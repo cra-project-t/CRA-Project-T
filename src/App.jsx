@@ -6,6 +6,7 @@ import { CssBaseline } from '@material-ui/core';
 
 import Login from "./pages/Login";
 import HomePage from './pages/HomePage';
+import sehyun from './pages/sehyun';
 
 const AuthOkay = ({children}) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
@@ -29,6 +30,7 @@ const App = () => {
               <Route path="/data" exact component={ViewData} />
               <Route path="/:engName" exact component={LookUpForm} />
               <Route path="/:engName/edit" exact component={EditPurchase} /> */}
+              <Route path="/sehyun/:status" exact component={sehyun} />
               <Route path="/" exact component={HomePage} />
             </Switch>
         </Router>
