@@ -1,3 +1,4 @@
+import React from "react";
 import ReactDOM from "react-dom";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -28,8 +29,10 @@ const theme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <App />
-  </ThemeProvider>,
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </React.StrictMode>,
   document.getElementById("root")
 );
