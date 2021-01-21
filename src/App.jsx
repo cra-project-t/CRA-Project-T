@@ -31,7 +31,7 @@ const App = () => {
               <Route path="/:engName" exact component={LookUpForm} />
               <Route path="/:engName/edit" exact component={EditPurchase} /> */}
               <Route path="/" exact component={HomePage} />
-              <Ruote path="/Harim" exact component={Harim} />
+              <Route path="/Harim" exact component={Harim} />
             </Switch>
         </Router>
       </AuthOkay>
