@@ -9,12 +9,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import Grid from '@material-ui/core/Grid'
+import EventIcon from '@material-ui/icons/Event';
 
 import Login from "./pages/Login";
 import HomePage from './pages/HomePage';
-
 
 const AuthOkay = ({children}) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
@@ -23,9 +22,7 @@ const AuthOkay = ({children}) => {
   if(error) return <div className="error">Auth is Error</div>
   if(!auth) return <Login />
   return children;
-
 }
-
 const App = () => {
   return (
     <div className="App">
@@ -69,7 +66,10 @@ const Addplan=()=>{
 
   return(
     <div>
+    <Grid container item justify="center">
     <form className={classes.root} noValidate autoComplete="off">
+      <h1>일정 추가<EventIcon/></h1>
+      <br/>
       <div>
       <TextField
           id="outlined-textarea"
@@ -80,7 +80,6 @@ const Addplan=()=>{
           value={planname}
           onChange={(e)=>setPlanname(e.target.value)}
         />
-        
       </div>
       <>
       <DatePickers value={date}/>
@@ -95,8 +94,11 @@ const Addplan=()=>{
         </FormGroup>
       </FormControl>
       </>
+      {!allday.checkedA&&
+      <div>
       <TimePickers value={starttime} label="시작시간"/>
       <TimePickers value={finishtime} label="종료시간"/>
+      </div>}
       <div>
       <TextField
           id="outlined-textarea"
@@ -120,6 +122,7 @@ const Addplan=()=>{
         />
       </div>
     </form>
+    </Grid>
     </div>
   );
 }
