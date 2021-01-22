@@ -65,11 +65,15 @@ const AddPlan = () => {
           </FormControl>
           {!allday.checkedA && (
             <div>
-              <TimePickers id="starttime" value={starttime} label="시작시간" />
               <TimePickers
-                id="finishtime"
+                label="시작 시간"
+                defaultValue="7:30"
+                value={starttime}
+              />
+              <TimePickers
+                label="종료 시간"
+                defaultValue="9:30"
                 value={finishtime}
-                label="종료시간"
               />
             </div>
           )}
@@ -141,16 +145,15 @@ function DatePickers() {
     </form>
   );
 }
-function TimePickers() {
+function TimePickers({ label, defaultValue }) {
   const classes = useStyles();
 
   return (
     <form className={classes.container} noValidate>
       <TextField
-        label="시작 시간"
+        label={label}
         type="time"
-        defaultValue="07:30"
-        className={classes.textField}
+        defaultValue={defaultValue}
         InputLabelProps={{
           shrink: true,
         }}
