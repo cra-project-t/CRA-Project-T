@@ -12,7 +12,9 @@ const Login = () => {
         variant="contained"
         color="primary"
         onClick={() =>
-          Check()
+          firebase
+            .auth()
+            .signInWithPopup(new firebase.auth.GoogleAuthProvider())
         }
       >
         구글로 로그인
@@ -20,12 +22,5 @@ const Login = () => {
     </div>
   );
 };
-
-function Check(){
-  firebase
-    .auth()
-    .signInWithPopup(new firebase.auth.GoogleAuthProvider());
-  // history.push('/status');
-}
 
 export default Login;
