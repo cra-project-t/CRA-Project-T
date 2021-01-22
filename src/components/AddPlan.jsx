@@ -28,7 +28,7 @@ const AddPlan = () => {
   return (
     <div>
       <Grid container item justify="center">
-        <form className={classes.root} noValidate autoComplete="off">
+        <div className={classes.root} noValidate autoComplete="off">
           <h1>
             일정 추가
             <EventIcon />
@@ -45,30 +45,32 @@ const AddPlan = () => {
               onChange={e => setPlanname(e.target.value)}
             />
           </div>
-          <>
-            <DatePickers value={date} />
-            <FormControl component="fieldset">
-              <FormGroup aria-label="position" row>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={allday.checkedA}
-                      onChange={handleChange1}
-                      name="checkedA"
-                      color="pimary"
-                    />
-                  }
-                  label="종일"
-                  labelPlacement="start"
-                  value={allday}
-                />
-              </FormGroup>
-            </FormControl>
-          </>
+          <DatePickers value={date} />
+          <FormControl component="fieldset">
+            <FormGroup aria-label="position" row>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={allday.checkedA}
+                    onChange={handleChange1}
+                    name="checkedA"
+                    color="primary"
+                  />
+                }
+                label="종일"
+                labelPlacement="start"
+                value={allday}
+              />
+            </FormGroup>
+          </FormControl>
           {!allday.checkedA && (
             <div>
-              <TimePickers value={starttime} label="시작시간" />
-              <TimePickers value={finishtime} label="종료시간" />
+              <TimePickers id="starttime" value={starttime} label="시작시간" />
+              <TimePickers
+                id="finishtime"
+                value={finishtime}
+                label="종료시간"
+              />
             </div>
           )}
           <div>
@@ -95,7 +97,7 @@ const AddPlan = () => {
               onChange={e => setContent(e.target.value)}
             />
           </div>
-        </form>
+        </div>
       </Grid>
     </div>
   );
@@ -145,7 +147,6 @@ function TimePickers() {
   return (
     <form className={classes.container} noValidate>
       <TextField
-        id="time"
         label="시작 시간"
         type="time"
         defaultValue="07:30"
