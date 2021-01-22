@@ -67,12 +67,12 @@ const AddPlan = () => {
             <div>
               <TimePickers
                 label="시작 시간"
-                defaultValue="7:30"
+                defaultValue="07:30"
                 value={starttime}
               />
               <TimePickers
                 label="종료 시간"
-                defaultValue="9:30"
+                defaultValue="09:30"
                 value={finishtime}
               />
             </div>
