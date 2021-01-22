@@ -6,7 +6,7 @@ import { CssBaseline } from '@material-ui/core';
 
 import Login from "./pages/Login";
 import HomePage from './pages/HomePage';
-import Status from './pages/Status';
+import Status from './components/Status';
 
 const AuthOkay = ({children}) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
