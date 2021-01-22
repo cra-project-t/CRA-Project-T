@@ -6,7 +6,6 @@ import { CssBaseline } from "@material-ui/core";
 
 import Login from "./pages/Login";
 import HomePage from "./pages/HomePage";
-import AddPlan from "./components/AddPlan";
 import HisnetLogin from "./components/HisnetLogin";
 
 const AuthOkay = ({ children }) => {
@@ -31,7 +30,6 @@ const App = () => {
               <Route path="/:engName" exact component={LookUpForm} />
               <Route path="/:engName/edit" exact component={EditPurchase} /> */}
             <Route path="/" exact component={HomePage} />
-            <Route path="/addplan" exact component={AddPlan} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
           </Switch>
         </Router>
