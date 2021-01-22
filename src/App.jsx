@@ -3,9 +3,9 @@ import firebase from "firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
-
 import Login from "./pages/Login";
 import HomePage from "./pages/HomePage";
+import AddPlan from "./components/AddPlan";
 import HisnetLogin from "./components/HisnetLogin";
 
 const AuthOkay = ({ children }) => {
@@ -16,7 +16,6 @@ const AuthOkay = ({ children }) => {
   if (!auth) return <Login />;
   return children;
 };
-
 const App = () => {
   return (
     <div className="App">
@@ -30,6 +29,7 @@ const App = () => {
               <Route path="/:engName" exact component={LookUpForm} />
               <Route path="/:engName/edit" exact component={EditPurchase} /> */}
             <Route path="/" exact component={HomePage} />
+            <Route path="/add" exact component={AddPlan} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
           </Switch>
         </Router>
