@@ -1,9 +1,6 @@
 import { Button } from "@material-ui/core";
-// import { ChangeHistory } from "@material-ui/icons";
 import firebase from "firebase";
 import React from "react";
-// import Router from "react-router-dom";
-// import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
