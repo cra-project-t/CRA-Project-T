@@ -10,12 +10,13 @@ import EventIcon from "@material-ui/icons/Event";
 
 const AddPlan = () => {
   const [planname, setPlanname] = useState("");
-  const [date] = useState("");
+  const [start] = useState("");
+  const [end] = useState("");
   const [allday, setAllday] = useState({
     checkedA: false,
   });
   const [starttime] = useState("");
-  const [finishtime] = useState("");
+  const [endtime] = useState("");
   const [place, setPlace] = useState("");
   const [content, setContent] = useState("");
 
@@ -45,7 +46,17 @@ const AddPlan = () => {
               onChange={e => setPlanname(e.target.value)}
             />
           </div>
-          <DatePickers value={date} />
+          {!allday.checkedA ? (
+            <div>
+              <DateAndTimePickers label="시작 일정" value={start} />
+              <DateAndTimePickers label="종료 일정" value={end} />
+            </div>
+          ) : (
+            <div>
+              <DatePickers label="시작 일정" value={start} />
+              <DatePickers label="시작 일정" value={end} />
+            </div>
+          )}
           <FormControl component="fieldset">
             <FormGroup aria-label="position" row>
               <FormControlLabel
@@ -63,20 +74,6 @@ const AddPlan = () => {
               />
             </FormGroup>
           </FormControl>
-          {!allday.checkedA && (
-            <div>
-              <TimePickers
-                label="시작 시간"
-                defaultValue="07:30"
-                value={starttime}
-              />
-              <TimePickers
-                label="종료 시간"
-                defaultValue="09:30"
-                value={finishtime}
-              />
-            </div>
-          )}
           <div>
             <TextField
               id="outlined-textarea"
@@ -127,16 +124,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function DatePickers() {
+function DateAndTimePickers({ label }) {
   const classes = useStyles();
 
   return (
     <form className={classes.container} noValidate>
       <TextField
-        id="date"
-        label="일정 날짜"
-        type="date"
-        defaultValue="2020-01-22"
+        id="datetime-local"
+        label={label}
+        type="datetime-local"
+        defaultValue="2021-03-03T01:00"
         className={classes.textField}
         InputLabelProps={{
           shrink: true,
@@ -145,20 +142,19 @@ function DatePickers() {
     </form>
   );
 }
-function TimePickers({ label, defaultValue }) {
+function DatePickers({ label }) {
   const classes = useStyles();
 
   return (
     <form className={classes.container} noValidate>
       <TextField
+        id="date"
         label={label}
-        type="time"
-        defaultValue={defaultValue}
+        type="date"
+        defaultValue="2020-01-22"
+        className={classes.textField}
         InputLabelProps={{
           shrink: true,
-        }}
-        inputProps={{
-          step: 300, // 5 min
         }}
       />
     </form>
