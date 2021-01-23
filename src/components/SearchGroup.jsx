@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { Grid } from "@material-ui/core";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import "./SearchGroup.css";
 
 const SearchGroup = props => {
@@ -26,16 +27,32 @@ const SearchGroup = props => {
   return (
     <Grid container item justify="center">
       <div>
-        <div className={classes.root}>
-          <img src={groups[id].photo} width="150" height="150" alt="Avatar" />
-          <h1>{groups[id].name}</h1>
-          <h3>{groups[id].desc}</h3>
-          <h5>{groups[id].members}명 회원</h5>
-          <Button variant="contained">취소</Button>
-          <Button variant="contained" color="primary">
-            요청
-          </Button>
-        </div>
+        {groups[id] ? (
+          <div className={classes.root}>
+            <div className="center">
+              <img
+                src={groups[id].photo}
+                width="150"
+                height="150"
+                alt="Avatar"
+              />
+              <h1>{groups[id].name}</h1>
+              <h3>{groups[id].desc}</h3>
+              <h5>{groups[id].members}명 회원</h5>
+              <Button variant="contained">취소</Button>
+              <Button variant="contained" color="primary">
+                요청
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            <strong>
+              데이터를 찾을 수가 없습니다. — 주소를 다시 확인해주세요.
+            </strong>
+          </Alert>
+        )}
       </div>
     </Grid>
   );
@@ -45,7 +62,9 @@ export default SearchGroup;
 
 const useStyles = makeStyles(theme => ({
   root: {
-    "& > *": {
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2),
       margin: theme.spacing(1),
     },
   },

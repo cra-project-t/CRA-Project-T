@@ -1,6 +1,7 @@
-img {
+img[src="https://www.handong.edu/dcp/editor/images/01_CRA.png"]
+{
   border-radius: 50%;
 }
-* {
+.center {
   text-align: center;
 }
