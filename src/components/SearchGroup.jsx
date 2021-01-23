@@ -35,7 +35,7 @@ const SearchGroup = props => {
                 width="150"
                 height="150"
                 alt="Avatar"
-                class="round"
+                className="round"
               />
               <h1>{groups[id].name}</h1>
               <h3>{groups[id].desc}</h3>
