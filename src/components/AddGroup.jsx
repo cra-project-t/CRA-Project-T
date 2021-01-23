@@ -2,17 +2,37 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+import NativeSelect from "@material-ui/core/NativeSelect";
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Slider from "@material-ui/core/Slider";
+import Input from "@material-ui/core/Input";
+import GroupIcon from "@material-ui/icons/Group";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import Select from "@material-ui/core/Select";
 
 const AddGroup = () => {
   const [groupname, setGroupname] = useState("");
   const [groupcategory, setGroupcategory] = useState("");
   const [groupcontent, setGroupcontent] = useState("");
+  const [groupmembernumber, setGroupmembernumber] = useState("");
+  const handleSliderChange = (e, newValue) => {
+    setGroupmembernumber(newValue);
+  };
+
+  const handleInputChange = e => {
+    setGroupmembernumber(e.target.value === "" ? "" : Number(e.target.value));
+  };
+
+  const handleBlur = () => {
+    if (groupmembernumber < 0) {
+      setGroupmembernumber(0);
+    } else if (groupmembernumber > 100) {
+      setGroupmembernumber(100);
+    }
+  };
 
   const classes = useStyles();
   return (
@@ -34,22 +54,55 @@ const AddGroup = () => {
             />
           </div>
           <FormControl className={classes.formControl}>
-            <InputLabel id="groupcategory-label">GROUP 카테고리</InputLabel>
-            <Select
-              labelId="groupcategory-label"
-              id="groupcategory-labelr"
+            <InputLabel htmlFor="groupcategory">GROUP 카테고리</InputLabel>
+            <NativeSelect
               value={groupcategory}
               onChange={e => setGroupcategory(e.target.value)}
+              inputProps={{
+                name: "age",
+                id: "groupcategory",
+              }}
             >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>동아리</MenuItem>
-              <MenuItem value={20}>학회</MenuItem>
-              <MenuItem value={30}>기타</MenuItem>
-            </Select>
-            <FormHelperText>GROUP 카테고리를 입력해주세요</FormHelperText>
+              <option aria-label="None" value="" />
+              <option value={10}>동아리</option>
+              <option value={20}>학회</option>
+              <option value={30}>기타</option>
+            </NativeSelect>
+            <FormHelperText>GROUP 카테고리를 선택해주세요</FormHelperText>
           </FormControl>
+          <Typography id="input-slider" gutterBottom>
+            GROUP 인원 수
+          </Typography>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+              <GroupIcon />
+            </Grid>
+            <Grid item xs>
+              <Slider
+                value={
+                  typeof groupmembernumber === "number" ? groupmembernumber : 0
+                }
+                onChange={handleSliderChange}
+                aria-labelledby="input-slider"
+              />
+            </Grid>
+            <Grid item>
+              <Input
+                className={classes.input}
+                value={groupmembernumber}
+                margin="dense"
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+                inputProps={{
+                  step: 1,
+                  min: 0,
+                  max: 100,
+                  type: "number",
+                  "aria-labelledby": "input-slider",
+                }}
+              />
+            </Grid>
+          </Grid>
           <div>
             <TextField
               id="outlined-textarea"
