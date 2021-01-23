@@ -10,7 +10,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
-// import { useEffect, useState } from 'react';
+import AddStudent from './AddStudent';
+// import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,8 +37,10 @@ const useStyles = makeStyles((theme) => ({
 const Status = () => {
   const classes = useStyles();
   const [user] = useAuthState(firebase.auth());
+  const [buttonControl, setButton] = React.useState(false);
   const [state, setState] = React.useState({
-    hakbun: user.email.substr(0, 8),
+    uid: user.uid,
+    hakbun: user.email.substring(0, user.email.indexOf("@")),
     studentname: user.displayName,
     nickname: "",
     major: "",
@@ -49,15 +52,19 @@ const Status = () => {
   });
   const majorChange = (event) => {
     setState({...state, [event.target.name]: event.target.value});
+    // setButton(buttonControl => false);
   };
   const keyChange = (event) => {
     if(event.key === 'Enter'){
       setState({...state, [event.target.name]: event.target.value});
+      // setButton(buttonControl => false);
     }
   };
   const checkChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
+    // setButton(buttonControl => false);
   };
+  // console.log(state);
   if(user)
     return (
       <div className={classes.title}>
@@ -99,6 +106,7 @@ const Status = () => {
                   value={state.major2}
                   onChange={majorChange}
                 >
+                  <MenuItem value=""><em>없음</em></MenuItem>
                   <MenuItem value={"Global leadership"}>글로벌 리더쉽 학부</MenuItem>
                   <MenuItem value={"International Study"}>국제 어문 학부</MenuItem>
                   <MenuItem value={"Management"}>경영 경제 학부</MenuItem>
@@ -149,7 +157,12 @@ const Status = () => {
             />
           </FormControl>
           <br />
-          <button>저장</button>
+          <button
+            onClick={() =>{
+              setButton(buttonControl => true);
+              setButton(buttonControl => AddStudent(state));
+            }}
+          disabled={buttonControl}>저장</button>
         </div>
       </div>
     )
