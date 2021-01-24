@@ -11,7 +11,6 @@ import Slider from "@material-ui/core/Slider";
 import Input from "@material-ui/core/Input";
 import GroupIcon from "@material-ui/icons/Group";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import Select from "@material-ui/core/Select";
 
 const AddGroup = () => {
   const [groupname, setGroupname] = useState("");
@@ -64,9 +63,9 @@ const AddGroup = () => {
               }}
             >
               <option aria-label="None" value="" />
-              <option value={10}>동아리</option>
-              <option value={20}>학회</option>
-              <option value={30}>기타</option>
+              <option value={"club"}>동아리</option>
+              <option value={"association"}>학회</option>
+              <option value={"others"}>기타</option>
             </NativeSelect>
             <FormHelperText>GROUP 카테고리를 선택해주세요</FormHelperText>
           </FormControl>
