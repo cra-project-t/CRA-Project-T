@@ -15,8 +15,8 @@ const AddPlan = () => {
   const [allday, setAllday] = useState({
     checkedA: false,
   });
-  const [starttime] = useState("");
-  const [endtime] = useState("");
+  // const [starttime] = useState("");
+  // const [endtime] = useState("");
   const [place, setPlace] = useState("");
   const [content, setContent] = useState("");
 
@@ -151,7 +151,7 @@ function DatePickers({ label }) {
         id="date"
         label={label}
         type="date"
-        defaultValue="2020-01-22"
+        defaultValue="2021-03-03"
         className={classes.textField}
         InputLabelProps={{
           shrink: true,
