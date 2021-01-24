@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import AddPlan from "./components/AddPlan";
 import HisnetLogin from "./components/HisnetLogin";
 import AddGroup from "./components/AddGroup";
+import SearchGroup from "./components/SearchGroup";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="/addplan" exact component={AddPlan} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
             <Route path="/addgroup" exact component={AddGroup} />
+            <Route path="/group/:id" component={SearchGroup} />
           </Switch>
         </Router>
       </AuthOkay>
