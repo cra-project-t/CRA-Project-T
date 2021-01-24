@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -7,23 +8,21 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import EventIcon from "@material-ui/icons/Event";
+import firebase from "firebase";
 
 const AddPlan = () => {
-  const [planname, setPlanname] = useState("");
-  const [start] = useState("");
-  const [end] = useState("");
-  const [allday, setAllday] = useState({
-    checkedA: false,
+  const [calInfo, setCalInfo] = useState({
+    planname: "",
+    start: "",
+    end: "",
+    allday: false,
+    place: "",
+    content: "",
   });
-  // const [starttime] = useState("");
-  // const [endtime] = useState("");
-  const [place, setPlace] = useState("");
-  const [content, setContent] = useState("");
 
   const classes = useStyles();
-
   const handleChange1 = e => {
-    setAllday({ ...allday, [e.target.name]: e.target.checked });
+    setCalInfo({ ...calInfo, allday: e.target.checked });
   };
 
   return (
@@ -42,19 +41,48 @@ const AddPlan = () => {
               placeholder="일정 이름을 입력해주세요"
               multiline
               variant="outlined"
-              value={planname}
-              onChange={e => setPlanname(e.target.value)}
+              value={calInfo.planname}
+              onChange={e =>
+                setCalInfo({
+                  ...calInfo,
+                  planname: e.target.value,
+                })
+              }
             />
           </div>
-          {!allday.checkedA ? (
+          {!calInfo.allday ? (
             <div>
-              <DateAndTimePickers label="시작 일정" value={start} />
-              <DateAndTimePickers label="종료 일정" value={end} />
+              <DateAndTimePickers
+                label="시작 일정"
+                value={calInfo.start}
+                onChange={e => {
+                  setCalInfo({ ...calInfo, start: e.target.value });
+                }}
+              />
+              <DateAndTimePickers
+                label="종료 일정"
+                value={calInfo.end}
+                onChange={e => {
+                  setCalInfo({ ...calInfo, end: e.target.value });
+                }}
+              />
             </div>
           ) : (
             <div>
-              <DatePickers label="시작 일정" value={start} />
-              <DatePickers label="시작 일정" value={end} />
+              <DatePickers
+                label="시작 일정"
+                value={calInfo.start}
+                onChange={e => {
+                  setCalInfo({ ...calInfo, start: e.target.value });
+                }}
+              />
+              <DatePickers
+                label="종료 일정"
+                value={calInfo.end}
+                onChange={e => {
+                  setCalInfo({ ...calInfo, end: e.target.value });
+                }}
+              />
             </div>
           )}
           <FormControl component="fieldset">
@@ -62,42 +90,61 @@ const AddPlan = () => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={allday.checkedA}
+                    checked={calInfo.allday}
                     onChange={handleChange1}
-                    name="checkedA"
+                    name="allday"
                     color="primary"
                   />
                 }
                 label="종일"
                 labelPlacement="start"
-                value={allday}
+                value={calInfo.allday}
               />
             </FormGroup>
           </FormControl>
           <div>
             <TextField
-              id="outlined-textarea"
-              label="장소"
+              id="일정 장소"
+              label="일정 장소"
               placeholder="일정 장소를 입력해주세요"
               multiline
               rows={4}
               variant="outlined"
-              value={place}
-              onChange={e => setPlace(e.target.value)}
+              value={calInfo.place}
+              onChange={e => setCalInfo({ ...calInfo, place: e.target.value })}
             />
           </div>
           <div>
             <TextField
-              id="outlined-textarea"
-              label="내용"
+              id="일정 내용"
+              label="일정 내용"
               placeholder="일정 내용을 입력해주세요"
               multiline
               rows={4}
               variant="outlined"
-              value={content}
-              onChange={e => setContent(e.target.value)}
+              value={calInfo.content}
+              onChange={e =>
+                setCalInfo({ ...calInfo, content: e.target.value })
+              }
             />
           </div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              firebase
+                .firestore()
+                .collection("calendars")
+                .doc("IQWkcBUvw06jseGNWWoA")
+                .collection("plans")
+                .add({
+                  ...calInfo,
+                });
+            }}
+          >
+            등록
+          </Button>
+          <Button variant="contained">취소</Button>
         </div>
       </Grid>
     </div>
@@ -121,6 +168,9 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1),
       width: "25ch",
     },
+    "& > *": {
+      margin: theme.spacing(1),
+    },
   },
 }));
 
@@ -130,10 +180,9 @@ function DateAndTimePickers({ label }) {
   return (
     <form className={classes.container} noValidate>
       <TextField
-        id="datetime-local"
         label={label}
         type="datetime-local"
-        defaultValue="2021-03-03T01:00"
+        defaultValue="2021-03-03T00:00"
         className={classes.textField}
         InputLabelProps={{
           shrink: true,
@@ -148,7 +197,6 @@ function DatePickers({ label }) {
   return (
     <form className={classes.container} noValidate>
       <TextField
-        id="date"
         label={label}
         type="date"
         defaultValue="2021-03-03"
