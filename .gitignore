@@ -245,3 +245,4 @@ $RECYCLE.BIN/
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/vscode,react,node,linux,windows,macos,yarn
+secrets
