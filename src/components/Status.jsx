@@ -10,14 +10,16 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
-import AddStudent from './AddStudent';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import DeleteIcon from '@material-ui/icons/Delete';
 // import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
       margin: theme.spacing(1),
-      width: '90%',
+      width: '100%',
       justifyContent: "center",
     },
   },
@@ -45,26 +47,24 @@ const Status = () => {
     nickname: "",
     major: "",
     major2: "",
-    home: "",
+    home: 0,
     shareWFriend: false,
     information: false,
     service: false,
   });
   const majorChange = (event) => {
     setState({...state, [event.target.name]: event.target.value});
-    // setButton(buttonControl => false);
   };
   const keyChange = (event) => {
-    if(event.key === 'Enter'){
-      setState({...state, [event.target.name]: event.target.value});
-      // setButton(buttonControl => false);
-    }
+    setState({...state, [event.target.name]: event.target.value});
   };
   const checkChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
-    // setButton(buttonControl => false);
   };
-  // console.log(state);
+  const colorChange = (event) => {
+    setState({...state, [event.target.name]: event.target.value});
+  }
+  console.log(state);
   if(user)
     return (
       <div className={classes.title}>
@@ -73,7 +73,7 @@ const Status = () => {
           {state.hakbun}학번<br />
           {state.studentname}님</h1><br />
           <FormControl className={classes.root} noValidate autoComplete="off">
-            <TextField id="nickname" name="nickname" label="닉네임" variant="outlined" onKeyPress={keyChange} /><br />
+            <TextField id="nickname" name="nickname" label="닉네임" variant="outlined" onChange={keyChange} /><br />
             <FormControl>
               <InputLabel id="major">전공</InputLabel>
                 <Select
@@ -121,7 +121,39 @@ const Status = () => {
                   <MenuItem value={"ICT"}>ICT 창업 학부</MenuItem>
                 </Select>
             </FormControl><br />
-            <TextField id="home" name="home" label="거주상태" variant="outlined" onKeyPress={keyChange} /><br />
+            <ButtonGroup id="home" aria-label="outlined primary button group">
+              <Button
+                variant="contained"
+                name="home"
+                value={1}
+                color={(state.home === 1)? "primary" : "secondary"}
+                onClick={colorChange}
+                startIcon={<DeleteIcon />}
+              >
+                기숙사
+              </Button>
+              <Button
+                variant="contained"
+                name="home"
+                value={2}
+                color={(state.home === 2)? "primary" : "secondary"}
+                onClick={colorChange}
+                startIcon={<DeleteIcon />}
+              >
+                자취
+              </Button>
+              <Button
+                variant="contained"
+                name="home"
+                value={3}
+                color={(state.home === 3)? "primary" : "secondary"}
+                onClick={colorChange}
+                startIcon={<DeleteIcon />}
+              >
+                온라인
+              </Button>
+            </ButtonGroup>
+            {/* <TextField id="home" name="home" label="거주상태" variant="outlined" onChange={keyChange} /><br /> */}
             <FormControlLabel
               control={
               <Checkbox
@@ -166,6 +198,16 @@ const Status = () => {
         </div>
       </div>
     )
+}
+
+function AddStudent(params) {
+  console.log(params);
+  // console.log(firebase.auth().currentUser.uid);
+  if(params.nickname.length === 0){
+      alert('거절');
+  }
+  else firebase.firestore().collection('users').doc(params.uid).set(params);
+  return false;
 }
 
 export default Status

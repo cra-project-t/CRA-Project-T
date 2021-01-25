@@ -9,6 +9,8 @@ import HomePage from './pages/HomePage';
 import Status from './components/Status';
 import AddPlan from "./components/AddPlan";
 import HisnetLogin from "./components/HisnetLogin";
+import UserInfo from "./components/UserInfo";
+import Test from "./components/Test";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
@@ -30,6 +32,8 @@ const App = () => {
               <Route path="/data" exact component={ViewData} />
               <Route path="/:engName" exact component={LookUpForm} />
               <Route path="/:engName/edit" exact component={EditPurchase} /> */}
+            <Route path="/user/:uid" exact component={UserInfo} />
+            <Route path="/test" exact component={Test} />
             <Route path="/status" exact component={Status} />
             <Route path="/" exact component={HomePage} />
             <Route path="/add" exact component={AddPlan} />
