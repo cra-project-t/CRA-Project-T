@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 
@@ -19,13 +18,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserInfo = ({match}) => {
+const UserInfo = () => {
   const classes = useStyles();
   const [edit, setEdit] = useState(true);
   const [state, setState] = useState([]);
   useEffect(() => {
-    firebase.firestore().collection('users').doc(match.params.uid).get().then(doc => setState(doc.data()));
-  }, [match])
+    firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then(doc => setState(doc.data()));
+  }, [])
   const editChange = () => {
     setEdit(false);
   };
@@ -38,9 +37,9 @@ const UserInfo = ({match}) => {
   const keyChange = (event) => {
     setState({...state, [event.target.name]: event.target.value});
   };
-  // const checkChange = (event) => {
-  //   setState({ ...state, [event.target.name]: event.target.checked });
-  // };
+  const checkChange = (event) => {
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
   return (
     <div>
       <h3 className={classes.root}>
@@ -60,13 +59,14 @@ const UserInfo = ({match}) => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={state.information}
-              // onChange={checkChange}
-              name="information"
+              checked={check(state.shareWFriend)}
+              onChange={checkChange}
+              name="shareWFriend"
               color="primary"
               disabled={edit}
             />
           }
+          label=""
         />친구들과 일정 공유<br />
         <button
           onClick={editChange}
@@ -101,25 +101,27 @@ const UserInfo = ({match}) => {
         return (
           <FormControl>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              name={stateName}
+              native
               value={value}
               onChange={majorChange}
+              inputProps={{
+                name: stateName,
+                id: 'major-native-simple',
+              }}
             >
-              <MenuItem value=""><em>없음</em></MenuItem>
-              <MenuItem value={"Global leadership"}>글로벌 리더쉽 학부</MenuItem>
-              <MenuItem value={"International Study"}>국제 어문 학부</MenuItem>
-              <MenuItem value={"Management"}>경영 경제 학부</MenuItem>
-              <MenuItem value={"Law"}>법학부</MenuItem>
-              <MenuItem value={"Communication"}>커뮤니케이션 학부</MenuItem>
-              <MenuItem value={"Counseling"}>상담심리사회복지학부</MenuItem>
-              <MenuItem value={"Life Science"}>생명 과학부</MenuItem>
-              <MenuItem value={"Spatial Environment System"}>공간 환경 시스템 공학부</MenuItem>
-              <MenuItem value={"Computer Science"}>전산 전자 공학부</MenuItem>
-              <MenuItem value={"C&C Design"}>콘텐츠 융합 디자인 학부</MenuItem>
-              <MenuItem value={"Mechanical"}>기계 제어 공학부</MenuItem>
-              <MenuItem value={"ICT"}>ICT 창업 학부</MenuItem>
+              <option aria-label="None" value="" />
+              <option value={"Global leadership"}>글로벌 리더쉽 학부</option>
+              <option value={"International Study"}>국제 어문 학부</option>
+              <option value={"Management"}>경영 경제 학부</option>
+              <option value={"Law"}>법학부</option>
+              <option value={"Communication"}>커뮤니케이션 학부</option>
+              <option value={"Counseling"}>상담심리사회복지학부</option>
+              <option value={"Life Science"}>생명 과학부</option>
+              <option value={"Spatial Environment System"}>공간 환경 시스템 공학부</option>
+              <option value={"Computer Science"}>전산 전자 공학부</option>
+              <option value={"C&C Design"}>콘텐츠 융합 디자인 학부</option>
+              <option value={"Mechanical"}>기계 제어 공학부</option>
+              <option value={"ICT"}>ICT 창업 학부</option>
             </Select>
           </FormControl>
         )
@@ -163,6 +165,11 @@ function whatMajor(major) {
   else if(major === "C&C Design") return "콘텐츠 융합 디자인 학부";
   else if(major === "Mechanical") return "기계 제어 공학부";
   else return "ICT 창업 학부";
+}
+
+function check(checked) {
+  if(checked) return true;
+  else return false;
 }
 
 function AddStudent(params) {
