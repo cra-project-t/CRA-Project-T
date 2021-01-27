@@ -5,6 +5,7 @@
     "build": "tsc",
     "watch": "nodemon --watch 'src/**/*.ts' --exec 'npm run build' --ext ts,json",
     "serve": "export GOOGLE_APPLICATION_CREDENTIALS='secrets/firebase-admin.json' && npm run build && firebase emulators:start --only functions",
+    "serve:windows": "cmd /V /C \"set GOOGLE_APPLICATION_CREDENTIALS='secrets/firebase-admin.json'&& nodemon app.js\"",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
