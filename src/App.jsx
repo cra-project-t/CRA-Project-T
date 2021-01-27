@@ -12,7 +12,6 @@ import SearchGroup from "./components/SearchGroup";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
-  auth && auth.getIdToken().then((token) => console.log(token));
 
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
