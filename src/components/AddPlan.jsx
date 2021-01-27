@@ -21,7 +21,7 @@ const AddPlan = () => {
   });
 
   const classes = useStyles();
-  const handleChange1 = e => {
+  const handleChange1 = (e) => {
     setCalInfo({ ...calInfo, allday: e.target.checked });
   };
 
@@ -42,7 +42,7 @@ const AddPlan = () => {
               multiline
               variant="outlined"
               value={calInfo.planname}
-              onChange={e =>
+              onChange={(e) =>
                 setCalInfo({
                   ...calInfo,
                   planname: e.target.value,
@@ -55,14 +55,14 @@ const AddPlan = () => {
               <DateAndTimePickers
                 label="시작 일정"
                 value={calInfo.start}
-                onChange={e => {
+                onChange={(e) => {
                   setCalInfo({ ...calInfo, start: e.target.value });
                 }}
               />
               <DateAndTimePickers
                 label="종료 일정"
                 value={calInfo.end}
-                onChange={e => {
+                onChange={(e) => {
                   setCalInfo({ ...calInfo, end: e.target.value });
                 }}
               />
@@ -72,14 +72,14 @@ const AddPlan = () => {
               <DatePickers
                 label="시작 일정"
                 value={calInfo.start}
-                onChange={e => {
+                onChange={(e) => {
                   setCalInfo({ ...calInfo, start: e.target.value });
                 }}
               />
               <DatePickers
                 label="종료 일정"
                 value={calInfo.end}
-                onChange={e => {
+                onChange={(e) => {
                   setCalInfo({ ...calInfo, end: e.target.value });
                 }}
               />
@@ -111,7 +111,9 @@ const AddPlan = () => {
               rows={4}
               variant="outlined"
               value={calInfo.place}
-              onChange={e => setCalInfo({ ...calInfo, place: e.target.value })}
+              onChange={(e) =>
+                setCalInfo({ ...calInfo, place: e.target.value })
+              }
             />
           </div>
           <div>
@@ -123,7 +125,7 @@ const AddPlan = () => {
               rows={4}
               variant="outlined"
               value={calInfo.content}
-              onChange={e =>
+              onChange={(e) =>
                 setCalInfo({ ...calInfo, content: e.target.value })
               }
             />
@@ -132,13 +134,18 @@ const AddPlan = () => {
             variant="contained"
             color="primary"
             onClick={() => {
+              console.log(calInfo.start);
               firebase
                 .firestore()
                 .collection("calendars")
                 .doc("IQWkcBUvw06jseGNWWoA")
-                .collection("plans")
+                .collection("events")
                 .add({
-                  ...calInfo,
+                  allDay: calInfo.allday,
+                  startTime: new Date(calInfo.start),
+                  endTime: new Date(calInfo.end),
+                  eventName: calInfo.planname,
+                  eventDescription: calInfo.content,
                 });
             }}
           >
@@ -153,7 +160,7 @@ const AddPlan = () => {
 
 export default AddPlan;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexWrap: "wrap",
@@ -174,7 +181,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function DateAndTimePickers({ label }) {
+function DateAndTimePickers({ label, onChange }) {
   const classes = useStyles();
 
   return (
@@ -187,11 +194,12 @@ function DateAndTimePickers({ label }) {
         InputLabelProps={{
           shrink: true,
         }}
+        onChange={onChange}
       />
     </form>
   );
 }
-function DatePickers({ label }) {
+function DatePickers({ label, onChange }) {
   const classes = useStyles();
 
   return (
@@ -204,6 +212,7 @@ function DatePickers({ label }) {
         InputLabelProps={{
           shrink: true,
         }}
+        onChange={onChange}
       />
     </form>
   );
