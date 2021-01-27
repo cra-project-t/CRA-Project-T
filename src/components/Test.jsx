@@ -12,7 +12,6 @@ const Test = () => {
   useEffect(() => {
     firebase.firestore().collection('users').doc(user).get().then(doc => setusers(doc.data()));
   }, [user])
-  console.log(users)
   if(!users){
     return (
       <div>

@@ -221,8 +221,6 @@ const Status = () => {
 }
 
 function AddStudent(params) {
-  console.log(params);
-  // console.log(firebase.auth().currentUser.uid);
   if(params.nickname.length === 0){
     alert('거절');
   }
