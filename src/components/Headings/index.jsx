@@ -11,7 +11,7 @@ function Heading({ drawerWidth, classes }) {
   return ReactDOM.createPortal(
     <React.Fragment>
       <Grid container>
-        <TitleBar drawerWidth={drawerWidth} />
+        <TitleBar />
         <Grid item xs={12}>
           <Paper
             elevation={0}
