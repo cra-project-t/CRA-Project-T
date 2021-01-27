@@ -42,6 +42,7 @@ const Status = () => {
   const [buttonControl, setButton] = React.useState(false);
   const [state, setState] = React.useState({
     uid: user.uid,
+    email: user.email,
     hakbun: user.email.substring(0, user.email.indexOf("@")),
     studentname: user.displayName,
     nickname: "",
@@ -61,10 +62,11 @@ const Status = () => {
   const checkChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
-  const colorChange = (event) => {
-    setState({...state, [event.target.name]: event.target.value});
+  const colorChange = (k) => {
+    setState({...state, home : k});
+    // console.log(k);
   }
-  console.log(state);
+  // console.log(state);
   if(user)
     return (
       <div className={classes.title}>
@@ -121,13 +123,28 @@ const Status = () => {
                   <MenuItem value={"ICT"}>ICT 창업 학부</MenuItem>
                 </Select>
             </FormControl><br />
-            <ButtonGroup id="home" aria-label="outlined primary button group">
+            {/* <FormGroup>
+            <FormControlLabel
+              control={<Checkbox value={1} checked={state.home === 1} onChange={colorChange} name="home" />}
+              label="Gilad Gray"
+            />
+            <FormControlLabel
+              control={<Checkbox value={2} checked={state.home === 2} onChange={colorChange} name="home" />}
+              label="Jason Killian"
+            />
+            <FormControlLabel
+              control={<Checkbox value={3} checked={state.home === 3} onChange={colorChange} name="home" />}
+              label="Antoine Llorca"
+            />
+          </FormGroup> */}
+            <ButtonGroup id="home">
               <Button
                 variant="contained"
                 name="home"
-                value={1}
                 color={(state.home === 1)? "primary" : "secondary"}
-                onClick={colorChange}
+                onClick={() =>{
+                  colorChange(1)
+                }}
                 startIcon={<DeleteIcon />}
               >
                 기숙사
@@ -135,9 +152,10 @@ const Status = () => {
               <Button
                 variant="contained"
                 name="home"
-                value={2}
                 color={(state.home === 2)? "primary" : "secondary"}
-                onClick={colorChange}
+                onClick={() =>{
+                  colorChange(2)
+                }}
                 startIcon={<DeleteIcon />}
               >
                 자취
@@ -145,9 +163,10 @@ const Status = () => {
               <Button
                 variant="contained"
                 name="home"
-                value={3}
                 color={(state.home === 3)? "primary" : "secondary"}
-                onClick={colorChange}
+                onClick={() =>{
+                  colorChange(3)
+                }}
                 startIcon={<DeleteIcon />}
               >
                 온라인
@@ -192,7 +211,8 @@ const Status = () => {
           <button
             onClick={() =>{
               setButton(buttonControl => true);
-              setButton(buttonControl => AddStudent(state));
+              AddStudent(state);
+              setButton(buttonControl => false);
             }}
           disabled={buttonControl}>저장</button>
         </div>
@@ -204,10 +224,14 @@ function AddStudent(params) {
   console.log(params);
   // console.log(firebase.auth().currentUser.uid);
   if(params.nickname.length === 0){
-      alert('거절');
+    alert('거절');
   }
   else firebase.firestore().collection('users').doc(params.uid).set(params);
-  return false;
 }
+
+// function changeHome(home, k) {
+//   if(home === k) return true;
+//   else return false;
+// }
 
 export default Status
