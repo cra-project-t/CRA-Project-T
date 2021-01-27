@@ -83,28 +83,28 @@ const UserInfo = ({match}) => {
     </div>
   )
 
-  function editspace(a, b, k) {
-    if(k) {
-      if(b === "major" || b === "major2"){
+  function editspace(value, stateName, buttonEdit) {
+    if(buttonEdit) {
+      if(stateName === "major" || stateName === "major2"){
         return (
-          whatMajor(a)
+          whatMajor(value)
         )
       }
       else {
         return (
-          a
+          value
         )
       }
     }
     else {
-      if(b === "major" || b === "major2"){
+      if(stateName === "major" || stateName === "major2"){
         return (
           <FormControl>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              name={b}
-              value={a}
+              name={stateName}
+              value={value}
               onChange={majorChange}
             >
               <MenuItem value=""><em>없음</em></MenuItem>
@@ -131,9 +131,9 @@ const UserInfo = ({match}) => {
               <TextField
                 size="small"
                 variant="outlined"
-                value={a}
+                value={value}
                 onChange={keyChange}
-                name={b}
+                name={stateName}
               />
             }
           />
