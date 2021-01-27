@@ -1,8 +1,7 @@
 name: Continuous Integration (Prettier)
 
 on:
-  push:
-    branches: [master]
+  pull_request:
 
 jobs:
   prettier:
