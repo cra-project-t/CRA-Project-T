@@ -3,6 +3,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import { Button, Container, Grid, makeStyles, Paper } from "@material-ui/core";
 import firebase from "firebase";
 import React from "react";
+import HomeAddActionIcon from "../components/HomeAddActionIcon";
 import HomeAnnouncements from "../components/HomeAnnouncements";
 import HomeFriends from "../components/HomeFriends";
 import HomeSchoolInfo from "../components/HomeSchoolInfo";
@@ -31,6 +32,7 @@ const HomePage = () => {
   const classes = useStyles();
   return (
     <Paper square elevation={1}>
+      <HomeAddActionIcon />
       <Grid className={classes.root} container spacing={2}>
         <Grid item sm={6} xs={12}>
           <div className={classes.paper}>
