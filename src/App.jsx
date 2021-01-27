@@ -9,10 +9,11 @@ import AddPlan from "./components/AddPlan";
 import HisnetLogin from "./components/HisnetLogin";
 import AddGroup from "./components/AddGroup";
 import SearchGroup from "./components/SearchGroup";
+import AddNotif from "./components/AddNotif";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
-  auth && auth.getIdToken().then((token) => console.log(token));
+  auth && auth.getIdToken().then(token => console.log(token));
 
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
@@ -36,6 +37,7 @@ const App = () => {
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
+            <Route path="/addnotif" exact component={AddNotif} />
           </Switch>
         </Router>
       </AuthOkay>
