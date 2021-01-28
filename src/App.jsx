@@ -5,23 +5,18 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CssBaseline, makeStyles } from "@material-ui/core";
 import Login from "./pages/Login";
 import HomePage from "./pages/HomePage";
-import HisnetLogin from "./components/HisnetLogin";
 import AddGroup from "./components/AddGroup";
 import SearchGroup from "./components/SearchGroup";
 import AddNotif from "./components/AddNotif";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
-import ExamplePage from "./pages/ExamplePage";
 import { userStore } from "./stores/userStore";
 import Status from "./components/Status";
-import AddPlan from "./components/AddPlan";
 import HisnetLogin from "./components/HisnetLogin";
 import UserInfo from "./components/UserInfo";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
-  auth && auth.getIdToken().then((token) => console.log(token));
-
   // Auth Use Context
   const { dispatch, state } = useContext(userStore);
   useEffect(() => {
@@ -49,12 +44,13 @@ const AuthOkay = ({ children }) => {
     return () => unsub();
   }, [dispatch, auth, loading]);
 
-  auth && auth.getIdToken(false).then((token) => console.log(token));
+  console.log(state);
 
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
   if (!auth) return <Login />;
-  if (Object.keys(state).length == 0) return <Status />;
+  if (state.loading) return <div>Database is Loading</div>;
+  if (Object.keys(state).length === 1) return <Status />;
   return children;
 };
 
@@ -100,7 +96,6 @@ const App = () => {
             <Route path="/" exact component={HomePage} />
             <Route path="/sf" exact component={SearchFriends} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
-            <Route path="/example" exact component={ExamplePage} />
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
             <Route path="/addnotif" exact component={AddNotif} />
