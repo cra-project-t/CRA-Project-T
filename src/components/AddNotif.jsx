@@ -34,7 +34,6 @@ const AddNotif = () => {
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
   const [groupname, setGroupname] = React.useState([]);
-  console.log(left);
   useEffect(() => {
     firebase
       .firestore()
@@ -42,12 +41,9 @@ const AddNotif = () => {
       .doc("grp3")
       .get()
       .then(doc => {
-        console.log(doc.data().members);
         setLeft(doc.data().members);
       });
   }, []);
-  const leftChecked = intersection(checked, left);
-  //const rightChecked = intersection(checked, right);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -130,7 +126,6 @@ const AddNotif = () => {
       .doc("grp3")
       .get()
       .then(doc => {
-        console.log(doc.data().name);
         setGroupname(doc.data().name);
       });
   }, []);
