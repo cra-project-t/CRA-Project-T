@@ -18,23 +18,19 @@ const EventView = ({ props, setopenEvent }) => {
         <EventIcon />
         {props.title}
       </DialogTitle>
-      <DialogContent>
-        {props.start.toString()}
-      </DialogContent>
-      {(!props.allday) ?
+      <DialogContent>{props.start.toString()}</DialogContent>
+      {!props.allday ? (
         <DialogContent>
-          {props.start.toString().substring(0, 8) + (props.start.getDate() + 1) + props.start.toString().substring(10)}
+          {props.start.toString().substring(0, 8) +
+            (props.start.getDate() + 1) +
+            props.start.toString().substring(10)}
         </DialogContent>
-        :
-        <DialogContent>
-          {props.end.toString()}
-        </DialogContent>
-      }
-      <DialogContent>
-        {props.extendedProps.comments}
-      </DialogContent>
+      ) : (
+        <DialogContent>{props.end.toString()}</DialogContent>
+      )}
+      <DialogContent>{props.extendedProps.comments}</DialogContent>
     </Dialog>
   );
-}
+};
 
 export default EventView;
