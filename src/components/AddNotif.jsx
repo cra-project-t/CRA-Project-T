@@ -33,7 +33,7 @@ const AddNotif = () => {
     group: "",
     name: "",
     description: "", //보내고 싶은 회원, 알림 방식추가하기
-    wayofannounce: "",
+    wayofannounce: "email",
   });
 
   const [checked, setChecked] = React.useState([]);
@@ -253,7 +253,7 @@ const AddNotif = () => {
             color="secondary"
             onClick={async () => {
               const token = await firebase.auth().currentUser.getIdToken();
-              console.log(token);
+              //console.log(token);
               axios.post(
                 "/group/englishgroup/add/announce",
                 {
@@ -267,6 +267,8 @@ const AddNotif = () => {
                   },
                 }
               );
+              //console.log(checked);
+              setNotif([]); //ㅎㅅㅎ 버튼 누르면 화면상으로는 초기화 시키고 싶다고
             }}
           >
             저장
