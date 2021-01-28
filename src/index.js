@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import axios from "axios";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core";
@@ -7,6 +8,10 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core";
 import App from "./App";
 
 import firebaseConfig from "./config/firebaseConfig";
+import { uriList } from "./uriList.js";
+
+// Axios Setup
+axios.defaults.baseURL = uriList.app;
 
 // Firebase Setup
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
