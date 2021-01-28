@@ -13,13 +13,17 @@ import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
 import ExamplePage from "./pages/ExamplePage";
 import { userStore } from "./stores/userStore";
+import Status from "./components/Status";
+import AddPlan from "./components/AddPlan";
+import HisnetLogin from "./components/HisnetLogin";
+import UserInfo from "./components/UserInfo";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
-  auth && auth.getIdToken().then(token => console.log(token));
+  auth && auth.getIdToken().then((token) => console.log(token));
 
   // Auth Use Context
-  const { dispatch } = useContext(userStore);
+  const { dispatch, state } = useContext(userStore);
   useEffect(() => {
     if (!auth || loading) {
       console.log("loading");
@@ -50,13 +54,14 @@ const AuthOkay = ({ children }) => {
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
   if (!auth) return <Login />;
+  if (Object.keys(state).length == 0) return <Status />;
   return children;
 };
 
 // Heading CSS Setting
 
 const drawerWidth = 240;
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   // root: {
   //   display: 'flex',
   // },
@@ -86,13 +91,13 @@ const App = () => {
       <AuthOkay>
         <Router>
           <Route
-            render={props => (
+            render={(props) => (
               <Heading {...props} drawerWidth={drawerWidth} classes={classes} />
             )}
           />
           <Switch>
+            <Route path="/mypage" exact component={UserInfo} />
             <Route path="/" exact component={HomePage} />
-            {/* Test Routes */}
             <Route path="/sf" exact component={SearchFriends} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
             <Route path="/example" exact component={ExamplePage} />
