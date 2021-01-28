@@ -21,6 +21,10 @@ import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import NotificationsTwoToneIcon from "@material-ui/icons/NotificationsTwoTone";
 import MailTwoToneIcon from "@material-ui/icons/MailTwoTone";
 import firebase from "firebase";
+import axios from "axios";
+import { CircularProgress } from "@material-ui/core";
+
+const groupId = "englishGroup";
 
 const AddNotif = () => {
   const classes = useStyles();
@@ -28,21 +32,44 @@ const AddNotif = () => {
   const [notif, setNotif] = useState({
     group: "",
     name: "",
-    content: "", //보내고 싶은 회원, 알림 방식추가하기
+    description: "", //보내고 싶은 회원, 알림 방식추가하기
+    wayofannounce: "",
   });
 
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
   const [groupname, setGroupname] = React.useState([]);
+
+  const [memberListError, setMemberListError] = useState("");
+  const [memberListLoading, setMemberListLoading] = useState(false);
+  const [GroupListError, setGroupListError] = useState("");
+
   useEffect(() => {
+    setMemberListError("");
+    setMemberListLoading(true);
+    // Axios post body data 넣는 방법
     firebase
-      .firestore()
-      .collection("group")
-      .doc("grp3")
-      .get()
-      .then(doc => {
-        setLeft(doc.data().members);
+      .auth()
+      .currentUser.getIdToken()
+      .then(token => {
+        axios
+          .get(`/group/${groupId}/members`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(res => setLeft(res.data.data))
+          .catch(e => setMemberListError(e.response.data.error))
+          .finally(() => setMemberListLoading(false));
       });
+    // firebase
+    //   .firestore()
+    //   .collection("group")
+    //   .doc("grp3")
+    //   .get()
+    //   .then(doc => {
+    //     setLeft(doc.data().members);
+    //   });
   }, []);
 
   const handleToggle = value => () => {
@@ -57,7 +84,7 @@ const AddNotif = () => {
 
     setChecked(newChecked);
   };
-  const numberOfChecked = members => intersection(checked, members).length; // members가 어디 정의된 건지 모름;;;;;
+  const numberOfChecked = members => intersection(checked, members).length; // members가 뭐야;;;;;
 
   const handleToggleAll = members => () => {
     if (numberOfChecked(members) === members.length) {
@@ -91,11 +118,12 @@ const AddNotif = () => {
       />
       <Divider />
       <List className={classes.list} dense component="div" role="list">
+        {memberListLoading && <CircularProgress />}
         {members.map(value => {
-          const labelId = `transfer-list-all-item-${value}-label`;
+          const labelId = `transfer-list-all-item-${value.displayName}-label`;
           return (
             <ListItem
-              key={value}
+              key={value.displayName}
               role="listitem"
               button
               onClick={handleToggle(value)}
@@ -110,7 +138,9 @@ const AddNotif = () => {
               </ListItemIcon>
               <ListItemText
                 id={labelId}
-                primary={`${value}` /* value=collection users에 있는 USERID */}
+                primary={
+                  `${value.displayName}` /* value=collection users에 있는 USERID */
+                }
               />
             </ListItem>
           );
@@ -120,14 +150,28 @@ const AddNotif = () => {
     </Card>
   );
   useEffect(() => {
+    setGroupListError("");
     firebase
-      .firestore()
-      .collection("group")
-      .doc("grp3")
-      .get()
-      .then(doc => {
-        setGroupname(doc.data().name);
+      .auth()
+      .currentUser.getIdToken()
+      .then(token => {
+        axios
+          .get(`/group/${groupId}/groups`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(res => setGroupname(res.data.data))
+          .catch(e => setGroupListError(e.response.data.error));
       });
+    // firebase
+    //   .firestore()
+    //   .collection("group")
+    //   .doc("grp3")
+    //   .get()
+    //   .then(doc => {
+    //     setGroupname(doc.data().name);
+    //   });
   }, []);
   return (
     <div>
@@ -174,8 +218,10 @@ const AddNotif = () => {
               placeholder="공지 설명을 입력해주세요"
               multiline
               variant="outlined"
-              value={notif.content}
-              onChange={e => setNotif({ ...notif, content: e.target.value })}
+              value={notif.description}
+              onChange={e =>
+                setNotif({ ...notif, description: e.target.value })
+              }
               rows={4}
             />
           </div>
@@ -185,6 +231,7 @@ const AddNotif = () => {
             <NotificationsActiveIcon /> 알림
           </h1>
           <FormLabel component="legend">알림 보내고 싶은 회원</FormLabel>
+          {memberListError && <div>{memberListError}</div>}
           <Grid
             container
             spacing={2}
@@ -198,20 +245,28 @@ const AddNotif = () => {
             </Grid>
           </Grid>
           <FormLabel component="legend">알림 방식</FormLabel>
-          <NotificationsTwoToneIcon /> <MailTwoToneIcon />
+          <NotificationsTwoToneIcon onClicked={() => {}} />{" "}
+          <MailTwoToneIcon onClicked={() => {}} />
           <br />
           <Button
             variant="outlined"
             color="secondary"
-            onClick={() => {
-              console.log(checked);
-              //   firebase
-              //     .firestore()
-              //     .collection("notif")
-              //     .add({
-              //       ...notif,
-              //     });
-              // }}
+            onClick={async () => {
+              const token = await firebase.auth().currentUser.getIdToken();
+              console.log(token);
+              axios.post(
+                "/group/englishgroup/add/announce",
+                {
+                  announceName: notif.name,
+                  description: notif.description,
+                  checked: checked.map(item => item.uid),
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
             }}
           >
             저장

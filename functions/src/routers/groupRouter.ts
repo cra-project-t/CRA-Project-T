@@ -74,11 +74,7 @@ groupRouter.post("/add", async (req, res) => {
 
   const existingDoc = await admin
     .firestore()
-<<<<<<< HEAD
-    .collection("group")
-=======
     .collection("groups")
->>>>>>> origin/jungsub/function-get-group-members
     .doc(englishName.toLowerCase())
     .get();
   if (existingDoc.data()) {
@@ -94,11 +90,7 @@ groupRouter.post("/add", async (req, res) => {
   // 해당 유저의 정보에 groups 항목에 해당 그룹을 추가한다.
   admin
     .firestore()
-<<<<<<< HEAD
-    .collection("group")
-=======
     .collection("groups")
->>>>>>> origin/jungsub/function-get-group-members
     .doc(groupID)
     .set({
       name: name,
@@ -120,7 +112,6 @@ groupRouter.post("/add", async (req, res) => {
           });
         return res.send("Success");
       } catch (e) {
-<<<<<<< HEAD
         admin.firestore().collection("group").doc(groupID).delete();
         return res.status(500).json(e);
       }
@@ -132,70 +123,51 @@ groupRouter.post("/add", async (req, res) => {
   return;
 });
 
-groupRouter.post("/add/announce", async (req, res) => {
-  const { announceID, announceName, description } = req.body;
+groupRouter.post("/:groupId/add/announce", async (req, res) => {
+  const groupId = req.params.groupId.toLowerCase();
+  const {
+    announceName,
+    description,
+    wayofannounce = "email",
+    checked,
+  } = req.body;
   const { uid } = req.decodedToken;
   // 유효성 #1 - 해당 필드들이 존재하여야함.
-  if (!announceID || !announceName || !description) {
+  if (!announceName || !description || !wayofannounce) {
     return res.status(221).json({
       status: 221,
       error: "필수 필드중 하나가 존재하지 않음.",
     });
   }
-
-  // 유효성 #2 - announceID에 space가 있으면 안된다. 소문자 변환
-  if (announceID.includes(" ")) {
-    return res.status(221).json({
-      status: 221,
-      error: "announceID에 space가 존재함",
-    });
-  }
-
-  const existingDoc = await admin
-    .firestore()
-    .collection("notif")
-    .doc(announceID.toLowerCase())
-    .get();
-  if (existingDoc.data()) {
-    // 해당 announceID을 가진 데이터가 존재함
-    return res.status(409).json({
-      status: 409,
-      error: "존재하는 항목임",
-    });
-  }
-
-  const annID = announceID.trim().toLowerCase();
+  // 유효성 #추가??
   // TODO: memberCount 및 members 정의 후에 해당 요청이 문제가 없을경우
   // 해당 유저의 정보에 notifs 항목에 해당 그룹을 추가한다.
-  admin
-    .firestore()
-    .collection("notif")
-    .doc(annID)
-    .set({
-      announceName: announceName,
-      description: description,
-      owners: [uid],
-      members: [uid],
-    })
-    .then(async () => {
-      //문제가 없음
-      try {
-        await admin
-          .firestore()
-          .collection("notif")
-          .doc(uid)
-          .update({
-            notifs: admin.firestore.FieldValue.arrayUnion(annID),
-          });
-        return res.send("Success");
-      } catch (e) {
-        admin.firestore().collection("notif").doc(annID).delete();
-=======
-        admin.firestore().collection("groups").doc(groupID).delete();
->>>>>>> origin/jungsub/function-get-group-members
-        return res.status(500).json(e);
-      }
-    });
+  try {
+    const groupdata = (
+      await admin.firestore().collection("groups").doc(groupId).get()
+    ).data();
+    if (!groupdata) {
+      return res.sendStatus(404);
+    }
+    if (!(groupdata.owners && groupdata.owners.includes(uid))) {
+      return res.sendStatus(403);
+    }
+    await admin
+      .firestore()
+      .collection("groups")
+      .doc(groupId)
+      .collection("announcements")
+      .add({
+        announceName,
+        description,
+        wayofannounce,
+        checked,
+      });
+    res.sendStatus(200);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ status: 500, error: "Server error" });
+  }
 
   // if(!memberCount){
   // admin.firestore().collection("users").doc(uid).set({...createdDocument, group: name});
