@@ -3,63 +3,63 @@ import { useState } from 'react';
 const FindTime = () => {
   const data = [
     {
-      week: "월",
+      week: "MON",
       startTime: 60,
       endTime: 80
     },
     {
-      week: "월",
+      week: "MON",
       startTime: 150,
       endTime: 300
     },
     {
-      week: "월",
+      week: "MON",
       startTime: 50,
       endTime: 220
     },
     {
-      week: "월",
+      week: "MON",
       startTime: 300,
       endTime: 350
     },
     {
-      week: "화",
+      week: "TUE",
       startTime: 300,
       endTime: 350
     },
     {
-      week: "월",
+      week: "MON",
       startTime: 400,
       endTime: 500
     },
   ];
 
   const [Time] = useState({
-    월 : {
+    MON : {
       start : [],
       end : []
     },
-    화 : {
+    TUE : {
       start : [],
       end : []
     },
-    수 : {
+    WED : {
       start : [],
       end : []
     },
-    목 : {
+    THU : {
       start : [],
       end : []
     },
-    금 : {
+    FRI : {
       start : [],
       end : []
     },
-    토 : {
+    SAT : {
       start : [],
       end : []
     },
-    일 : {
+    SUN : {
       start : [],
       end : []
     }
@@ -78,10 +78,10 @@ const FindTime = () => {
       mergeTime(Time[element.week], 0);
     });
     // console.log(data);
-    Time.월.start.push(1440);
-    Time.월.end.unshift(0);
-    for(let i = 0 ; i < Time.월.start.length ; i++){
-      console.log(Time.월.end[i], Time.월.start[i]);
+    Time.MON.start.push(1440);
+    Time.MON.end.unshift(0);
+    for(let i = 0 ; i < Time.MON.start.length ; i++){
+      console.log(Time.MON.end[i], Time.MON.start[i]);
     }
     console.log(Time);
   }
