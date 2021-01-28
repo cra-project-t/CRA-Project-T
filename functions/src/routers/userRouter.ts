@@ -171,4 +171,113 @@ userRouter.post("/request", async (req, res) => {
   }
 });
 
-userRouter.post("/request/approve", (req, res) => {});
+userRouter.post("/request/approve", async (req, res) => {
+  const { uid } = req.decodedToken;
+  const { from } = req.body;
+
+  if (!from)
+    return res.status(406).json({
+      status: 406,
+      error: "필수 필드중 하나가 존재하지 않음.",
+    });
+
+  // 유저 프로필에 진짜 요청이 있는지 확인
+  const userData = (
+    await admin.firestore().collection("users").doc(uid).get()
+  ).data();
+  if (!userData)
+    return res
+      .status(404)
+      .json({ status: 404, error: "NO REQUESTED USER FOUND" });
+
+  // 해당 유저가 요청을 안받았을경우
+  const userIncoming = userData.friends?.incoming?.find(
+    (data: FriendUser) => data.from === from
+  );
+  if (!userIncoming)
+    return res
+      .status(400)
+      .json({ status: 400, error: "User didn't receieved invitation" });
+
+  const fromData = (
+    await admin.firestore().collection("users").doc(from).get()
+  ).data();
+  if (!fromData)
+    return res.status(404).json({ status: 404, error: "NO FROM USER FOUND" });
+
+  // To 유저가 해당 유저에게 이미 친구 요청을 보냈는 경우.
+  const fromPending = fromData.friends?.pending?.find(
+    (data: ToFriendUser) => data.to === uid
+  );
+  if (!fromPending)
+    return res
+      .status(400)
+      .json({ status: 400, error: "User didn't sended the request" });
+
+  // 이미 친구인경우
+  if (userData.friends?.active?.find((data: Friend) => data._id === from))
+    return res.status(400).json({ status: 400, error: "Already Friend" });
+
+  // 친구작업
+  const since = admin.firestore.Timestamp.fromDate(new Date());
+  try {
+    const fromNickname =
+      fromData.nickname || (await admin.auth().getUser(from)).displayName;
+    const userNickname =
+      userData.nickname || (await admin.auth().getUser(uid)).displayName;
+    // 받는 사람에게 추가
+    console.log("userIncoming", userIncoming);
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .update({
+        "friends.incoming": admin.firestore.FieldValue.arrayRemove(
+          userIncoming
+        ),
+        "friends.active": admin.firestore.FieldValue.arrayUnion(<Friend>{
+          _id: from,
+          nickname: fromNickname,
+          since,
+        }),
+        notifications: admin.firestore.FieldValue.arrayUnion({
+          message: `${fromNickname} 님과 친구가 되셨습니다.`,
+          created: since,
+          type: "friendConfirm",
+          from,
+        }),
+      });
+
+    // 보내는 사람에게 추가
+    console.log("fromPending", fromPending);
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(from)
+      .update({
+        "friends.pending": admin.firestore.FieldValue.arrayRemove(fromPending),
+        "friends.active": admin.firestore.FieldValue.arrayUnion(<Friend>{
+          _id: uid,
+          nickname: userNickname,
+          since,
+        }),
+        notifications: admin.firestore.FieldValue.arrayUnion({
+          message: `${userNickname} 님과 친구가 되셨습니다.`,
+          created: since,
+          type: "friendConfirm",
+          from,
+        }),
+      });
+
+    // Success
+    return res.json({
+      from,
+      to: uid,
+    });
+  } catch (e) {
+    // 실패했을때 삭제
+    console.error("Error While Accept Friend Request");
+    console.error(e);
+    res.status(500).json({ err: e });
+  }
+});
