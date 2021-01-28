@@ -1,22 +1,21 @@
-import React from "react";
+import React, { useContext } from "react";
 import firebase from "firebase";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { Button } from "@material-ui/core";
 import SearchFriends from "../SearchFriends";
+import { userStore } from "../../stores/userStore";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -95,6 +94,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
+
+  const { state: userDataStore } = useContext(userStore);
+
+  // Notification
+  const [notificationEl, setNotificationEl] = React.useState(null);
+  const isNotificationOpen = Boolean(notificationEl);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -176,6 +182,9 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
+  const notificationCount =
+    (userDataStore.notifications && userDataStore.notifications.length) || 0;
+
   return (
     <div className={classes.grow}>
       <AppBar position="static">
@@ -208,11 +217,31 @@ export default function PrimarySearchAppBar() {
                 <MailIcon />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <>
+              <IconButton
+                aria-label={`show ${notificationCount} new notifications`}
+                color="inherit"
+                onClick={(event) => setNotificationEl(event.currentTarget)}
+              >
+                <Badge badgeContent={notificationCount} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <Menu
+                id="simple-menu"
+                anchorEl={notificationEl}
+                keepMounted
+                open={isNotificationOpen}
+                onClose={() => setNotificationEl(null)}
+              >
+                {userDataStore.notifications &&
+                  userDataStore.notifications.map((notification) => (
+                    <MenuItem key={notification.created.seconds}>
+                      {notification.message}
+                    </MenuItem>
+                  ))}
+              </Menu>
+            </>
             <IconButton
               edge="end"
               aria-label="account of current user"

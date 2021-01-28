@@ -110,9 +110,11 @@ userRouter.post("/request", async (req, res) => {
           from,
           requestDate,
         }),
-        notification: admin.firestore.FieldValue.arrayUnion({
+        notifications: admin.firestore.FieldValue.arrayUnion({
           message: `${name}님에게서 친구 요청을 받으셨습니다.`,
           created: requestDate,
+          type: "friendRequest",
+          from,
         }),
       });
 
