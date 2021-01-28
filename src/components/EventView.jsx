@@ -7,7 +7,6 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 
-
 const EventView = ({ props, setopenEvent }) => {
   const handleClose = () => {
     setopenEvent(false);
@@ -38,4 +37,4 @@ const EventView = ({ props, setopenEvent }) => {
   );
 }
 
-export default EventView
+export default EventView;
