@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import HisnetLogin from "./components/HisnetLogin";
 import AddGroup from "./components/AddGroup";
 import SearchGroup from "./components/SearchGroup";
+import AddNotif from "./components/AddNotif";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
 import ExamplePage from "./pages/ExamplePage";
@@ -15,6 +16,7 @@ import { userStore } from "./stores/userStore";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
+  auth && auth.getIdToken().then(token => console.log(token));
 
   // Auth Use Context
   const { dispatch } = useContext(userStore);
@@ -54,7 +56,7 @@ const AuthOkay = ({ children }) => {
 // Heading CSS Setting
 
 const drawerWidth = 240;
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   // root: {
   //   display: 'flex',
   // },
@@ -84,7 +86,7 @@ const App = () => {
       <AuthOkay>
         <Router>
           <Route
-            render={(props) => (
+            render={props => (
               <Heading {...props} drawerWidth={drawerWidth} classes={classes} />
             )}
           />
@@ -96,6 +98,7 @@ const App = () => {
             <Route path="/example" exact component={ExamplePage} />
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
+            <Route path="/addnotif" exact component={AddNotif} />
           </Switch>
         </Router>
       </AuthOkay>

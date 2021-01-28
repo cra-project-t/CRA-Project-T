@@ -4,6 +4,7 @@ import * as express from "express";
 // Middleware to check auth
 export const checkAuth: express.RequestHandler = (req, res, next) => {
   const token = req.headers.authorization?.split("Bearer ")[1];
+  console.log(token);
   if (!token) return res.sendStatus(401);
 
   return admin

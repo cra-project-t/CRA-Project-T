@@ -112,10 +112,62 @@ groupRouter.post("/add", async (req, res) => {
           });
         return res.send("Success");
       } catch (e) {
-        admin.firestore().collection("groups").doc(groupID).delete();
+        admin.firestore().collection("group").doc(groupID).delete();
         return res.status(500).json(e);
       }
     });
+
+  // if(!memberCount){
+  // admin.firestore().collection("users").doc(uid).set({...createdDocument, group: name});
+  // }
+  return;
+});
+
+groupRouter.post("/:groupId/add/announce", async (req, res) => {
+  const groupId = req.params.groupId.toLowerCase();
+  const {
+    announceName,
+    description,
+    wayofannounce = "email",
+    checked,
+  } = req.body;
+  const { uid } = req.decodedToken;
+  // 유효성 #1 - 해당 필드들이 존재하여야함.
+  if (!announceName || !description || !wayofannounce) {
+    return res.status(221).json({
+      status: 221,
+      error: "필수 필드중 하나가 존재하지 않음.",
+    });
+  }
+  // 유효성 #추가??
+  // TODO: memberCount 및 members 정의 후에 해당 요청이 문제가 없을경우
+  // 해당 유저의 정보에 notifs 항목에 해당 그룹을 추가한다.
+  try {
+    const groupdata = (
+      await admin.firestore().collection("groups").doc(groupId).get()
+    ).data();
+    if (!groupdata) {
+      return res.sendStatus(404);
+    }
+    if (!(groupdata.owners && groupdata.owners.includes(uid))) {
+      return res.sendStatus(403);
+    }
+    await admin
+      .firestore()
+      .collection("groups")
+      .doc(groupId)
+      .collection("announcements")
+      .add({
+        announceName,
+        description,
+        wayofannounce,
+        checked,
+      });
+    res.sendStatus(200);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ status: 500, error: "Server error" });
+  }
 
   // if(!memberCount){
   // admin.firestore().collection("users").doc(uid).set({...createdDocument, group: name});
