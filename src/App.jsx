@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CssBaseline, makeStyles } from "@material-ui/core";
 import Login from "./pages/Login";
 import HomePage from "./pages/HomePage";
-import AddPlan from "./components/AddPlan";
 import HisnetLogin from "./components/HisnetLogin";
 import AddGroup from "./components/AddGroup";
 import SearchGroup from "./components/SearchGroup";
@@ -59,7 +58,6 @@ const App = () => {
           />
           <Switch>
             <Route path="/" exact component={HomePage} />
-            <Route path="/addplan" exact component={AddPlan} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />

@@ -18,12 +18,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function HomeAddActionIcon() {
+export default function HomeAddActionIcon({ setOpenNewEvent }) {
   const classes = useStyles();
 
   return ReactDOM.createPortal(
     <div className={classes.root}>
-      <Fab color="primary" aria-label="add">
+      <Fab
+        color="primary"
+        aria-label="add"
+        onClick={() => setOpenNewEvent(true)}
+      >
         <AddIcon />
       </Fab>
     </div>,

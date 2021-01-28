@@ -1,15 +1,16 @@
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { Button, Container, Grid, makeStyles, Paper } from "@material-ui/core";
+import { Grid, makeStyles, Paper } from "@material-ui/core";
 import firebase from "firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
-import React from "react";
+import React, { useState } from "react";
 import HomeAddActionIcon from "../components/HomeAddActionIcon";
 import HomeAnnouncements from "../components/HomeAnnouncements";
 import HomeFriends from "../components/HomeFriends";
 import HomeSchoolInfo from "../components/HomeSchoolInfo";
 import QuickView from "../components/QuickView";
 import "../tools/weekNumber";
+import AddEvent from "../components/AddEvent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 const HomePage = () => {
   const classes = useStyles();
+  const [openNewEvent, setOpenNewEvent] = useState(false);
   const [events, loading] = useCollection(
     firebase
       .firestore()
@@ -48,7 +50,8 @@ const HomePage = () => {
   events && console.log(events.docs);
   return (
     <Paper square elevation={1}>
-      <HomeAddActionIcon />
+      {openNewEvent && <AddEvent setOpenNewEvent={setOpenNewEvent} />}
+      <HomeAddActionIcon setOpenNewEvent={setOpenNewEvent} />
       <Grid className={classes.root} container spacing={2}>
         <Grid item sm={6} xs={12}>
           <div className={classes.paper}>
@@ -79,7 +82,6 @@ const HomePage = () => {
               }}
               events={
                 events.docs.map((doc) => {
-                  console.log(doc.data().startTime.toDate());
                   return {
                     title: doc.data().eventName,
                     start: doc.data().startTime.toDate(),
