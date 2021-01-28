@@ -32,15 +32,8 @@ const AddNotif = () => {
   });
 
   const [checked, setChecked] = React.useState([]);
-  //
-  //   const db = firebase.firestore();
-  //   return db.collection('posts').onSnapshot((snapshot) => {
-  //     const postData = [];
-  //     snapshot.forEach((doc) => postData.push({ ...doc.data(), id: doc.id }));
-  //     setPosts(postData);
-  //   });
-  //
   const [left, setLeft] = React.useState([]);
+  const [groupname, setGroupname] = React.useState([]);
   console.log(left);
   useEffect(() => {
     firebase
@@ -130,6 +123,17 @@ const AddNotif = () => {
       </List>
     </Card>
   );
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("group")
+      .doc("grp3")
+      .get()
+      .then(doc => {
+        console.log(doc.data().name);
+        setGroupname(doc.data().name);
+      });
+  }, []);
   return (
     <div>
       <Grid container item justify="center">
@@ -150,9 +154,9 @@ const AddNotif = () => {
                 }}
               >
                 <option aria-label="None" value="" />
-                {/* <option value={"club"}>동아리</option>
-                <option value={"association"}>학회</option>
-                <option value={"others"}>기타</option> */}
+                <option value={"groupname"}>{groupname}</option>
+                {/* <option value={"club"}>동아리</option>               
+                <option value={"others"}>기타</option> 배열로 참고하기 */}
               </NativeSelect>
               <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
             </FormControl>
