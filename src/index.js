@@ -10,6 +10,9 @@ import App from "./App";
 import firebaseConfig from "./config/firebaseConfig";
 import { uriList } from "./uriList.js";
 
+// Stores Setup
+import { UserStateProvider } from "./stores/userStore";
+
 // Axios Setup
 axios.defaults.baseURL = uriList.app;
 
@@ -36,7 +39,9 @@ const theme = createMuiTheme({
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <App />
+      <UserStateProvider>
+        <App />
+      </UserStateProvider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")

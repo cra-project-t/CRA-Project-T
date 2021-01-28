@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import firebase from "firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -10,9 +10,40 @@ import AddGroup from "./components/AddGroup";
 import SearchGroup from "./components/SearchGroup";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
+import ExamplePage from "./pages/ExamplePage";
+import { userStore } from "./stores/userStore";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
+
+  // Auth Use Context
+  const { dispatch } = useContext(userStore);
+  useEffect(() => {
+    if (!auth || loading) {
+      console.log("loading");
+      dispatch({
+        type: "update",
+        payload: {
+          loading: true,
+        },
+      });
+      return;
+    }
+    const unsub = firebase
+      .firestore()
+      .collection("users")
+      .doc(auth.uid)
+      .onSnapshot((docSnapshot) => {
+        console.log("Snapshot Triggered");
+        dispatch({
+          type: "update",
+          payload: { loading: false, ...docSnapshot.data() },
+        });
+      });
+    return () => unsub();
+  }, [dispatch, auth, loading]);
+
+  // auth && auth.getIdToken().then((token) => console.log(token));
 
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
@@ -62,6 +93,7 @@ const App = () => {
             {/* Test Routes */}
             <Route path="/sf" exact component={SearchFriends} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
+            <Route path="/example" exact component={ExamplePage} />
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
           </Switch>
