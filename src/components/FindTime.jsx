@@ -35,7 +35,6 @@ const FindTime = () => {
   ];
 
   const [Time] = useState({
-<<<<<<< HEAD
     MON : {
       start : [],
       end : []
@@ -64,36 +63,6 @@ const FindTime = () => {
       start : [],
       end : []
     }
-=======
-    월: {
-      start: [],
-      end: [],
-    },
-    화: {
-      start: [],
-      end: [],
-    },
-    수: {
-      start: [],
-      end: [],
-    },
-    목: {
-      start: [],
-      end: [],
-    },
-    금: {
-      start: [],
-      end: [],
-    },
-    토: {
-      start: [],
-      end: [],
-    },
-    일: {
-      start: [],
-      end: [],
-    },
->>>>>>> cadd88fab013248e0944a8c3b1f88d3431e373ff
   });
 
   return <div>{findTime()}</div>;
@@ -105,17 +74,10 @@ const FindTime = () => {
       mergeTime(Time[element.week], 0);
     });
     // console.log(data);
-<<<<<<< HEAD
     Time.MON.start.push(1440);
     Time.MON.end.unshift(0);
     for(let i = 0 ; i < Time.MON.start.length ; i++){
       console.log(Time.MON.end[i], Time.MON.start[i]);
-=======
-    Time.월.start.push(1440);
-    Time.월.end.unshift(0);
-    for (let i = 0; i < Time.월.start.length; i++) {
-      console.log(Time.월.end[i], Time.월.start[i]);
->>>>>>> cadd88fab013248e0944a8c3b1f88d3431e373ff
     }
     console.log(Time);
   }
