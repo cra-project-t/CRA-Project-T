@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import Card from "@material-ui/core/Card";
@@ -31,12 +31,29 @@ const AddNotif = () => {
     content: "", //보내고 싶은 회원, 알림 방식추가하기
   });
 
-  //const [notiffile, setNotiffile] = useState("");
   const [checked, setChecked] = React.useState([]);
-  const [left] = React.useState([0, 1, 2, 3]);
-  const [right] = React.useState([4, 5, 6, 7]);
-
-  //const leftChecked = intersection(checked, left);
+  //
+  //   const db = firebase.firestore();
+  //   return db.collection('posts').onSnapshot((snapshot) => {
+  //     const postData = [];
+  //     snapshot.forEach((doc) => postData.push({ ...doc.data(), id: doc.id }));
+  //     setPosts(postData);
+  //   });
+  //
+  const [left, setLeft] = React.useState([]);
+  console.log(left);
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("group")
+      .doc("grp3")
+      .get()
+      .then(doc => {
+        console.log(doc.data().members);
+        setLeft(doc.data().members);
+      });
+  }, []);
+  const leftChecked = intersection(checked, left);
   //const rightChecked = intersection(checked, right);
 
   const handleToggle = value => () => {
@@ -51,40 +68,41 @@ const AddNotif = () => {
 
     setChecked(newChecked);
   };
-  const numberOfChecked = items => intersection(checked, items).length;
+  const numberOfChecked = members => intersection(checked, members).length; // members가 어디 정의된 건지 모름;;;;;
 
-  const handleToggleAll = items => () => {
-    if (numberOfChecked(items) === items.length) {
-      setChecked(not(checked, items));
+  const handleToggleAll = members => () => {
+    if (numberOfChecked(members) === members.length) {
+      setChecked(not(checked, members));
     } else {
-      setChecked(union(checked, items));
+      setChecked(union(checked, members));
     }
   };
 
-  const customList = (title, items) => (
+  const customList = (title, members) => (
     <Card>
       <CardHeader
         className={classes.cardHeader}
         avatar={
           <Checkbox
-            onClick={handleToggleAll(items)}
+            onClick={handleToggleAll(members)}
             checked={
-              numberOfChecked(items) === items.length && items.length !== 0
+              numberOfChecked(members) === members.length &&
+              members.length !== 0
             }
             indeterminate={
-              numberOfChecked(items) !== items.length &&
-              numberOfChecked(items) !== 0
+              numberOfChecked(members) !== members.length &&
+              numberOfChecked(members) !== 0
             }
-            disabled={items.length === 0}
-            inputProps={{ "aria-label": "all items selected" }}
+            disabled={members.length === 0}
+            inputProps={{ "aria-label": "all members selected" }}
           />
         }
         title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
+        subheader={`${numberOfChecked(members)}/${members.length} selected`}
       />
       <Divider />
       <List className={classes.list} dense component="div" role="list">
-        {items.map(value => {
+        {members.map(value => {
           const labelId = `transfer-list-all-item-${value}-label`;
           return (
             <ListItem
@@ -101,7 +119,10 @@ const AddNotif = () => {
                   inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+              <ListItemText
+                id={labelId}
+                primary={`${value}` /* value=collection users에 있는 USERID */}
+              />
             </ListItem>
           );
         })}
@@ -109,7 +130,6 @@ const AddNotif = () => {
       </List>
     </Card>
   );
-
   return (
     <div>
       <Grid container item justify="center">
@@ -118,21 +138,6 @@ const AddNotif = () => {
             공지 추가
             <NotificationsIcon />
           </h1>
-          {firebase
-            .firestore()
-            .collection("users")
-            .doc(currentUserId)
-            .get()
-            .then(querySnapshot => {
-              querySnapshot.forEach(item => {
-                var itemVal = item.val();
-                item.push(itemVal);
-              });
-              for (let i = 0; i < item.length; i++) {
-                counts.push(item[i].wordcount);
-                console.log(item);
-              }
-            })}
           <div>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="notifgroup">GROUP TYPE</InputLabel>
@@ -145,9 +150,9 @@ const AddNotif = () => {
                 }}
               >
                 <option aria-label="None" value="" />
-                <option value={"club"}>동아리</option>
+                {/* <option value={"club"}>동아리</option>
                 <option value={"association"}>학회</option>
-                <option value={"others"}>기타</option>
+                <option value={"others"}>기타</option> */}
               </NativeSelect>
               <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
             </FormControl>
@@ -181,19 +186,6 @@ const AddNotif = () => {
             <NotificationsActiveIcon /> 알림
           </h1>
           <FormLabel component="legend">알림 보내고 싶은 회원</FormLabel>
-          {firebase
-            .firestore()
-            .collection("users")
-            .get()
-            .then(querySnapshot => {
-              querySnapshot.forEach(item => {
-                var itemVal = item.val();
-                keys.push(itemVal);
-              });
-              for (let i = 0; i < item.length; i++) {
-                counts.push(item[i].wordcount);
-              }
-            })}
           <Grid
             container
             spacing={2}
@@ -213,12 +205,14 @@ const AddNotif = () => {
             variant="outlined"
             color="secondary"
             onClick={() => {
-              firebase
-                .firestore()
-                .collection("notif")
-                .add({
-                  ...notif,
-                });
+              console.log(checked);
+              //   firebase
+              //     .firestore()
+              //     .collection("notif")
+              //     .add({
+              //       ...notif,
+              //     });
+              // }}
             }}
           >
             저장
