@@ -7,35 +7,26 @@ import {
   DialogTitle,
 } from "@material-ui/core";
 
-
 const EventView = ({ props, setopenEvent }) => {
   const handleClose = () => {
     setopenEvent(false);
   };
   console.log(props);
-    return (
+  return (
     <Dialog open fullWidth onClose={handleClose}>
       <DialogTitle>
         <EventIcon />
         {props.title}
       </DialogTitle>
-      <DialogContent>
-        {props.start.toString()}
-      </DialogContent>
-      {(!props.allday)? 
-        <DialogContent>
-          {props.start.toString()}
-        </DialogContent>
-        :
-        <DialogContent>
-          {props.end.toString()}
-        </DialogContent>
-      }
-      <DialogContent>
-        {props.extendedProps.comments}
-      </DialogContent>
+      <DialogContent>{props.start.toString()}</DialogContent>
+      {!props.allday ? (
+        <DialogContent>{props.start.toString()}</DialogContent>
+      ) : (
+        <DialogContent>{props.end.toString()}</DialogContent>
+      )}
+      <DialogContent>{props.extendedProps.comments}</DialogContent>
     </Dialog>
-    );
-}
+  );
+};
 
-export default EventView
+export default EventView;

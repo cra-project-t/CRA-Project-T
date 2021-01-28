@@ -53,7 +53,7 @@ const HomePage = () => {
   return (
     <Paper square elevation={1}>
       {openNewEvent && <AddEvent setOpenNewEvent={setOpenNewEvent} />}
-      {(openEvent)&& <EventView props={openEvent} setopenEvent={setopenEvent} />}
+      {openEvent && <EventView props={openEvent} setopenEvent={setopenEvent} />}
       <HomeAddActionIcon setOpenNewEvent={setOpenNewEvent} />
       <Grid className={classes.root} container spacing={2}>
         <Grid item sm={6} xs={12}>
@@ -101,8 +101,8 @@ const HomePage = () => {
                 //   },
                 // ]
               }
-              eventClick = {(e) => {
-                setopenEvent(e.event)
+              eventClick={(e) => {
+                setopenEvent(e.event);
                 // console.log(e.event)
               }}
               // onClick={() => {<EventView props="g" />}}
