@@ -16,6 +16,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { Button } from "@material-ui/core";
+import SearchFriends from "../SearchFriends";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -197,7 +198,7 @@ export default function PrimarySearchAppBar() {
               <Button>전체일정</Button>
               <Button>일정추가</Button>
               <Button>시간 맞추기</Button>
-              <Button>친구추가</Button>
+              <SearchFriends button={<Button>친구추가</Button>} />
             </div>
           </div>
           <div className={classes.grow} />
