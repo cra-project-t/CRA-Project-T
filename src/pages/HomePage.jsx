@@ -11,6 +11,7 @@ import HomeSchoolInfo from "../components/HomeSchoolInfo";
 import QuickView from "../components/QuickView";
 import "../tools/weekNumber";
 import AddEvent from "../components/AddEvent";
+import EventView from "../components/EventView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [openNewEvent, setOpenNewEvent] = useState(false);
+  const [openEvent, setopenEvent] = useState(false);
   const [events, loading] = useCollection(
     firebase
       .firestore()
@@ -51,6 +53,7 @@ const HomePage = () => {
   return (
     <Paper square elevation={1}>
       {openNewEvent && <AddEvent setOpenNewEvent={setOpenNewEvent} />}
+      {openEvent && <EventView props={openEvent} setopenEvent={setopenEvent} />}
       <HomeAddActionIcon setOpenNewEvent={setOpenNewEvent} />
       <Grid className={classes.root} container spacing={2}>
         <Grid item sm={6} xs={12}>
@@ -87,6 +90,7 @@ const HomePage = () => {
                     start: doc.data().startTime.toDate(),
                     end: doc.data().endTime.toDate(),
                     allDay: doc.data().allDay,
+                    comments: doc.data().eventDescription,
                   };
                 })
                 //   [
@@ -97,6 +101,12 @@ const HomePage = () => {
                 //   },
                 // ]
               }
+              eventClick={(e) => {
+                setopenEvent(e.event);
+                // console.log(e.event)
+              }}
+              // onClick={() => {<EventView props="g" />}}
+              // onclick={<EventView props="g" />}
               // eventSources={[
               //   {
               //     events: {
