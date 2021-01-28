@@ -45,7 +45,7 @@ const EventView = ({ props, setopenEvent }) => {
       </div>
     </Dialog>
   );
-}
+};
 
 export default EventView;
 
