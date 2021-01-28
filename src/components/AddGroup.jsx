@@ -14,8 +14,8 @@ import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 const AddGroup = () => {
   const [groupname, setGroupname] = useState("");
-  const [groupcategory, setGroupcategory] = useState("");
-  const [groupcontent, setGroupcontent] = useState("");
+  const [grouptype, setGrouptype] = useState("");
+  const [groupdesc, setGroupdesc] = useState("");
   const [groupmembernumber, setGroupmembernumber] = useState("");
   const handleSliderChange = (e, newValue) => {
     setGroupmembernumber(newValue);
@@ -53,13 +53,13 @@ const AddGroup = () => {
             />
           </div>
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="groupcategory">GROUP 카테고리</InputLabel>
+            <InputLabel htmlFor="grouptype">GROUP TYPE</InputLabel>
             <NativeSelect
-              value={groupcategory}
-              onChange={e => setGroupcategory(e.target.value)}
+              value={grouptype}
+              onChange={e => setGrouptype(e.target.value)}
               inputProps={{
                 name: "age",
-                id: "groupcategory",
+                id: "grouptype",
               }}
             >
               <option aria-label="None" value="" />
@@ -67,7 +67,7 @@ const AddGroup = () => {
               <option value={"association"}>학회</option>
               <option value={"others"}>기타</option>
             </NativeSelect>
-            <FormHelperText>GROUP 카테고리를 선택해주세요</FormHelperText>
+            <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
           </FormControl>
           <Typography id="input-slider" gutterBottom>
             GROUP 인원 수
@@ -109,8 +109,8 @@ const AddGroup = () => {
               placeholder="GROUP 설명을 입력해주세요"
               multiline
               variant="outlined"
-              value={groupcontent}
-              onChange={e => setGroupcontent(e.target.value)}
+              value={groupdesc}
+              onChange={e => setGroupdesc(e.target.value)}
               rows={4}
             />
           </div>
