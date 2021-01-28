@@ -16,6 +16,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import { Button } from "@material-ui/core";
 import SearchFriends from "../SearchFriends";
 import { userStore } from "../../stores/userStore";
+import Notifications from "./Notifications";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -227,20 +228,20 @@ export default function PrimarySearchAppBar() {
                   <NotificationsIcon />
                 </Badge>
               </IconButton>
-              <Menu
+              {/* <Menu
                 id="simple-menu"
                 anchorEl={notificationEl}
                 keepMounted
                 open={isNotificationOpen}
                 onClose={() => setNotificationEl(null)}
-              >
-                {userDataStore.notifications &&
-                  userDataStore.notifications.map((notification) => (
-                    <MenuItem key={notification.created.seconds}>
-                      {notification.message}
-                    </MenuItem>
-                  ))}
-              </Menu>
+              /> */}
+              <Notifications
+                anchorEl={notificationEl}
+                keepMounted
+                open={isNotificationOpen}
+                onClose={() => setNotificationEl(null)}
+                userDataStore={userDataStore}
+              />
             </>
             <IconButton
               edge="end"
