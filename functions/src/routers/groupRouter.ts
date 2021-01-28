@@ -31,6 +31,7 @@ groupRouter.get("/:groupId/members", async (req, res) => {
     const { displayName, photoURL } = await admin.auth().getUser(memberID);
     console.log(displayName);
     return {
+      uid: memberID,
       displayName,
       photoURL,
     };
