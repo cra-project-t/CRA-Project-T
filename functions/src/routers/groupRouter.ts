@@ -8,6 +8,41 @@ groupRouter.get("/", async (req, res) => {
   return res.json(decodedToken);
 });
 
+groupRouter.get("/:groupId/members", async (req, res) => {
+  const uid = req.decodedToken.uid;
+  const groupId = req.params.groupId.toLowerCase();
+
+  // 데이터베이스에서 해당 그룹 정보 가져오기
+  const groupData = (
+    await admin.firestore().collection("groups").doc(groupId).get()
+  ).data();
+
+  console.log(uid, groupData);
+
+  // DB 에서 해당 데이터를 찾을 수 없는경우.
+  if (!groupData)
+    return res.status(404).json({ status: 404, error: "NOT FOUND" });
+
+  // 해당 그룹에 멤버 정보가 있는지 확인
+  if (!(groupData.members && groupData.members.includes(uid)))
+    return res.status(403).json({ status: 403, error: "FORBIDDEN", uid });
+
+  const dataPromise = groupData.members.map(async (memberID: string) => {
+    const { displayName, photoURL } = await admin.auth().getUser(memberID);
+    console.log(displayName);
+    return {
+      displayName,
+      photoURL,
+    };
+  });
+
+  // 유저 정보 데이터 반환
+  return res.json({
+    status: "200",
+    data: await Promise.all(dataPromise),
+  });
+});
+
 // POST /group/add
 groupRouter.post("/add", async (req, res) => {
   const { englishName, name, type, description, memberCount } = req.body;
