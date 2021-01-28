@@ -13,7 +13,7 @@ const EventView = ({ props, setopenEvent }) => {
     setopenEvent(false);
   };
   console.log(props);
-    return (
+  return (
     <Dialog open fullWidth onClose={handleClose}>
       <DialogTitle>
         <EventIcon />
@@ -22,9 +22,9 @@ const EventView = ({ props, setopenEvent }) => {
       <DialogContent>
         {props.start.toString()}
       </DialogContent>
-      {(!props.allday)? 
+      {(!props.allday) ?
         <DialogContent>
-          {props.start.toString()}
+          {props.start.toString().substring(0, 8) + (props.start.getDate() + 1) + props.start.toString().substring(10)}
         </DialogContent>
         :
         <DialogContent>
@@ -35,7 +35,7 @@ const EventView = ({ props, setopenEvent }) => {
         {props.extendedProps.comments}
       </DialogContent>
     </Dialog>
-    );
+  );
 }
 
 export default EventView
