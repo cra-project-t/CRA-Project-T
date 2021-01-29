@@ -1,10 +1,6 @@
 import EventIcon from "@material-ui/icons/Event";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from "@material-ui/core";
+import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
 
 const EventView = ({ props, setopenEvent }) => {
   const handleClose = () => {
@@ -20,27 +16,23 @@ const EventView = ({ props, setopenEvent }) => {
       </DialogTitle>
       <div className={classes.root}>
         <DialogContent>
-          <p>
-            {props.start.toString()}
-          </p>
+          <p>{props.start.toString()}</p>
         </DialogContent>
         {props.allDay ?
           (<DialogContent>
             <p>
-              {props.start.toString().substring(0, 8) + (props.start.getDate() + 1) + props.start.toString().substring(10)}
+              {props.start.toString().substring(0, 8) +
+                (props.start.getDate() + 1) +
+                props.start.toString().substring(10)}
             </p>
-          </DialogContent>)
-          :
-          (<DialogContent>
-            <p>
-              {props.end.toString()}
-            </p>
-          </DialogContent>)
-        }
+          </DialogContent>
+          ) : (
+            <DialogContent>
+              <p>{props.end.toString()}</p>
+            </DialogContent>
+          )}
         <DialogContent>
-          <p>
-            {props.extendedProps.comments}
-          </p>
+          <p>{props.extendedProps.comments}</p>
         </DialogContent>
       </div>
     </Dialog>
@@ -49,11 +41,10 @@ const EventView = ({ props, setopenEvent }) => {
 
 export default EventView;
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     margin: theme.spacing(1),
-    fontSize: '20px',
+    fontSize: "20px",
   },
 }));
