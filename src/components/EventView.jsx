@@ -18,7 +18,7 @@ const EventView = ({ props, setopenEvent }) => {
         <DialogContent>
           <p>{props.start.toString()}</p>
         </DialogContent>
-        {!props.allday ? (
+        {props.allDay ? (
           <DialogContent>
             <p>
               {props.start.toString().substring(0, 8) +
