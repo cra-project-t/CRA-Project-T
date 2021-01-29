@@ -18,19 +18,19 @@ const EventView = ({ props, setopenEvent }) => {
         <DialogContent>
           <p>{props.start.toString()}</p>
         </DialogContent>
-        {props.allDay ?
-          (<DialogContent>
+        {props.allDay ? (
+          <DialogContent>
             <p>
               {props.start.toString().substring(0, 8) +
                 (props.start.getDate() + 1) +
                 props.start.toString().substring(10)}
             </p>
           </DialogContent>
-          ) : (
-            <DialogContent>
-              <p>{props.end.toString()}</p>
-            </DialogContent>
-          )}
+        ) : (
+          <DialogContent>
+            <p>{props.end.toString()}</p>
+          </DialogContent>
+        )}
         <DialogContent>
           <p>{props.extendedProps.comments}</p>
         </DialogContent>
