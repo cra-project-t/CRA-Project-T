@@ -8,6 +8,7 @@ const Notifications = ({
   onClose,
   userDataStore,
 }) => {
+  console.log(userDataStore.notifications);
   return (
     <Menu
       id="simple-menu"
@@ -18,7 +19,10 @@ const Notifications = ({
     >
       {userDataStore.notifications &&
         userDataStore.notifications.map((notification) => (
-          <FriendRequest notification={notification} />
+          <FriendRequest
+            notification={notification}
+            key={notification.created.seconds}
+          />
         ))}
     </Menu>
   );
