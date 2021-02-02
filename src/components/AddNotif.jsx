@@ -31,15 +31,11 @@ const userId = "C62F1D8OsnZtSzFhZMR8EPusrYm1";
 const AddNotif = () => {
   const classes = useStyles();
   const { state: userDataStore } = useContext(userStore);
-  console.log(userDataStore);
-  const currentUserId = "uid1"; // 이후 uid7을 이용해 추가확인
-  const today = new Date().toLocaleString();
   const [notif, setNotif] = useState({
     group: "",
     name: "",
     description: "", //보내고 싶은 회원, 알림 방식추가하기
     wayofannounce: "email",
-    today: today,
   });
 
   const [checked, setChecked] = React.useState([]);
@@ -49,17 +45,6 @@ const AddNotif = () => {
   const [memberListError, setMemberListError] = useState("");
   const [memberListLoading, setMemberListLoading] = useState(false);
   const [userGroupError, setUserGroupError] = useState("");
-
-  // function getCurrentDate(separator = "-") {
-  //   let newDate = new Date();
-  //   let date = newDate.getDate();
-  //   let month = newDate.getMonth() + 1;
-  //   let year = newDate.getFullYear();
-
-  //   return `${year}${separator}${
-  //     month < 10 ? `0${month}` : `${month}`
-  //   }${separator}${date}`;
-  // }
 
   // Group의 members정보 받아오기
   useEffect(() => {
@@ -80,33 +65,7 @@ const AddNotif = () => {
           .catch(e => setMemberListError(e.response.data.error))
           .finally(() => setMemberListLoading(false));
       });
-    // firebase
-    //   .firestore()
-    //   .collection("group")
-    //   .doc("grp3")
-    //   .get()
-    //   .then(doc => {
-    //     setLeft(doc.data().members);
-    //   });
   }, []);
-  // // User의 Group 정보 받아오기
-  // useEffect(() => {
-  //   firebase
-  //     .auth()
-  //     .currentUser.getIdToken()
-  //     .then(token => {
-  //       axios
-  //         .get(`/group/${userId}/groups`, {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         })
-  //         .then(res => setRight(res.data.data))
-  //         .catch(e => setUserGroupError(e.response.data.error));
-  //     }); //여기서 그룹받아와서 seslet option에 넣어야하느ㄴ데
-  //   // console.log(right);
-  //   // console.log(userGroupError);
-  // }, []);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -185,30 +144,7 @@ const AddNotif = () => {
       </List>
     </Card>
   );
-  // useEffect(() => {
-  //   setGroupListError("");
-  //   firebase
-  //     .auth()
-  //     .currentUser.getIdToken()
-  //     .then(token => {
-  //       axios
-  //         .get(`/group/${groupId}/groups`, {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         })
-  //         .then(res => setGroupname(res.data.data))
-  //         .catch(e => setGroupListError(e.response.data.error));
-  //     });
-  //   // firebase
-  //   //   .firestore()
-  //   //   .collection("group")
-  //   //   .doc("grp3")
-  //   //   .get()
-  //   //   .then(doc => {
-  //   //     setGroupname(doc.data().name);
-  //   //   });
-  // }, []);
+
   return (
     <div>
       <Grid container item justify="center">
@@ -216,11 +152,6 @@ const AddNotif = () => {
           <h1>
             공지 추가
             <NotificationsIcon />
-            {/*
-              console.log(
-                notif.today
-              ) -> 이거 공지사항 글 쓸때마다 render됨. 돈 펑펑펑
-             */}
           </h1>
           <div>
             <FormControl className={classes.formControl}>
@@ -295,7 +226,6 @@ const AddNotif = () => {
             color="secondary"
             onClick={async () => {
               const token = await firebase.auth().currentUser.getIdToken();
-              //console.log(token);
               axios.post(
                 "/group/englishgroup/add/announce",
                 {
@@ -310,7 +240,6 @@ const AddNotif = () => {
                   },
                 }
               );
-              //console.log(checked);
               setNotif({
                 group: "",
                 name: "",
