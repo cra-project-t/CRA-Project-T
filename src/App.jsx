@@ -18,7 +18,7 @@ const AuthOkay = ({ children }) => {
   auth && auth.getIdToken().then(token => console.log(token));
 
   // Auth Use Context
-  const { dispatch } = useContext(userStore);
+  const { dispatch, state } = useContext(userStore);
   useEffect(() => {
     if (!auth || loading) {
       console.log("loading");
@@ -48,6 +48,8 @@ const AuthOkay = ({ children }) => {
 
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
+  if (state.loading)
+    return <div className="loading">User Data is Loading from Database</div>;
   if (!auth) return <Login />;
   return children;
 };
