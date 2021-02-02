@@ -119,9 +119,6 @@ groupRouter.post("/add", async (req, res) => {
       }
     });
 
-  // if(!memberCount){
-  // admin.firestore().collection("users").doc(uid).set({...createdDocument, group: name});
-  // }
   return;
 });
 groupRouter.get("/:userId/groups", async (req, res) => {
@@ -140,13 +137,11 @@ groupRouter.get("/:userId/groups", async (req, res) => {
       return res.status(404).json({ status: 404, error: "USERDATA NOT FOUND" });
 
     // 해당 유저 그룹에 그룹 정보가 있는지 확인
-    if (!userData.groups)
-      return res.status(200).json({ status: 200, [] })
 
     // 유저의 그룹 정보 데이터 반환
     return res.json({
       status: "200",
-      data: userData.groups, // Group ID
+      data: userData.groups || [], // Group ID
     });
   } catch (e) {
     console.error(e);
@@ -161,23 +156,22 @@ groupRouter.post("/:groupId/add/announce", async (req, res) => {
     description,
     wayofannounce = "email",
     checked,
-    created = admin.firestore.Timestamp.fromDate(new Date()),
   } = req.body;
   const { uid } = req.decodedToken;
 
   // 유효성 #1 - 해당 필드들이 존재하여야함.
-  if (!announceName || !description || !wayofannounce || !checked || !created) {
+  if (!announceName || !description || !wayofannounce || !checked) {
     return res.status(221).json({
       status: 221,
       error: "필수 필드중 하나가 존재하지 않음.",
     });
   }
   //유효성 #2 wayofannounce가 정의되어 있는 옵션 중 하나인지 확인
-  if(!["email", "notification"].includes(wayofannounce)){
+  if (!["email", "notification"].includes(wayofannounce)) {
     return res.status(221).json({
       status: 221,
       error: "알 수 없는 type",
-    })
+    });
   }
   // TODO: memberCount 및 members 정의 후에 해당 요청이 문제가 없을경우
   // 해당 유저의 정보에 notifs 항목에 해당 그룹을 추가한다.
@@ -191,7 +185,11 @@ groupRouter.post("/:groupId/add/announce", async (req, res) => {
     if (!(groupdata.owners && groupdata.owners.includes(uid))) {
       return res.sendStatus(403);
     }
-    if((checked.filter((member)=>groupdata.members.indexOf(member)===-1))){
+    if (
+      checked.filter(
+        (member: string) => groupdata.members.indexOf(member) === -1
+      )
+    ) {
       return res.sendStatus(400);
     }
     await admin
@@ -204,7 +202,7 @@ groupRouter.post("/:groupId/add/announce", async (req, res) => {
         description,
         wayofannounce,
         checked,
-        created,
+        created: admin.firestore.Timestamp.fromDate(new Date()),
       });
     res.sendStatus(200);
   } catch (e) {
