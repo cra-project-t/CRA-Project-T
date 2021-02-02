@@ -10,7 +10,6 @@ import AddGroup from "./components/AddGroup";
 import SearchGroup from "./components/SearchGroup";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
-import ExamplePage from "./pages/ExamplePage";
 import { userStore } from "./stores/userStore";
 
 const AuthOkay = ({ children }) => {
@@ -93,7 +92,6 @@ const App = () => {
             {/* Test Routes */}
             <Route path="/sf" exact component={SearchFriends} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
-            <Route path="/example" exact component={ExamplePage} />
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
           </Switch>
