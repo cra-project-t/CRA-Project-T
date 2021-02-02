@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import firebase from "firebase";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -10,6 +10,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Badge, Checkbox, ListItemSecondaryAction } from "@material-ui/core";
+import { userStore } from "../stores/userStore";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -54,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 export default function HomeFriends() {
   const classes = useStyles();
   const [user] = useAuthState(firebase.auth());
+  const { state: userDataStore } = useContext(userStore);
   const [shareStatus, setShareStatus] = useState(false);
 
   return (
@@ -84,7 +86,42 @@ export default function HomeFriends() {
           />
         </ListItemSecondaryAction>
       </ListItem>
-      <ListItem alignItems="flex-start">
+      {userDataStore.friends && userDataStore.friends.active ? (
+        userDataStore.friends.active.map((friend, index) => (
+          <React.Fragment key={friend._id}>
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar
+                  alt={friend.nickname}
+                  src="/static/images/avatar/1.jpg"
+                />
+              </ListItemAvatar>
+              <ListItemText
+                primary={friend.nickname}
+                secondary={
+                  <React.Fragment>
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classes.inline}
+                      color="textPrimary"
+                    >
+                      경제학 입문
+                    </Typography>
+                    {" — 2교시 10:00-11:15"}
+                  </React.Fragment>
+                }
+              />
+            </ListItem>
+            {userDataStore.friends.active.list < index && (
+              <Divider variant="inset" component="li" />
+            )}
+          </React.Fragment>
+        ))
+      ) : (
+        <p>친구가 없어요</p>
+      )}
+      {/* <ListItem alignItems="flex-start">
         <ListItemAvatar>
           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
         </ListItemAvatar>
@@ -148,7 +185,7 @@ export default function HomeFriends() {
             </React.Fragment>
           }
         />
-      </ListItem>
+      </ListItem> */}
     </List>
   );
 }

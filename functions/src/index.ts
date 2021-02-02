@@ -5,6 +5,7 @@ import * as cors from "cors";
 import { config } from "./config";
 import { groupRouter } from "./routers/groupRouter";
 import { checkAuth } from "./middlewares/checkAuth";
+import { userRouter } from "./routers/userRouter";
 
 const app = express();
 
@@ -20,6 +21,7 @@ admin.initializeApp({});
 // app.use("/worktime", checkAuth, workTimeRouter);
 
 app.use("/group", checkAuth, groupRouter);
+app.use("/user", checkAuth, userRouter);
 
 app.use("/", (req, res) => {
   res.send("Hello World!!");
