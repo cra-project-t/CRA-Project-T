@@ -67,17 +67,18 @@ const AddNotif = () => {
     firebase
       .auth()
       .currentUser.getIdToken()
-      .then((token) => {
+      .then(token => {
         axios
           .get(`/group/${groupId}/members`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           })
-          .then((res) => setLeft(res.data.data))
-          .catch((e) => setMemberListError(e.response.data.error))
+          .then(res => setLeft(res.data.data))
+          .catch(e => setMemberListError(e.response.data.error))
           .finally(() => setMemberListLoading(false));
       });
+    console.log(left);
     // firebase
     //   .firestore()
     //   .collection("group")
@@ -88,7 +89,6 @@ const AddNotif = () => {
     //   });
   }, []);
 
-<<<<<<< HEAD
   // User의 Group 정보 받아오기
   useEffect(() => {
     firebase
@@ -109,9 +109,6 @@ const AddNotif = () => {
   }, []);
 
   const handleToggle = value => () => {
-=======
-  const handleToggle = (value) => () => {
->>>>>>> 5013148943dce7e42c76c0923144ad63af5fa4a3
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -123,9 +120,9 @@ const AddNotif = () => {
 
     setChecked(newChecked);
   };
-  const numberOfChecked = (members) => intersection(checked, members).length; // members가 뭐야;;;;;
+  const numberOfChecked = members => intersection(checked, members).length; // members가 뭐야;;;;;
 
-  const handleToggleAll = (members) => () => {
+  const handleToggleAll = members => () => {
     if (numberOfChecked(members) === members.length) {
       setChecked(not(checked, members));
     } else {
@@ -158,7 +155,7 @@ const AddNotif = () => {
       <Divider />
       <List className={classes.list} dense component="div" role="list">
         {memberListLoading && <CircularProgress />}
-        {members.map((value) => {
+        {members.map(value => {
           const labelId = `transfer-list-all-item-${value.displayName}-label`;
           return (
             <ListItem
@@ -188,7 +185,6 @@ const AddNotif = () => {
       </List>
     </Card>
   );
-<<<<<<< HEAD
   // useEffect(() => {
   //   setGroupListError("");
   //   firebase
@@ -213,32 +209,6 @@ const AddNotif = () => {
   //   //     setGroupname(doc.data().name);
   //   //   });
   // }, []);
-=======
-  useEffect(() => {
-    setGroupListError("");
-    firebase
-      .auth()
-      .currentUser.getIdToken()
-      .then((token) => {
-        axios
-          .get(`/group/${groupId}/groups`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((res) => setGroupname(res.data.data))
-          .catch((e) => setGroupListError(e.response.data.error));
-      });
-    // firebase
-    //   .firestore()
-    //   .collection("group")
-    //   .doc("grp3")
-    //   .get()
-    //   .then(doc => {
-    //     setGroupname(doc.data().name);
-    //   });
-  }, []);
->>>>>>> 5013148943dce7e42c76c0923144ad63af5fa4a3
   return (
     <div>
       <Grid container item justify="center">
@@ -257,7 +227,7 @@ const AddNotif = () => {
               <InputLabel htmlFor="notifgroup">GROUP TYPE</InputLabel>
               <NativeSelect
                 value={notif.group}
-                onChange={(e) => setNotif({ ...notif, group: e.target.value })}
+                onChange={e => setNotif({ ...notif, group: e.target.value })}
                 inputProps={{
                   name: "age",
                   id: "notifgroup",
@@ -280,7 +250,7 @@ const AddNotif = () => {
             multiline
             variant="outlined"
             value={notif.name}
-            onChange={(e) => setNotif({ ...notif, name: e.target.value })}
+            onChange={e => setNotif({ ...notif, name: e.target.value })}
             rows={1}
           />
           <div>
@@ -292,7 +262,7 @@ const AddNotif = () => {
               multiline
               variant="outlined"
               value={notif.description}
-              onChange={(e) =>
+              onChange={e =>
                 setNotif({ ...notif, description: e.target.value })
               }
               rows={4}
@@ -331,12 +301,8 @@ const AddNotif = () => {
                 {
                   announceName: notif.name,
                   description: notif.description,
-<<<<<<< HEAD
                   checked: checked.map(item => item.uid),
                   today: notif.today,
-=======
-                  checked: checked.map((item) => item.uid),
->>>>>>> 5013148943dce7e42c76c0923144ad63af5fa4a3
                 },
                 {
                   headers: {
@@ -364,7 +330,7 @@ const AddNotif = () => {
 
 export default AddNotif;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -400,11 +366,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function not(a, b) {
-  return a.filter((value) => b.indexOf(value) === -1);
+  return a.filter(value => b.indexOf(value) === -1);
 }
 
 function intersection(a, b) {
-  return a.filter((value) => b.indexOf(value) !== -1);
+  return a.filter(value => b.indexOf(value) !== -1);
 }
 
 function union(a, b) {
