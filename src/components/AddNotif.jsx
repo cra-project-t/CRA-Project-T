@@ -26,7 +26,6 @@ import { CircularProgress } from "@material-ui/core";
 import { userStore } from "../stores/userStore";
 
 const groupId = "englishGroup";
-const userId = "C62F1D8OsnZtSzFhZMR8EPusrYm1";
 
 const AddNotif = () => {
   const classes = useStyles();
@@ -40,11 +39,9 @@ const AddNotif = () => {
 
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
-  const [groupname, setGroupname] = React.useState([]);
 
   const [memberListError, setMemberListError] = useState("");
   const [memberListLoading, setMemberListLoading] = useState(false);
-  const [userGroupError, setUserGroupError] = useState("");
 
   // Group의 members정보 받아오기
   useEffect(() => {
