@@ -42,7 +42,11 @@ const AuthOkay = ({ children }) => {
     return () => unsub();
   }, [dispatch, auth, loading]);
 
-  auth && auth.getIdToken(false).then((token) => console.log(token));
+  // Log Access Token
+  useEffect(
+    () => auth && auth.getIdToken(false).then((token) => console.log(token)),
+    [auth]
+  );
 
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
