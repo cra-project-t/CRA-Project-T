@@ -234,7 +234,9 @@ const AddNotif = () => {
               >
                 <option aria-label="None" value="" />
                 {right.map(group => (
-                  <option value={"groupname"}>{group}</option>
+                  <React.Fragment key={group}>
+                    <option value={"groupname"}>{group}</option>
+                  </React.Fragment>
                 ))}
               </NativeSelect>
               <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
