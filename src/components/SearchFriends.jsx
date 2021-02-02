@@ -16,11 +16,10 @@ import {
   ListItemText,
   makeStyles,
   TextField,
-  Typography,
 } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import firebase from "firebase";
 import { Alert, AlertTitle } from "@material-ui/lab";

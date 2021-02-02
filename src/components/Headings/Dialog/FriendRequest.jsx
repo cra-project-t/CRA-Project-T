@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import firebase from "firebase";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { Alert, AlertTitle } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FriendRequest = ({ notification }) => {
+const FriendRequest = ({ notification }, ref) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [sendResult, setSendResult] = useState({});
@@ -96,4 +96,4 @@ const FriendRequest = ({ notification }) => {
   );
 };
 
-export default FriendRequest;
+export default forwardRef(FriendRequest);
