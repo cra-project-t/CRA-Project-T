@@ -7,10 +7,13 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
+import { userStore } from "../stores/userStore";
+
 const HomeClubNotif = () => {
   const classes = useStyles();
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
+  const { state: userDataStore } = useContext(userStore);
 
   return (
     <div className={classes.root}>
@@ -41,10 +44,12 @@ const HomeClubNotif = () => {
               {generate(
                 <ListItem>
                   <ListItemText
-                    primary="[CRA] 3차 시연회 공지"
-                    // primary={
-                    //   `${value.displayName}` /* value=collection users에 있는 USERID */
-                    // }
+                    primary={userDataStore.groups.map(group => (
+                        if()
+                        <React.Fragment key={group}>
+                          <option value={"groupname"}>{group}</option>
+                        </React.Fragment>
+                      ))}
                     secondary={secondary ? "2021-02-09" : null}
                   />
                 </ListItem>
