@@ -25,25 +25,41 @@ import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
 
 const groupId = "englishGroup";
+const userId = "C62F1D8OsnZtSzFhZMR8EPusrYm1";
 
 const AddNotif = () => {
   const classes = useStyles();
   const currentUserId = "uid1"; // 이후 uid7을 이용해 추가확인
+  const today = new Date().toLocaleString();
   const [notif, setNotif] = useState({
     group: "",
     name: "",
     description: "", //보내고 싶은 회원, 알림 방식추가하기
     wayofannounce: "email",
+    today: today,
   });
 
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
+  const [right, setRight] = React.useState([]);
   const [groupname, setGroupname] = React.useState([]);
 
   const [memberListError, setMemberListError] = useState("");
   const [memberListLoading, setMemberListLoading] = useState(false);
-  const [GroupListError, setGroupListError] = useState("");
+  const [userGroupError, setUserGroupError] = useState("");
 
+  // function getCurrentDate(separator = "-") {
+  //   let newDate = new Date();
+  //   let date = newDate.getDate();
+  //   let month = newDate.getMonth() + 1;
+  //   let year = newDate.getFullYear();
+
+  //   return `${year}${separator}${
+  //     month < 10 ? `0${month}` : `${month}`
+  //   }${separator}${date}`;
+  // }
+
+  // Group의 members정보 받아오기
   useEffect(() => {
     setMemberListError("");
     setMemberListLoading(true);
@@ -70,6 +86,25 @@ const AddNotif = () => {
     //   .then(doc => {
     //     setLeft(doc.data().members);
     //   });
+  }, []);
+
+  // User의 Group 정보 받아오기
+  useEffect(() => {
+    firebase
+      .auth()
+      .currentUser.getIdToken()
+      .then(token => {
+        axios
+          .get(`/group/${userId}/groups`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then(res => setRight(res.data.data))
+          .catch(e => setUserGroupError(e.response.data.error));
+      }); //여기서 그룹받아와서 seslet option에 넣어야하느ㄴ데
+    // console.log(right);
+    // console.log(userGroupError);
   }, []);
 
   const handleToggle = value => () => {
@@ -149,30 +184,30 @@ const AddNotif = () => {
       </List>
     </Card>
   );
-  useEffect(() => {
-    setGroupListError("");
-    firebase
-      .auth()
-      .currentUser.getIdToken()
-      .then(token => {
-        axios
-          .get(`/group/${groupId}/groups`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(res => setGroupname(res.data.data))
-          .catch(e => setGroupListError(e.response.data.error));
-      });
-    // firebase
-    //   .firestore()
-    //   .collection("group")
-    //   .doc("grp3")
-    //   .get()
-    //   .then(doc => {
-    //     setGroupname(doc.data().name);
-    //   });
-  }, []);
+  // useEffect(() => {
+  //   setGroupListError("");
+  //   firebase
+  //     .auth()
+  //     .currentUser.getIdToken()
+  //     .then(token => {
+  //       axios
+  //         .get(`/group/${groupId}/groups`, {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         })
+  //         .then(res => setGroupname(res.data.data))
+  //         .catch(e => setGroupListError(e.response.data.error));
+  //     });
+  //   // firebase
+  //   //   .firestore()
+  //   //   .collection("group")
+  //   //   .doc("grp3")
+  //   //   .get()
+  //   //   .then(doc => {
+  //   //     setGroupname(doc.data().name);
+  //   //   });
+  // }, []);
   return (
     <div>
       <Grid container item justify="center">
@@ -180,6 +215,11 @@ const AddNotif = () => {
           <h1>
             공지 추가
             <NotificationsIcon />
+            {/*
+              console.log(
+                notif.today
+              ) -> 이거 공지사항 글 쓸때마다 render됨. 돈 펑펑펑
+             */}
           </h1>
           <div>
             <FormControl className={classes.formControl}>
@@ -193,9 +233,9 @@ const AddNotif = () => {
                 }}
               >
                 <option aria-label="None" value="" />
-                <option value={"groupname"}>{groupname}</option>
-                {/* <option value={"club"}>동아리</option>               
-                <option value={"others"}>기타</option> 배열로 참고하기 */}
+                {right.map(group => (
+                  <option value={"groupname"}>{group}</option>
+                ))}
               </NativeSelect>
               <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
             </FormControl>
@@ -259,6 +299,7 @@ const AddNotif = () => {
                   announceName: notif.name,
                   description: notif.description,
                   checked: checked.map(item => item.uid),
+                  today: notif.today,
                 },
                 {
                   headers: {

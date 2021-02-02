@@ -7,6 +7,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import ShowClubNotif from "./ShowClubNotif";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -41,7 +42,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     // width: 500,
@@ -60,7 +61,7 @@ export default function HomeAnnouncements() {
     setValue(newValue);
   };
 
-  const handleChangeIndex = (index) => {
+  const handleChangeIndex = index => {
     setValue(index);
   };
 
@@ -89,7 +90,7 @@ export default function HomeAnnouncements() {
           학교 공지
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
-          동아리 공지
+          <ShowClubNotif />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           학회 공지

@@ -21,11 +21,13 @@ groupRouter.get("/:groupId/members", async (req, res) => {
 
   // DB 에서 해당 데이터를 찾을 수 없는경우.
   if (!groupData)
-    return res.status(404).json({ status: 404, error: "NOT FOUND" });
+    return res.status(404).json({ status: 404, error: "GROUPDATA NOT FOUND" });
 
   // 해당 그룹에 멤버 정보가 있는지 확인
   if (!(groupData.members && groupData.members.includes(uid)))
-    return res.status(403).json({ status: 403, error: "FORBIDDEN", uid });
+    return res
+      .status(403)
+      .json({ status: 403, error: "GROUPMEMBER FORBIDDEN", uid });
 
   const dataPromise = groupData.members.map(async (memberID: string) => {
     const { displayName, photoURL } = await admin.auth().getUser(memberID);
@@ -122,6 +124,37 @@ groupRouter.post("/add", async (req, res) => {
   // }
   return;
 });
+groupRouter.get("/:userId/groups", async (req, res) => {
+  const uid = req.decodedToken.uid;
+
+  try {
+    // 데이터베이스에서 해당 유저의 정보 가져오기
+    const userData = (
+      await admin.firestore().collection("users").doc(uid).get()
+    ).data();
+
+    // console.log(uid, userData);
+
+    // DB 에서 해당 데이터를 찾을 수 없는경우.
+    if (!userData)
+      return res.status(404).json({ status: 404, error: "USERDATA NOT FOUND" });
+
+    // 해당 유저 그룹에 그룹 정보가 있는지 확인
+    if (!userData.group)
+      return res
+        .status(403)
+        .json({ status: 403, error: "USERGROUP FORBIDDEN", uid });
+
+    // 유저의 그룹 정보 데이터 반환
+    return res.json({
+      status: "200",
+      data: userData.group, // Group ID
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ status: 500, error: "Server error", e });
+  }
+});
 
 groupRouter.post("/:groupId/add/announce", async (req, res) => {
   const groupId = req.params.groupId.toLowerCase();
@@ -130,10 +163,12 @@ groupRouter.post("/:groupId/add/announce", async (req, res) => {
     description,
     wayofannounce = "email",
     checked,
+    today,
   } = req.body;
   const { uid } = req.decodedToken;
+
   // 유효성 #1 - 해당 필드들이 존재하여야함.
-  if (!announceName || !description || !wayofannounce) {
+  if (!announceName || !description || !wayofannounce || !checked || !today) {
     return res.status(221).json({
       status: 221,
       error: "필수 필드중 하나가 존재하지 않음.",
@@ -162,6 +197,7 @@ groupRouter.post("/:groupId/add/announce", async (req, res) => {
         description,
         wayofannounce,
         checked,
+        today,
       });
     res.sendStatus(200);
   } catch (e) {
