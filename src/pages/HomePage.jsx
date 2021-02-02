@@ -44,8 +44,8 @@ const HomePage = () => {
       snapshotListenOptions: { includeMetadataChanges: true },
     }
   );
-  if (loading || !events) {
-    return <div>Loading</div>;
+  if (!events) {
+    return <div>Events Loading</div>;
   }
   events && console.log(events.docs);
   return (
