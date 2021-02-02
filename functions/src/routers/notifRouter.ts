@@ -14,7 +14,7 @@ notifRouter.get("/:groupId/add/announce", async (req, res) => {
 
   try {
     // 데이터베이스에서 해당 그룹의 공지사항 정보 가져오기
-    const announceData = (
+    const announceData: any = (
       await admin
         .firestore()
         .collection("groups")
@@ -23,9 +23,7 @@ notifRouter.get("/:groupId/add/announce", async (req, res) => {
         .orderBy("created")
         .limit(5)
         .get()
-    ).data();
-
-    // console.log(uid, announceData);
+    ).docs;
 
     // DB 에서 해당 데이터를 찾을 수 없는경우.
     if (!announceData)
@@ -34,10 +32,8 @@ notifRouter.get("/:groupId/add/announce", async (req, res) => {
         .json({ status: 404, error: "announceDATA NOT FOUND" });
 
     // 해당 유저 그룹에 그룹 정보가 있는지 확인
-    if (!announceData.group)
-      return res
-        .status(403)
-        .json({ status: 403, error: "announceGROUP FORBIDDEN", uid });
+    if (!announceData.announceName)
+      return res.status(403).json({ status: 403, error: "FORBIDDEN", uid });
 
     // 유저의 그룹 정보 데이터 반환
     return res.json({
