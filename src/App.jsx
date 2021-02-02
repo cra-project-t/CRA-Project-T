@@ -15,8 +15,9 @@ import { userStore } from "./stores/userStore";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
-  auth && auth.getIdToken().then(token => console.log(token));
-
+  useEffect(() => {
+    auth && auth.getIdToken().then(token => console.log(token));
+  }, []);
   // Auth Use Context
   const { dispatch, state } = useContext(userStore);
   useEffect(() => {
@@ -34,8 +35,8 @@ const AuthOkay = ({ children }) => {
       .firestore()
       .collection("users")
       .doc(auth.uid)
-      .onSnapshot((docSnapshot) => {
-        console.log("Snapshot Triggered");
+      .onSnapshot(docSnapshot => {
+        //console.log("Snapshot Triggered");
         dispatch({
           type: "update",
           payload: { loading: false, ...docSnapshot.data() },
@@ -43,8 +44,6 @@ const AuthOkay = ({ children }) => {
       });
     return () => unsub();
   }, [dispatch, auth, loading]);
-
-  auth && auth.getIdToken(false).then((token) => console.log(token));
 
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import Card from "@material-ui/core/Card";
@@ -23,12 +23,15 @@ import MailTwoToneIcon from "@material-ui/icons/MailTwoTone";
 import firebase from "firebase";
 import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
+import { userStore } from "../stores/userStore";
 
 const groupId = "englishGroup";
 const userId = "C62F1D8OsnZtSzFhZMR8EPusrYm1";
 
 const AddNotif = () => {
   const classes = useStyles();
+  const { state: userDataStore } = useContext(userStore);
+  console.log(userDataStore);
   const currentUserId = "uid1"; // 이후 uid7을 이용해 추가확인
   const today = new Date().toLocaleString();
   const [notif, setNotif] = useState({
@@ -41,7 +44,6 @@ const AddNotif = () => {
 
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState([]);
-  const [right, setRight] = React.useState([]);
   const [groupname, setGroupname] = React.useState([]);
 
   const [memberListError, setMemberListError] = useState("");
@@ -78,7 +80,6 @@ const AddNotif = () => {
           .catch(e => setMemberListError(e.response.data.error))
           .finally(() => setMemberListLoading(false));
       });
-    console.log(left);
     // firebase
     //   .firestore()
     //   .collection("group")
@@ -88,25 +89,24 @@ const AddNotif = () => {
     //     setLeft(doc.data().members);
     //   });
   }, []);
-
-  // User의 Group 정보 받아오기
-  useEffect(() => {
-    firebase
-      .auth()
-      .currentUser.getIdToken()
-      .then(token => {
-        axios
-          .get(`/group/${userId}/groups`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(res => setRight(res.data.data))
-          .catch(e => setUserGroupError(e.response.data.error));
-      }); //여기서 그룹받아와서 seslet option에 넣어야하느ㄴ데
-    // console.log(right);
-    // console.log(userGroupError);
-  }, []);
+  // // User의 Group 정보 받아오기
+  // useEffect(() => {
+  //   firebase
+  //     .auth()
+  //     .currentUser.getIdToken()
+  //     .then(token => {
+  //       axios
+  //         .get(`/group/${userId}/groups`, {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         })
+  //         .then(res => setRight(res.data.data))
+  //         .catch(e => setUserGroupError(e.response.data.error));
+  //     }); //여기서 그룹받아와서 seslet option에 넣어야하느ㄴ데
+  //   // console.log(right);
+  //   // console.log(userGroupError);
+  // }, []);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -234,7 +234,7 @@ const AddNotif = () => {
                 }}
               >
                 <option aria-label="None" value="" />
-                {right.map(group => (
+                {userDataStore.groups.map(group => (
                   <React.Fragment key={group}>
                     <option value={"groupname"}>{group}</option>
                   </React.Fragment>
