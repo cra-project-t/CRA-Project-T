@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -7,14 +7,47 @@ import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
+import firebase from "firebase";
+import axios from "axios";
 import { userStore } from "../stores/userStore";
 
 const HomeClubNotif = () => {
   const classes = useStyles();
   const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
   const { state: userDataStore } = useContext(userStore);
+  const [notif, setNotif] = React.useState([]);
+  const [notifListError, setNotifListError] = useState("");
+  const [notifListLoading, setNotifListLoading] = useState(false);
+  {
+    useEffect(() => {
+      {
+        setNotifListError("");
+        setNotifListLoading(true);
+        userDataStore.groups.map(group => (
+          <React.Fragment key={group}>
+            {firebase
+              .auth()
+              .currentUser.getIdToken()
+              .then(axios.post(`/group/${group}/add/announce`, { group }))
+              .then(token => {
+                axios.get(`/group/${group}/add/announce`, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+              })
+              .then(res => setNotif(res.data.data))
+              .catch(e => setNotifListError(e.response.data.error))
+              .finally(() => setNotifListLoading(false))}
+          </React.Fragment>
+        ));
+      }
+    }, []);
+  }
 
+  console.log(userDataStore.groups);
+  console.log(notifListError);
+  console.log(notif);
   return (
     <div className={classes.root}>
       <FormGroup row>
@@ -27,15 +60,6 @@ const HomeClubNotif = () => {
           }
           label="Enable dense"
         />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={secondary}
-              onChange={event => setSecondary(event.target.checked)}
-            />
-          }
-          label="Enable secondary text"
-        />
       </FormGroup>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
@@ -43,15 +67,13 @@ const HomeClubNotif = () => {
             <List dense={dense}>
               {generate(
                 <ListItem>
-                  <ListItemText
-                    primary={userDataStore.groups.map(group => (
-                        if()
-                        <React.Fragment key={group}>
-                          <option value={"groupname"}>{group}</option>
-                        </React.Fragment>
+                  {userDataStore.groups.map(group => (
+                    <React.Fragment key={group}>
+                      {notif.map(announcement => (
+                        <ListItemText primary={announcement} />
                       ))}
-                    secondary={secondary ? "2021-02-09" : null}
-                  />
+                    </React.Fragment>
+                  ))}
                 </ListItem>
               )}
             </List>
