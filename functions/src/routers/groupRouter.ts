@@ -121,6 +121,7 @@ groupRouter.post("/add", async (req, res) => {
 
   return;
 });
+
 groupRouter.get("/:userId/groups", async (req, res) => {
   const uid = req.decodedToken.uid;
 
@@ -185,11 +186,10 @@ groupRouter.post("/:groupId/add/announce", async (req, res) => {
     if (!(groupdata.owners && groupdata.owners.includes(uid))) {
       return res.sendStatus(403);
     }
-    if (
-      checked.filter(
-        (member: string) => groupdata.members.indexOf(member) === -1
-      )
-    ) {
+    const checkArr = checked.filter(
+      (member: string) => groupdata.members.indexOf(member) === -1
+    );
+    if (checkArr.length) {
       return res.sendStatus(400);
     }
     await admin
