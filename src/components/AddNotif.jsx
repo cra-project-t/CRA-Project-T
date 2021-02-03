@@ -185,6 +185,13 @@ const AddNotif = props => {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleChange = e => {
+    const group = e.target.name;
+    setNotif({
+      ...notif,
+      [group]: e.target.value,
+    });
+  };
 
   return (
     <div>
@@ -208,19 +215,17 @@ const AddNotif = props => {
                 <FormControl className={classes.formControl}>
                   <FormLabel component="legend">공지 대상 그룹: </FormLabel>
                   <NativeSelect
+                    onChange={handleChange}
                     value={notif.group}
-                    onChange={e =>
-                      setNotif({ ...notif, group: e.target.value })
-                    }
                     inputProps={{
-                      name: "age",
+                      name: "group",
                       id: "notifgroup",
                     }}
                   >
                     <option aria-label="None" value="" />
                     {userDataStore.groups.map(group => (
                       <React.Fragment key={group}>
-                        <option value={"groupname"}>{group}</option>
+                        <option value={group}>{group}</option>
                       </React.Fragment>
                     ))}
                   </NativeSelect>
