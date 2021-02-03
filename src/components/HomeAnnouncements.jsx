@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Container from "@material-ui/core/Container";
 import SwipeableViews from "react-swipeable-views";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -21,9 +22,12 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
+        <Container>
+          <Box>
+            {/*P TAG REMOVED ←<div> cannot appear as a descendant of <p>*/}
+            <Typography component="span">{children}</Typography>
+          </Box>
+        </Container>
       )}
     </div>
   );
