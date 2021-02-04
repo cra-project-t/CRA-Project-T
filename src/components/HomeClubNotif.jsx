@@ -28,9 +28,9 @@ const HomeClubNotif = () => {
             {firebase
               .auth()
               .currentUser.getIdToken()
-              .then(axios.post(`/group/${group}/add/announce`, { group }))
+              .then(axios.post(`/notif/${group}/show/announce`, { group }))
               .then(token => {
-                axios.get(`/group/${group}/add/announce`, {
+                axios.get(`/notif/${group}/show/announce`, {
                   headers: {
                     Authorization: `Bearer ${token}`,
                   },
