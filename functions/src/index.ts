@@ -6,6 +6,7 @@ import { config } from "./config";
 import { groupRouter } from "./routers/groupRouter";
 import { checkAuth } from "./middlewares/checkAuth";
 import { userRouter } from "./routers/userRouter";
+import { calendarRouter } from "./routers/calendarRouter";
 
 const app = express();
 
@@ -20,6 +21,7 @@ admin.initializeApp({});
 // Work Time Management
 // app.use("/worktime", checkAuth, workTimeRouter);
 
+app.use("/calendar", checkAuth, calendarRouter);
 app.use("/group", checkAuth, groupRouter);
 app.use("/user", checkAuth, userRouter);
 
