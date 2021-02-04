@@ -9,7 +9,7 @@ notifRouter.get("/", async (req, res) => {
   return res.json(decodedToken);
 });
 
-notifRouter.get("/:groupId/add/announce", async (req, res) => {
+notifRouter.get("/:groupId/show/announce", async (req, res) => {
   const uid = req.decodedToken.uid;
   const groupId = req.params.groupId.toLowerCase();
   // const { state: userDataStore } = useContext(userStore); 않이 외않됨
