@@ -17,6 +17,7 @@ import { Button } from "@material-ui/core";
 import SearchFriends from "../SearchFriends";
 import { userStore } from "../../stores/userStore";
 import Notifications from "./Notifications";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -40,6 +41,10 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: "auto",
       marginTop: "auto",
       color: "white",
+    },
+    "& a": {
+      color: "inherit",
+      textDecoration: "inherit",
     },
   },
   // search: {
@@ -208,6 +213,9 @@ export default function PrimarySearchAppBar() {
               <Button>전체일정</Button>
               <Button>일정추가</Button>
               <Button>시간 맞추기</Button>
+              <Button>
+                <Link to="/">Test Menu</Link>
+              </Button>
               <SearchFriends button={<Button>친구추가</Button>} />
             </div>
           </div>
