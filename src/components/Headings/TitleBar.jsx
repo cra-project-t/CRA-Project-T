@@ -20,7 +20,7 @@ import Notifications from "./Notifications";
 import AddNotif from "../AddNotif";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
@@ -114,7 +114,7 @@ export default function PrimarySearchAppBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = event => {
+  const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -127,7 +127,7 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = event => {
+  const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
@@ -231,7 +231,7 @@ export default function PrimarySearchAppBar() {
               <IconButton
                 aria-label={`show ${notificationCount} new notifications`}
                 color="inherit"
-                onClick={event => setNotificationEl(event.currentTarget)}
+                onClick={(event) => setNotificationEl(event.currentTarget)}
               >
                 <Badge badgeContent={notificationCount} color="secondary">
                   <NotificationsIcon />
