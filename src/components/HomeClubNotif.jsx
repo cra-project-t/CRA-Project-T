@@ -19,33 +19,26 @@ const HomeClubNotif = () => {
   const [notifListError, setNotifListError] = useState("");
   const [notifListLoading, setNotifListLoading] = useState(false);
 
-  const group = "englishgoup";
   {
     useEffect(() => {
-      {
-        setNotifListError("");
-        setNotifListLoading(true);
-        //userDataStore.groups.map(group => (
-        //<React.Fragment key={group}>
-        {
-          firebase
-            .auth()
-            .currentUser.getIdToken()
-            //.then(axios.post(`/notif/${group}/show/announce`, { group }))
-            .then((token) => {
-              axios.get(`/notif/${group}/show/announce`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-            })
-            .then((res) => setNotif(res.data.data))
-            .catch((e) => setNotifListError(e.response.data.error))
-            .finally(() => setNotifListLoading(false));
-        }
-        //</React.Fragment>
-        // ));
-      }
+      setNotifListError("");
+      setNotifListLoading(true);
+      userDataStore.groups.map(group => {
+        firebase
+          .auth()
+          .currentUser.getIdToken()
+          //.then(axios.post(`/notif/${group}/show/announce`, { group })) 이러면 안된다고 함
+          .then(token => {
+            axios.get(`/notif/${group}/show/announce`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+          })
+          .then(res => setNotif(res.data && res.data.data))
+          .catch(e => setNotifListError(e.response && e.response.data.error))
+          .finally(() => setNotifListLoading(false));
+      });
     }, []);
   }
 
@@ -59,7 +52,7 @@ const HomeClubNotif = () => {
           control={
             <Checkbox
               checked={dense}
-              onChange={(event) => setDense(event.target.checked)}
+              onChange={event => setDense(event.target.checked)}
             />
           }
           label="Enable dense"
@@ -71,9 +64,9 @@ const HomeClubNotif = () => {
             <List dense={dense}>
               {generate(
                 <ListItem>
-                  {userDataStore.groups.map((group) => (
-                    <React.Fragment key={group}>
-                      {notif.map((data) => (
+                  {userDataStore.groups.map(group => (
+                    <React.Fragment key={group.created}>
+                      {notif.map(data => (
                         <ListItemText
                           primary={(data.announceName, data.created)}
                         />
@@ -92,7 +85,7 @@ const HomeClubNotif = () => {
 
 export default HomeClubNotif;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     maxWidth: 752,
@@ -106,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function generate(element) {
-  return [0, 1, 2].map((value) =>
+  return [0, 1, 2].map(value =>
     React.cloneElement(element, {
       key: value,
     })
