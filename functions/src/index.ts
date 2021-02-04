@@ -6,6 +6,7 @@ import { config } from "./config";
 import { groupRouter } from "./routers/groupRouter";
 import { checkAuth } from "./middlewares/checkAuth";
 import { userRouter } from "./routers/userRouter";
+import { notifRouter } from "./routers/notifRouter";
 
 const app = express();
 
@@ -22,6 +23,7 @@ admin.initializeApp({});
 
 app.use("/group", checkAuth, groupRouter);
 app.use("/user", checkAuth, userRouter);
+app.use("/notif", checkAuth, notifRouter);
 
 app.use("/", (req, res) => {
   res.send("Hello World!!");
