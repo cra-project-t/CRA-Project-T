@@ -73,8 +73,10 @@ const HomeClubNotif = () => {
                 <ListItem>
                   {userDataStore.groups.map(group => (
                     <React.Fragment key={group}>
-                      {notif.map(announcement => (
-                        <ListItemText primary={announcement} />
+                      {notif.map(data => (
+                        <ListItemText
+                          primary={(data.announceName, data.created)}
+                        />
                       ))}
                     </React.Fragment>
                   ))}
