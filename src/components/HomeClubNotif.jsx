@@ -18,29 +18,33 @@ const HomeClubNotif = () => {
   const [notif, setNotif] = React.useState([]);
   const [notifListError, setNotifListError] = useState("");
   const [notifListLoading, setNotifListLoading] = useState(false);
+
+  const group = "englishgoup";
   {
     useEffect(() => {
       {
         setNotifListError("");
         setNotifListLoading(true);
-        userDataStore.groups.map(group => (
-          <React.Fragment key={group}>
-            {firebase
-              .auth()
-              .currentUser.getIdToken()
-              .then(axios.post(`/notif/${group}/show/announce`, { group }))
-              .then(token => {
-                axios.get(`/notif/${group}/show/announce`, {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                });
-              })
-              .then(res => setNotif(res.data.data))
-              .catch(e => setNotifListError(e.response.data.error))
-              .finally(() => setNotifListLoading(false))}
-          </React.Fragment>
-        ));
+        //userDataStore.groups.map(group => (
+        //<React.Fragment key={group}>
+        {
+          firebase
+            .auth()
+            .currentUser.getIdToken()
+            //.then(axios.post(`/notif/${group}/show/announce`, { group }))
+            .then(token => {
+              axios.get(`/notif/${group}/show/announce`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+            })
+            .then(res => setNotif(res.data.data))
+            .catch(e => setNotifListError(e.response.data.error))
+            .finally(() => setNotifListLoading(false));
+        }
+        //</React.Fragment>
+        // ));
       }
     }, []);
   }
