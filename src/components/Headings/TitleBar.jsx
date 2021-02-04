@@ -17,9 +17,8 @@ import { Button } from "@material-ui/core";
 import SearchFriends from "../SearchFriends";
 import { userStore } from "../../stores/userStore";
 import Notifications from "./Notifications";
-import AddNotif from "../AddNotif";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
@@ -109,7 +108,7 @@ export default function PrimarySearchAppBar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = event => {
+  const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -122,7 +121,7 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = event => {
+  const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
@@ -207,8 +206,8 @@ export default function PrimarySearchAppBar() {
               className={classes.menuButtonList} /*className={classes.search}*/
             >
               <Button>전체일정</Button>
+              <Button>일정추가</Button>
               <Button>시간 맞추기</Button>
-              <AddNotif button={<Button>공지추가</Button>} />
               <SearchFriends button={<Button>친구추가</Button>} />
             </div>
           </div>
@@ -223,7 +222,7 @@ export default function PrimarySearchAppBar() {
               <IconButton
                 aria-label={`show ${notificationCount} new notifications`}
                 color="inherit"
-                onClick={event => setNotificationEl(event.currentTarget)}
+                onClick={(event) => setNotificationEl(event.currentTarget)}
               >
                 <Badge badgeContent={notificationCount} color="secondary">
                   <NotificationsIcon />
