@@ -35,7 +35,7 @@ const HomeClubNotif = () => {
               },
             });
           })
-          .then(res => setNotif(res.data && res.data.data))
+          .then(res => setNotif([...notif, res.data.data]))
           .catch(e => setNotifListError(e.response && e.response.data.error))
           .finally(() => setNotifListLoading(false));
       });

@@ -14,6 +14,7 @@ import GroupAddIcon from "@material-ui/icons/GroupAdd";
 
 const AddGroup = () => {
   const [groupname, setGroupname] = useState("");
+  const [groupId, setGroupId] = useState("");
   const [grouptype, setGrouptype] = useState("");
   const [groupdesc, setGroupdesc] = useState("");
   const [groupmembernumber, setGroupmembernumber] = useState("");
@@ -46,10 +47,19 @@ const AddGroup = () => {
           <div>
             <TextField
               id="groupname"
-              label="GROUP 이름"
+              label="GROUP 이름 (한글)"
               variant="outlined"
               value={groupname}
               onChange={e => setGroupname(e.target.value)}
+            />
+          </div>
+          <div>
+            <TextField
+              id="groupname"
+              label="GROUP ID (영어 필수)"
+              variant="outlined"
+              value={groupId}
+              onChange={e => setGroupId(e.target.value)}
             />
           </div>
           <FormControl className={classes.formControl}>
