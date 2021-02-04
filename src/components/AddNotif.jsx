@@ -29,12 +29,10 @@ import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
 import { userStore } from "../stores/userStore";
 
-const groupId = "englishGroup";
-
-const AddNotif = (props) => {
+const AddNotif = props => {
   const classes = useStyles();
   const Button = props.button
-    ? (pr) => ({ ...props.button, props: { ...props.button.props, ...pr } })
+    ? pr => ({ ...props.button, props: { ...props.button.props, ...pr } })
     : () => null;
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState("paper");
@@ -45,7 +43,7 @@ const AddNotif = (props) => {
     description: "", //보내고 싶은 회원, 알림 방식추가하기
     wayofannounce: "email",
   });
-
+  const [groupId, setGroupId] = useState("");
   const [checked, setChecked] = React.useState([]);
   const [memberList, setMemberList] = React.useState([]);
 
@@ -60,21 +58,21 @@ const AddNotif = (props) => {
     firebase
       .auth()
       .currentUser.getIdToken()
-      .then((token) => {
+      .then(token => {
         axios
           .get(`/group/${groupId}/members`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           })
-          .then((res) => setMemberList(res.data.data))
-          .catch((e) => setMemberListError(e.response.data.error))
+          .then(res => setMemberList(res.data.data))
+          .catch(e => setMemberListError(e.response.data.error))
           .finally(() => setMemberListLoading(false));
         console.log(token);
       });
   }, []);
 
-  const handleToggle = (value) => () => {
+  const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -86,9 +84,9 @@ const AddNotif = (props) => {
 
     setChecked(newChecked);
   };
-  const numberOfChecked = (members) => intersection(checked, members).length; // members가 뭐야;;;;;
+  const numberOfChecked = members => intersection(checked, members).length; // members가 뭐야;;;;;
 
-  const handleToggleAll = (members) => () => {
+  const handleToggleAll = members => () => {
     if (numberOfChecked(members) === members.length) {
       setChecked(not(checked, members));
     } else {
@@ -121,7 +119,7 @@ const AddNotif = (props) => {
       <Divider />
       <List className={classes.list} dense component="div" role="list">
         {memberListLoading && <CircularProgress />}
-        {members.map((value) => {
+        {members.map(value => {
           const labelId = `transfer-list-all-item-${value.displayName}-label`;
           return (
             <ListItem
@@ -158,7 +156,7 @@ const AddNotif = (props) => {
       {
         announceName: notif.name,
         description: notif.description,
-        checked: checked.map((item) => item.uid),
+        checked: checked.map(item => item.uid),
       },
       {
         headers: {
@@ -177,7 +175,7 @@ const AddNotif = (props) => {
     setOpen(false);
   };
 
-  const handleClickOpen = (scrollType) => () => {
+  const handleClickOpen = scrollType => () => {
     setOpen(true);
     setScroll(scrollType);
   };
@@ -185,7 +183,7 @@ const AddNotif = (props) => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleChange = (e) => {
+  const handleChange = e => {
     const group = e.target.name;
     setNotif({
       ...notif,
@@ -194,120 +192,110 @@ const AddNotif = (props) => {
   };
 
   return (
-    <div>
-      <Grid container item justify="center">
-        <div className={classes.root}>
-          <Button onClick={handleClickOpen("paper")} />
-          <Dialog open={open} onClose={handleClose} scroll={scroll}>
-            <DialogTitle id="scroll-dialog-title">
-              공지 추가
-              <NotificationsIcon />
-              <IconButton
-                aria-label="close"
-                className={classes.closeButton}
-                onClick={handleClose}
+    <>
+      <Button onClick={handleClickOpen("paper")} />
+      <Dialog open={open} onClose={handleClose} scroll={scroll}>
+        <DialogTitle id="scroll-dialog-title">
+          공지 추가
+          <NotificationsIcon />
+          <IconButton
+            aria-label="close"
+            className={classes.closeButton}
+            onClick={handleClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers={scroll === "paper"}>
+          <div>
+            <FormControl className={classes.formControl}>
+              <FormLabel component="legend">공지 대상 그룹: </FormLabel>
+              <NativeSelect
+                onChange={handleChange}
+                value={notif.group}
+                inputProps={{
+                  name: "group",
+                  id: "notifgroup",
+                }}
               >
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent dividers={scroll === "paper"}>
-              <div>
-                <FormControl className={classes.formControl}>
-                  <FormLabel component="legend">공지 대상 그룹: </FormLabel>
-                  <NativeSelect
-                    onChange={handleChange}
-                    value={notif.group}
-                    inputProps={{
-                      name: "group",
-                      id: "notifgroup",
-                    }}
-                  >
-                    <option aria-label="None" value="" />
-                    {userDataStore.groups.map((group) => (
-                      <React.Fragment key={group}>
-                        <option value={group}>{group}</option>
-                      </React.Fragment>
-                    ))}
-                  </NativeSelect>
-                  <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
-                </FormControl>
-              </div>
-              <FormLabel component="legend">제목: </FormLabel>
-              <br />
-              <TextField
-                id="outlined-textarea"
-                placeholder="공지 제목을 입력해주세요"
-                multiline
-                variant="outlined"
-                value={notif.name}
-                onChange={(e) => setNotif({ ...notif, name: e.target.value })}
-                rows={1}
-              />
-              <br />
-              <br />
-              <div>
-                <FormLabel component="legend">내용: </FormLabel>
-                <br />
-                <TextField
-                  id="outlined-textarea"
-                  placeholder="공지 설명을 입력해주세요"
-                  multiline
-                  variant="outlined"
-                  value={notif.description}
-                  onChange={(e) =>
-                    setNotif({ ...notif, description: e.target.value })
-                  }
-                  rows={4}
-                />
-              </div>
-              <br />
-              <FormLabel component="legend">
-                첨부파일: (추후 추가예정)
-              </FormLabel>
-              <br />
-              <h3>
-                <NotificationsActiveIcon /> 알림
-              </h3>
-              <FormLabel component="legend">알림 보내고 싶은 회원</FormLabel>
-              <br />
-              {memberListError && <div>{memberListError}</div>}
-              <Grid
-                container
-                spacing={2}
-                justify="center"
-                alignItems="center"
-                className={classes.root}
-              >
-                <Grid item>{checkMemberList("모든 회원", memberList)}</Grid>
-                <Grid item>
-                  <Grid container direction="column" alignItems="center"></Grid>
-                </Grid>
-              </Grid>
-              <br />
-              <FormLabel component="legend">알림 방식</FormLabel>
-              <br />
-              <NotificationsTwoToneIcon /> <MailTwoToneIcon />
-              <br />
-              <DialogActions>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={saveNotif}
-                >
-                  저장
-                </Button>
-              </DialogActions>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </Grid>
-    </div>
+                <option aria-label="None" value="" />
+                {userDataStore.groups.map(group => (
+                  <React.Fragment key={group}>
+                    <option value={group}>{group}</option>
+                  </React.Fragment>
+                ))}
+              </NativeSelect>
+              <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
+            </FormControl>
+          </div>
+          <FormLabel component="legend">제목: </FormLabel>
+          <br />
+          <TextField
+            id="outlined-textarea"
+            placeholder="공지 제목을 입력해주세요"
+            multiline
+            variant="outlined"
+            value={notif.name}
+            onChange={e => setNotif({ ...notif, name: e.target.value })}
+            rows={1}
+          />
+          <br />
+          <br />
+          <div>
+            <FormLabel component="legend">내용: </FormLabel>
+            <br />
+            <TextField
+              id="outlined-textarea"
+              placeholder="공지 설명을 입력해주세요"
+              multiline
+              variant="outlined"
+              value={notif.description}
+              onChange={e =>
+                setNotif({ ...notif, description: e.target.value })
+              }
+              rows={4}
+            />
+          </div>
+          <br />
+          <FormLabel component="legend">첨부파일: (추후 추가예정)</FormLabel>
+          <br />
+          <h3>
+            <NotificationsActiveIcon /> 알림
+          </h3>
+          <FormLabel component="legend">알림 보내고 싶은 회원</FormLabel>
+          <br />
+          {memberListError && <div>{memberListError}</div>}
+          <Grid
+            container
+            spacing={2}
+            justify="center"
+            alignItems="center"
+            className={classes.root}
+          >
+            <Grid item>{checkMemberList("모든 회원", memberList)}</Grid>
+            <Grid item>
+              <Grid container direction="column" alignItems="center"></Grid>
+            </Grid>
+          </Grid>
+          <br />
+          <FormLabel component="legend">알림 방식</FormLabel>
+          <br />
+          <NotificationsTwoToneIcon /> <MailTwoToneIcon />
+          <br />
+          <DialogActions>
+            <Button variant="outlined" color="secondary" onClick={saveNotif}>
+              저장
+            </Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
 export default AddNotif;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -349,11 +337,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function not(a, b) {
-  return a.filter((value) => b.indexOf(value) === -1);
+  return a.filter(value => b.indexOf(value) === -1);
 }
 
 function intersection(a, b) {
-  return a.filter((value) => b.indexOf(value) !== -1);
+  return a.filter(value => b.indexOf(value) !== -1);
 }
 
 function union(a, b) {
