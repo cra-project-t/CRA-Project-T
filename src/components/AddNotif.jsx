@@ -43,7 +43,6 @@ const AddNotif = props => {
     description: "", //보내고 싶은 회원, 알림 방식추가하기
     wayofannounce: "email",
   });
-  const [groupId, setGroupId] = useState("");
   const [checked, setChecked] = React.useState([]);
   const [memberList, setMemberList] = React.useState([]);
 
@@ -55,22 +54,26 @@ const AddNotif = props => {
     setMemberListError("");
     setMemberListLoading(true);
     // Axios post body data 넣는 방법
-    firebase
-      .auth()
-      .currentUser.getIdToken()
-      .then(token => {
-        axios
-          .get(`/group/${groupId}/members`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(res => setMemberList(res.data.data))
-          .catch(e => setMemberListError(e.response.data.error))
-          .finally(() => setMemberListLoading(false));
-        console.log(token);
-      });
-  }, []);
+    notif.group &&
+      firebase
+        .auth()
+        .currentUser.getIdToken()
+        .then(token => {
+          axios
+            .get(`/group/${notif.group}/members`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then(res => setMemberList(res.data && res.data.data))
+            .catch(e => {
+              setMemberListError(e.response.data.error);
+              setMemberList([]);
+            })
+            .finally(() => setMemberListLoading(false));
+          console.log(token);
+        });
+  }, [notif.group]);
 
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
@@ -152,7 +155,7 @@ const AddNotif = props => {
   const saveNotif = async () => {
     const token = await firebase.auth().currentUser.getIdToken();
     axios.post(
-      "/group/englishgroup/add/announce",
+      `/group/${notif.group}/add/announce`,
       {
         announceName: notif.name,
         description: notif.description,
