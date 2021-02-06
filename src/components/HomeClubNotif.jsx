@@ -10,37 +10,39 @@ import Grid from "@material-ui/core/Grid";
 import firebase from "firebase";
 import axios from "axios";
 import { userStore } from "../stores/userStore";
+import qs from "qs";
 
 const HomeClubNotif = () => {
   const classes = useStyles();
-  const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = useState(false);
   const { state: userDataStore } = useContext(userStore);
-  const [notif, setNotif] = React.useState([]);
+  const [notif, setNotif] = useState([]);
   const [notifListError, setNotifListError] = useState("");
   const [notifListLoading, setNotifListLoading] = useState(false);
 
-  {
-    useEffect(() => {
-      setNotifListError("");
-      setNotifListLoading(true);
-      userDataStore.groups.map(group => {
+  useEffect(() => {
+    setNotifListError("");
+    setNotifListLoading(true);
+    async function fetchData() {
+      await userDataStore.groups.map(group => {
         firebase
           .auth()
           .currentUser.getIdToken()
           //.then(axios.post(`/notif/${group}/show/announce`, { group })) 이러면 안된다고 함
           .then(token => {
-            axios.get(`/notif/${group}/show/announce`, {
+            axios.get(`/notif/${qs.stringify(group)}/show/announce`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             });
           })
-          .then(res => setNotif([...notif, res.data.data]))
+          .then(async res => await setNotif([...notif, res.data.data]))
           .catch(e => setNotifListError(e.response && e.response.data.error))
           .finally(() => setNotifListLoading(false));
       });
-    }, []);
-  }
+    }
+    fetchData();
+  }, [notif]);
 
   console.log(userDataStore.groups);
   console.log(notifListError);
