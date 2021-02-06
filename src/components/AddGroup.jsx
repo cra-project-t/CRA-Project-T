@@ -145,7 +145,6 @@ const AddGroup = props => {
                 <option value={"association"}>학회</option>
                 <option value={"others"}>기타</option>
               </NativeSelect>
-              <br />
               <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
             </FormControl>
             <Typography id="input-slider" gutterBottom>
