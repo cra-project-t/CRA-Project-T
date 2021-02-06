@@ -20,10 +20,10 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import firebase from "firebase";
 import axios from "axios";
 
-const AddGroup = props => {
+const AddGroup = (props) => {
   const classes = useStyles();
   const Button = props.button
-    ? pr => ({ ...props.button, props: { ...props.button.props, ...pr } })
+    ? (pr) => ({ ...props.button, props: { ...props.button.props, ...pr } })
     : () => null;
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState("paper");
@@ -39,7 +39,7 @@ const AddGroup = props => {
     setValue(newValue);
   };
 
-  const handleInputChange = event => {
+  const handleInputChange = (event) => {
     setValue(event.target.value === "" ? "" : Number(event.target.value));
   };
 
@@ -78,7 +78,7 @@ const AddGroup = props => {
     }); // 공지 내용 초기화
     setOpen(false);
   };
-  const handleClickOpen = scrollType => () => {
+  const handleClickOpen = (scrollType) => () => {
     setOpen(true);
     setScroll(scrollType);
   };
@@ -111,7 +111,7 @@ const AddGroup = props => {
               label="한글 GROUP 이름"
               variant="outlined"
               value={groupList.name}
-              onChange={e =>
+              onChange={(e) =>
                 setGroupList({ ...groupList, name: e.target.value })
               }
             />
@@ -124,7 +124,9 @@ const AddGroup = props => {
               label="영어 GROUP 이름"
               variant="outlined"
               value={groupList.id}
-              onChange={e => setGroupList({ ...groupList, id: e.target.value })}
+              onChange={(e) =>
+                setGroupList({ ...groupList, id: e.target.value })
+              }
             />
             <br />
             <br />
@@ -132,7 +134,7 @@ const AddGroup = props => {
               <FormLabel component="legend">GROUP 종류: </FormLabel>
               <NativeSelect
                 value={groupList.type}
-                onChange={e =>
+                onChange={(e) =>
                   setGroupList({ ...groupList, type: e.target.value })
                 }
                 inputProps={{
@@ -189,7 +191,7 @@ const AddGroup = props => {
                 multiline
                 variant="outlined"
                 value={groupList.description}
-                onChange={e =>
+                onChange={(e) =>
                   setGroupList({ ...groupList, description: e.target.value })
                 }
                 rows={4}
@@ -213,7 +215,7 @@ const AddGroup = props => {
 
 export default AddGroup;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
