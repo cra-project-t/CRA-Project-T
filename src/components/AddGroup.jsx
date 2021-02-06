@@ -20,20 +20,10 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import firebase from "firebase";
 import axios from "axios";
 
-<<<<<<< HEAD
-const AddGroup = () => {
-  const [groupname, setGroupname] = useState("");
-  const [groupId, setGroupId] = useState("");
-  const [grouptype, setGrouptype] = useState("");
-  const [groupdesc, setGroupdesc] = useState("");
-  const [groupmembernumber, setGroupmembernumber] = useState("");
-  const handleSliderChange = (e, newValue) => {
-    setGroupmembernumber(newValue);
-=======
-const AddGroup = (props) => {
+const AddGroup = props => {
   const classes = useStyles();
   const Button = props.button
-    ? (pr) => ({ ...props.button, props: { ...props.button.props, ...pr } })
+    ? pr => ({ ...props.button, props: { ...props.button.props, ...pr } })
     : () => null;
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState("paper");
@@ -47,10 +37,9 @@ const AddGroup = (props) => {
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
->>>>>>> e64670bace7147503d1ec4be3d45cc49f16d4d44
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     setValue(event.target.value === "" ? "" : Number(event.target.value));
   };
 
@@ -89,7 +78,7 @@ const AddGroup = (props) => {
     }); // 공지 내용 초기화
     setOpen(false);
   };
-  const handleClickOpen = (scrollType) => () => {
+  const handleClickOpen = scrollType => () => {
     setOpen(true);
     setScroll(scrollType);
   };
@@ -119,57 +108,13 @@ const AddGroup = (props) => {
             <br />
             <TextField
               id="groupname"
-<<<<<<< HEAD
-              label="GROUP 이름 (한글)"
-=======
               label="한글 GROUP 이름"
->>>>>>> e64670bace7147503d1ec4be3d45cc49f16d4d44
               variant="outlined"
               value={groupList.name}
-              onChange={(e) =>
+              onChange={e =>
                 setGroupList({ ...groupList, name: e.target.value })
               }
             />
-<<<<<<< HEAD
-          </div>
-          <div>
-            <TextField
-              id="groupname"
-              label="GROUP ID (영어 필수)"
-              variant="outlined"
-              value={groupId}
-              onChange={e => setGroupId(e.target.value)}
-            />
-          </div>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="grouptype">GROUP TYPE</InputLabel>
-            <NativeSelect
-              value={grouptype}
-              onChange={e => setGrouptype(e.target.value)}
-              inputProps={{
-                name: "age",
-                id: "grouptype",
-              }}
-            >
-              <option aria-label="None" value="" />
-              <option value={"club"}>동아리</option>
-              <option value={"association"}>학회</option>
-              <option value={"others"}>기타</option>
-            </NativeSelect>
-            <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
-          </FormControl>
-          <Typography id="input-slider" gutterBottom>
-            GROUP 인원 수
-          </Typography>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              <GroupIcon />
-            </Grid>
-            <Grid item xs>
-              <Slider
-                value={
-                  typeof groupmembernumber === "number" ? groupmembernumber : 0
-=======
             <br />
             <br />
             <FormLabel component="legend">GROUP ID: </FormLabel>
@@ -179,9 +124,7 @@ const AddGroup = (props) => {
               label="영어 GROUP 이름"
               variant="outlined"
               value={groupList.id}
-              onChange={(e) =>
-                setGroupList({ ...groupList, id: e.target.value })
-              }
+              onChange={e => setGroupList({ ...groupList, id: e.target.value })}
             />
             <br />
             <br />
@@ -189,9 +132,8 @@ const AddGroup = (props) => {
               <FormLabel component="legend">GROUP 종류: </FormLabel>
               <NativeSelect
                 value={groupList.type}
-                onChange={(e) =>
+                onChange={e =>
                   setGroupList({ ...groupList, type: e.target.value })
->>>>>>> e64670bace7147503d1ec4be3d45cc49f16d4d44
                 }
                 inputProps={{
                   name: "group",
@@ -246,7 +188,7 @@ const AddGroup = (props) => {
                 multiline
                 variant="outlined"
                 value={groupList.description}
-                onChange={(e) =>
+                onChange={e =>
                   setGroupList({ ...groupList, description: e.target.value })
                 }
                 rows={4}
@@ -270,7 +212,7 @@ const AddGroup = (props) => {
 
 export default AddGroup;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
