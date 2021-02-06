@@ -9,7 +9,7 @@ export const checkAuth: express.RequestHandler = (req, res, next) => {
   return admin
     .auth()
     .verifyIdToken(token)
-    .then((decodedToken) => {
+    .then(decodedToken => {
       req.decodedToken = decodedToken;
       return next();
     })
