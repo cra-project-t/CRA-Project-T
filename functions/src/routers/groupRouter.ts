@@ -122,3 +122,51 @@ groupRouter.post("/add", async (req, res) => {
   // }
   return;
 });
+
+groupRouter.get("/:groupId", async (req, res) => {
+  //const uid = req.decodedToken.uid;
+  const groupId = req.params.groupId.toLowerCase();
+
+  // 데이터베이스에서 해당 그룹 정보 가져오기
+  const groupData = (
+    await admin.firestore().collection("groups").doc(groupId).get()
+  ).data();
+
+  // DB 에서 해당 데이터를 찾을 수 없는경우.
+  if (!groupData)
+    return res.status(404).json({ status: 404, error: "NOT FOUND" });
+
+  // 유저 정보 데이터 반환
+  return res.json({
+    status: "200",
+    data: groupData,
+  });
+});
+
+groupRouter.post("/:groupId", async (req, res) => {
+  const { uid } = req.decodedToken;
+  const groupId = req.params.groupId.toLowerCase();
+
+  const existingDoc = admin
+    .firestore()
+    .collection("groups")
+    .where("members", "array-contains", [uid])
+    .get();
+  if (existingDoc) {
+    return res.status(409).json({
+      status: 409,
+      error: "이미 가입되어 있음",
+    });
+  }
+
+  await admin
+    .firestore()
+    .collection("groups")
+    .doc(groupId)
+    .set({
+      members: [uid],
+    });
+  return res.json({
+    status: "200",
+  });
+});

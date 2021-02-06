@@ -10,9 +10,8 @@ import Grid from "@material-ui/core/Grid";
 import firebase from "firebase";
 import axios from "axios";
 import { userStore } from "../stores/userStore";
-import qs from "qs";
 
-const HomeClubNotif = () => {
+const HomeClubNotif = id => {
   const classes = useStyles();
   const [dense, setDense] = useState(false);
   const { state: userDataStore } = useContext(userStore);
@@ -23,26 +22,30 @@ const HomeClubNotif = () => {
   useEffect(() => {
     setNotifListError("");
     setNotifListLoading(true);
-    async function fetchData() {
-      await userDataStore.groups.map(group => {
-        firebase
-          .auth()
-          .currentUser.getIdToken()
-          //.then(axios.post(`/notif/${group}/show/announce`, { group })) 이러면 안된다고 함
-          .then(token => {
-            axios.get(`/notif/${qs.stringify(group)}/show/announce`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-          })
-          .then(async res => await setNotif([...notif, res.data.data]))
-          .catch(e => setNotifListError(e.response && e.response.data.error))
-          .finally(() => setNotifListLoading(false));
-      });
-    }
+    const fetchData = async () => {
+      const token = await firebase.auth().currentUser.getIdToken();
+      console.log(token);
+      firebase
+        .auth()
+        .currentUser.getIdToken()
+        .then(token => {
+          userDataStore.groups.map(group => {
+            axios
+              .get(`/notif/${group}/show/announce`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+              .then(res => setNotif([...notif, res.data.data]))
+              .catch(e =>
+                setNotifListError(e.response && e.response.data.error)
+              )
+              .finally(() => setNotifListLoading(false));
+          });
+        });
+    };
     fetchData();
-  }, [notif]);
+  }, [userDataStore.groups]);
 
   console.log(userDataStore.groups);
   console.log(notifListError);
@@ -67,11 +70,14 @@ const HomeClubNotif = () => {
               {generate(
                 <ListItem>
                   {userDataStore.groups.map(group => (
-                    <React.Fragment key={group.created}>
+                    <React.Fragment key={group}>
                       {notif.map(data => (
-                        <ListItemText
-                          primary={(data.announceName, data.created)}
-                        />
+                        <React.Fragment key={data._id}>
+                          {console.log(data.announceName)}
+                          <ListItemText
+                            primary={(data.announceName, data.created)} //undefined=>출력 모름(애초에 map 중복 가능?)
+                          />
+                        </React.Fragment>
                       ))}
                     </React.Fragment>
                   ))}
