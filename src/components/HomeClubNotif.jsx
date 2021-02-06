@@ -11,7 +11,7 @@ import firebase from "firebase";
 import axios from "axios";
 import { userStore } from "../stores/userStore";
 
-const HomeClubNotif = id => {
+const HomeClubNotif = () => {
   const classes = useStyles();
   const [dense, setDense] = useState(false);
   const { state: userDataStore } = useContext(userStore);
@@ -45,7 +45,7 @@ const HomeClubNotif = id => {
         });
     };
     fetchData();
-  }, [userDataStore.groups]);
+  }, []);
 
   console.log(userDataStore.groups);
   console.log(notifListError);
