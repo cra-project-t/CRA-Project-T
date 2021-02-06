@@ -17,6 +17,9 @@ import { Button } from "@material-ui/core";
 import SearchFriends from "../SearchFriends";
 import { userStore } from "../../stores/userStore";
 import Notifications from "./Notifications";
+import AddNotif from "../AddNotif";
+//import { Link } from "react-router-dom";
+import AddGroup from "../AddGroup";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -40,6 +43,10 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: "auto",
       marginTop: "auto",
       color: "white",
+    },
+    "& a": {
+      color: "inherit",
+      textDecoration: "inherit",
     },
   },
   // search: {
@@ -206,8 +213,12 @@ export default function PrimarySearchAppBar() {
               className={classes.menuButtonList} /*className={classes.search}*/
             >
               <Button>전체일정</Button>
-              <Button>일정추가</Button>
               <Button>시간 맞추기</Button>
+              {/* <Button>
+                <Link to="/addnotif">공지추가페이지</Link>
+              </Button> */}
+              <AddGroup button={<Button>그룹추가</Button>} />
+              <AddNotif button={<Button>공지추가</Button>} />
               <SearchFriends button={<Button>친구추가</Button>} />
             </div>
           </div>

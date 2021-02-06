@@ -8,7 +8,11 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+<<<<<<< HEAD
 import HomeClubNotif from "./HomeClubNotif";
+=======
+import ShowClubNotif from "./ShowClubNotif";
+>>>>>>> e64670bace7147503d1ec4be3d45cc49f16d4d44
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,7 +98,11 @@ export default function HomeAnnouncements() {
           학교 공지
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
+<<<<<<< HEAD
           <HomeClubNotif />
+=======
+          <ShowClubNotif />
+>>>>>>> e64670bace7147503d1ec4be3d45cc49f16d4d44
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           학회 공지
