@@ -9,15 +9,8 @@ notifRouter.get("/", async (req, res) => {
   return res.json(decodedToken);
 });
 
-<<<<<<< HEAD
 notifRouter.get("/:groupId/show/announce", async (req, res) => {
   const groupId = req.params.groupId.toLowerCase();
-=======
-notifRouter.post("/:groupId/show/announce", async (req, res) => {
-  // const uid = req.decodedToken.uid; // 언제 쓸지 몰라 잠시 보류
-  const groupId = req.params.groupId.toLowerCase();
-  // const { state: userDataStore } = useContext(userStore); // 않이 외않됨
->>>>>>> 2c2405f40402f16de7eed9462d4e4db4ef1677e7
 
   try {
     // 데이터베이스에서 해당 그룹의 공지사항 정보 가져오기
