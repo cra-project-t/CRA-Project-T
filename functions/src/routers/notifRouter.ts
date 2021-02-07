@@ -23,7 +23,7 @@ notifRouter.get("/:groupId/show/announce", async (req, res) => {
         .orderBy("created")
         .limit(5)
         .get()
-    ).docs.map(data => ({
+    ).docs.map((data) => ({
       _id: data.id,
       announceName: data.data().announceName,
       created: data.data().created,
@@ -41,6 +41,6 @@ notifRouter.get("/:groupId/show/announce", async (req, res) => {
     });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({() status: 500, error: "Server error", e });
+    return res.status(500).json({ status: 500, error: "Server error", e });
   }
 });
