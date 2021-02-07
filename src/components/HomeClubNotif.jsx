@@ -11,6 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import firebase from "firebase";
 import axios from "axios";
 import { userStore } from "../stores/userStore";
+import { Divider } from "@material-ui/core";
 
 const HomeClubNotif = () => {
   const classes = useStyles();
@@ -30,18 +31,31 @@ const HomeClubNotif = () => {
         .auth()
         .currentUser.getIdToken()
         .then(token => {
+          const dataPromises = []; // promise 비동기라 loop돌릴 때 오류 가끔씩=> Promise.all사용
           userDataStore.groups.map(group => {
-            axios
-              .get(`/notif/${group}/show/announce`, {
+            dataPromises.push(
+              axios.get(`/notif/${group}/show/announce`, {
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
-              })
-              .then(res => setNotif([...notif, res.data.data]))
-              .catch(e =>
-                setNotifListError(e.response && e.response.data.error)
-              )
-              .finally(() => setNotifListLoading(false));
+              }) //get으로 받은 Promise를 배열안에 다 넣어버린다.
+            );
+          });
+          // 시작할때는 [promise, promise, promise];
+          // promise.all 을 해주면 [then 을 한 값, 즉 doc, doc, doc];
+          Promise.all(dataPromises).then(datas => {
+            // Promise.all이 모여있는 모든 배열에 요청해서(resolve) 결과물을 담아서 넘겨줌
+            const allData = datas.reduce(
+              // doc.data.data
+              (prev, curr) => {
+                console.log(prev);
+                console.log(curr.data.data);
+                return prev.concat(curr.data.data);
+              },
+              []
+            );
+            console.log(allData);
+            setNotif(allData);
           });
         });
     };
@@ -73,22 +87,13 @@ const HomeClubNotif = () => {
         <Grid item xs={12} md={6}>
           <div className={classes.demo}>
             <List dense={dense}>
-              {generate(
-                <ListItem>
-                  {userDataStore.groups.map(group => (
-                    <React.Fragment key={group}>
-                      {notif.map(data => (
-                        <React.Fragment key={data._id}>
-                          {console.log(data.announceName)}
-                          <ListItemText
-                            primary={(data.announceName, data.created)} //undefined=>출력 모름(애초에 map 중복 가능?)
-                          />
-                        </React.Fragment>
-                      ))}
-                    </React.Fragment>
-                  ))}
+              {notif.map(data => (
+                <ListItem key={data._id}>
+                  <ListItemText primary={data.announceName} />
                 </ListItem>
-              )}
+              ))}{" "}
+              {/*promise map 사용 잘못된 예시*/}
+              {/* //1. 배열풀어주기: data에 map한번 더=>비효율적 */}
             </List>
           </div>
         </Grid>
@@ -112,10 +117,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function generate(element) {
-  return [0, 1, 2].map(value =>
-    React.cloneElement(element, {
-      key: value,
-    })
-  );
-}
+// function generate(element) {
+//   return [0, 1, 2].map(value =>
+//     React.cloneElement(element, {
+//       key: value,
+//     })
+//   );
+// } //더미 데이터

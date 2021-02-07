@@ -41,6 +41,6 @@ notifRouter.get("/:groupId/show/announce", async (req, res) => {
     });
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ status: 500, error: "Server error", e });
+    return res.status(500).json({() status: 500, error: "Server error", e });
   }
 });

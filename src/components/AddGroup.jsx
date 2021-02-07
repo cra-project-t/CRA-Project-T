@@ -80,13 +80,13 @@ const AddGroup = props => {
     console.log(token);
     setGroupList({
       name: "",
-      englishName: "",
+      id: "",
       type: "",
       description: "",
       photoURL: "",
     }); // 공지 내용 초기화
     setValue(20);
-    // setOpen(false);
+    setOpen(false);
   };
   const handleClickOpen = scrollType => () => {
     setOpen(true);
@@ -100,7 +100,7 @@ const AddGroup = props => {
   return (
     <>
       <Button onClick={handleClickOpen("paper")} />
-      <Dialog open={open} onClose={handleClose} scroll={scroll}>
+      <Dialog open={open} onClose={handleClose} scroll={scroll} fullWidth>
         <DialogTitle id="scroll-dialog-title">
           GROUP 추가
           <GroupAddIcon />
@@ -135,6 +135,17 @@ const AddGroup = props => {
               variant="outlined"
               value={groupList.id}
               onChange={e => setGroupList({ ...groupList, id: e.target.value })}
+            />
+            <br />
+            <br />
+            <TextField
+              id="groupphoto"
+              label="Photo URL"
+              variant="outlined"
+              value={groupList.photoURL}
+              onChange={e =>
+                setGroupList({ ...groupList, photoURL: e.target.value })
+              }
             />
             <br />
             <br />
@@ -208,15 +219,13 @@ const AddGroup = props => {
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={
-                  saveGroupList && groupListError ? (
-                    <div>
-                      <Alert severity="error">{groupListError}</Alert>
-                    </div>
-                  ) : (
-                    handleClose
-                  )
-                } // 실패인듯
+                onClick={saveGroupList} //&& groupListError ? (
+                //   <div>
+                //     <Alert severity="error">{groupListError}</Alert>
+                //   </div>
+                // ) : (
+                //   handleClose
+                // )// 실패인듯
               >
                 저장
               </Button>

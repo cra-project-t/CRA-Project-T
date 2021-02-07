@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { Link } from "react-router-dom";
-import { Grid } from "@material-ui/core";
+import { Grid, CircularProgress } from "@material-ui/core";
 import { AlertTitle } from "@material-ui/lab";
+import { userStore } from "../stores/userStore";
 import "./SearchGroup.css";
 import firebase from "firebase";
 import axios from "axios";
 
 const SearchGroup = props => {
   const id = props.match.params.id;
+  const [user, setUser] = useState("");
   const [groupList, setGroupList] = useState([]);
   const [groupListError, setGroupListError] = useState("");
   const [groupListError2, setGroupListError2] = useState("");
   const [groupListLoading, setGroupListLoading] = useState(false);
+  const { state: userDataStore } = useContext(userStore);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -41,6 +44,10 @@ const SearchGroup = props => {
       });
   }, [id]);
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -49,12 +56,12 @@ const SearchGroup = props => {
   };
 
   const addMember = async () => {
-    const token = await firebase.auth().currentUser.getIdToken();
+    const token = await firebase.auth().currentUser.getIdToken(); //토큰은 아주 많은 기능 jwt
     axios
       .post(
         `/group/${id}`,
         {
-          members: uid,
+          checkGroup: userDataStore.groups,
         },
         {
           headers: {
@@ -62,16 +69,18 @@ const SearchGroup = props => {
           },
         }
       )
+      .then(res => setUser(res.data.data))
       .catch(e => {
         setGroupListError2(e.response.data.error);
-        setGroupList([]);
       });
+    console.log(token);
     setOpen(true);
   };
 
   return (
     <Grid container item justify="center">
       <div>
+        {groupListLoading && <CircularProgress />}
         {/* {groupList.length !== 0 ? (
           <div className={classes.root}>
             <div className="center">
@@ -121,7 +130,7 @@ const SearchGroup = props => {
           <div className={classes.root}>
             <div className="center">
               <img
-                src={groupList.photo}
+                src={groupList.photoURL}
                 width="150"
                 height="150"
                 alt="Avatar"
@@ -133,10 +142,34 @@ const SearchGroup = props => {
               <Button variant="contained">
                 <Link to="/">취소</Link>
               </Button>
-              <Button variant="contained" color="primary" onClick={addMember}>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={groupListLoading}
+                onClick={addMember}
+              >
                 요청
               </Button>
-              {groupListError2 ? (
+              <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message={
+                  <Alert onClose={handleClose} severity="success">
+                    요청이 완료되었습니다!
+                  </Alert>
+                }
+              ></Snackbar>
+              {/* <Snackbar
+                open={false}
+                autoHideDuration={6000}
+                onClose={handleClose}
+              > */}
+              {/* <Alert onClose={handleClose} severity="success">
+                요청 완료되었습니다.
+              </Alert> */}
+              {/* </Snackbar> */}
+              {/* {groupListError2 ? (
                 <div>
                   <Alert severity="error">
                     <AlertTitle>Error</AlertTitle>
@@ -144,16 +177,8 @@ const SearchGroup = props => {
                   </Alert>
                 </div>
               ) : (
-                <Snackbar
-                  open={open}
-                  autoHideDuration={6000}
-                  onClose={handleClose}
-                >
-                  <Alert onClose={handleClose} severity="success">
-                    요청 완료되었습니다.
-                  </Alert>
-                </Snackbar>
-              )}
+                
+              )} */}
             </div>
           </div>
         )}

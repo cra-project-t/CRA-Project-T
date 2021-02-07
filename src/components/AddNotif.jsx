@@ -28,7 +28,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import firebase from "firebase";
 import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
-import { userStore } from "../stores/userStore";
+import { userStore } from "../stores/userStore"; //사이트에서 통합적으로 정보 불러올 수 있도록.
 
 const AddNotif = props => {
   const classes = useStyles();
@@ -198,7 +198,7 @@ const AddNotif = props => {
   return (
     <>
       <Button onClick={handleClickOpen("paper")} />
-      <Dialog open={open} onClose={handleClose} scroll={scroll}>
+      <Dialog open={open} onClose={handleClose} scroll={scroll} fullWidth>
         <DialogTitle id="scroll-dialog-title">
           공지 추가
           <NotificationsIcon />
