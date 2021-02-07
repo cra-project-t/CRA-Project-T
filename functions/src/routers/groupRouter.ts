@@ -48,11 +48,25 @@ groupRouter.get("/:groupId/members", async (req, res) => {
 
 // POST /group/add
 groupRouter.post("/add", async (req, res) => {
-  const { englishName, name, type, description, memberCount } = req.body;
+  const {
+    englishName,
+    name,
+    type,
+    description,
+    memberCount,
+    photoURL,
+  } = req.body;
   const { uid } = req.decodedToken;
 
   // 유효성 #1 - 해당 필드들이 존재하여야함.
-  if (!englishName || !name || !type || !description || !memberCount) {
+  if (
+    !englishName ||
+    !name ||
+    !type ||
+    !description ||
+    !memberCount ||
+    !photoURL
+  ) {
     return res.status(221).json({
       status: 221,
       error: "필수 필드중 하나가 존재하지 않음.",
@@ -101,6 +115,7 @@ groupRouter.post("/add", async (req, res) => {
       owners: [uid],
       members: [uid],
       memberCount: 1, // memberCount 그룹 추가 시 1명이므로
+      photoURL: photoURL,
     })
     .then(async () => {
       //문제가 없음
@@ -227,7 +242,9 @@ groupRouter.get("/:groupId", async (req, res) => {
 
   // DB 에서 해당 데이터를 찾을 수 없는경우.
   if (!groupData)
-    return res.status(404).json({ status: 404, error: "NOT FOUND" });
+    return res
+      .status(404)
+      .json({ status: 404, error: "데이터를 찾을 수 없습니다." });
 
   // 유저 정보 데이터 반환
   return res.json({
@@ -239,18 +256,25 @@ groupRouter.get("/:groupId", async (req, res) => {
 groupRouter.post("/:groupId", async (req, res) => {
   const { uid } = req.decodedToken;
   const groupId = req.params.groupId.toLowerCase();
-
   const existingDoc = admin
     .firestore()
     .collection("groups")
-    .where("members", "array-contains", [uid])
+    .doc(groupId)
+    //.where("id", "array-contains", {groupId})
     .get();
-  if (existingDoc) {
-    return res.status(409).json({
-      status: 409,
-      error: "이미 가입되어 있음",
-    });
-  }
+  try {
+    const data = (await existingDoc).data();
+    if (!existingDoc.exists) {
+      if (uid in data) {
+        return res.status(409).json({
+          status: 409,
+          error: "이미 가입되어 있음",
+        });
+      }
+    }
+  } catch (err) {
+    res.send({ err: "Something went terribly wrong^^" });
+  } // 몰라 쓰벌^
 
   await admin
     .firestore()

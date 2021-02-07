@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Alert from "@material-ui/lab/Alert";
 import List from "@material-ui/core/List";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -267,7 +268,11 @@ const AddNotif = props => {
           </h3>
           <FormLabel component="legend">알림 보내고 싶은 회원</FormLabel>
           <br />
-          {memberListError && <div>{memberListError}</div>}
+          {memberListError && (
+            <div>
+              <Alert severity="error">{memberListError}</Alert>
+            </div>
+          )}
           <Grid
             container
             spacing={2}

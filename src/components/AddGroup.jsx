@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Alert from "@material-ui/lab/Alert";
 import TextField from "@material-ui/core/TextField";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -33,7 +34,9 @@ const AddGroup = props => {
     id: "",
     type: "",
     description: "", //보내고 싶은 회원, 알림 방식추가하기
+    photoURL: "",
   });
+  const [groupListError, setGroupListError] = useState("");
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
@@ -53,30 +56,37 @@ const AddGroup = props => {
 
   const saveGroupList = async () => {
     const token = await firebase.auth().currentUser.getIdToken();
-    axios.post(
-      `/group/add`,
-      {
-        name: groupList.name,
-        englishName: groupList.id,
-        type: groupList.type,
-        description: groupList.description,
-        memberCount: value,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    axios
+      .post(
+        `/group/add`,
+        {
+          name: groupList.name,
+          englishName: groupList.id,
+          type: groupList.type,
+          description: groupList.description,
+          memberCount: value,
+          photoURL: groupList.photoURL,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .catch(e => {
+        setGroupListError(e.response.data.error);
+        setGroupList([]);
+      });
     console.log(token);
     setGroupList({
-      groupname: "",
-      groupid: "",
-      grouptype: "",
-      groupdesc: "",
-      groupmembernumber: "",
+      name: "",
+      englishName: "",
+      type: "",
+      description: "",
+      photoURL: "",
     }); // 공지 내용 초기화
-    setOpen(false);
+    setValue(20);
+    // setOpen(false);
   };
   const handleClickOpen = scrollType => () => {
     setOpen(true);
@@ -108,7 +118,7 @@ const AddGroup = props => {
             <br />
             <TextField
               id="groupname"
-              label="한글 GROUP 이름"
+              label="한글 GROUP이름"
               variant="outlined"
               value={groupList.name}
               onChange={e =>
@@ -121,7 +131,7 @@ const AddGroup = props => {
             <br />
             <TextField
               id="groupid"
-              label="영어 GROUP 이름"
+              label="영어소문자 GROUP이름"
               variant="outlined"
               value={groupList.id}
               onChange={e => setGroupList({ ...groupList, id: e.target.value })}
@@ -198,7 +208,15 @@ const AddGroup = props => {
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={saveGroupList}
+                onClick={
+                  saveGroupList && groupListError ? (
+                    <div>
+                      <Alert severity="error">{groupListError}</Alert>
+                    </div>
+                  ) : (
+                    handleClose
+                  )
+                } // 실패인듯
               >
                 저장
               </Button>

@@ -14,6 +14,7 @@ const SearchGroup = props => {
   const id = props.match.params.id;
   const [groupList, setGroupList] = useState([]);
   const [groupListError, setGroupListError] = useState("");
+  const [groupListError2, setGroupListError2] = useState("");
   const [groupListLoading, setGroupListLoading] = useState(false);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -49,22 +50,29 @@ const SearchGroup = props => {
 
   const addMember = async () => {
     const token = await firebase.auth().currentUser.getIdToken();
-    axios.post(
-      `/group/${id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+    axios
+      .post(
+        `/group/${id}`,
+        {
+          members: uid,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .catch(e => {
+        setGroupListError2(e.response.data.error);
+        setGroupList([]);
+      });
     setOpen(true);
   };
 
   return (
     <Grid container item justify="center">
       <div>
-        {groupList.length !== 0 ? (
+        {/* {groupList.length !== 0 ? (
           <div className={classes.root}>
             <div className="center">
               <img
@@ -101,6 +109,53 @@ const SearchGroup = props => {
               데이터를 찾을 수가 없습니다. — 주소를 다시 확인해주세요.
             </strong>
           </Alert>
+        )} */}
+        {groupListError ? (
+          <div>
+            <Alert severity="error">
+              <AlertTitle>Error</AlertTitle>
+              <strong>{groupListError}</strong>
+            </Alert>
+          </div>
+        ) : (
+          <div className={classes.root}>
+            <div className="center">
+              <img
+                src={groupList.photo}
+                width="150"
+                height="150"
+                alt="Avatar"
+                className="round"
+              />
+              <h1>{groupList.name}</h1>
+              <h3>{groupList.description}</h3>
+              <h5>{groupList.memberCount}명 회원</h5>
+              <Button variant="contained">
+                <Link to="/">취소</Link>
+              </Button>
+              <Button variant="contained" color="primary" onClick={addMember}>
+                요청
+              </Button>
+              {groupListError2 ? (
+                <div>
+                  <Alert severity="error">
+                    <AlertTitle>Error</AlertTitle>
+                    <strong>{groupListError2}</strong>
+                  </Alert>
+                </div>
+              ) : (
+                <Snackbar
+                  open={open}
+                  autoHideDuration={6000}
+                  onClose={handleClose}
+                >
+                  <Alert onClose={handleClose} severity="success">
+                    요청 완료되었습니다.
+                  </Alert>
+                </Snackbar>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </Grid>
