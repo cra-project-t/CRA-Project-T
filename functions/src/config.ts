@@ -4,8 +4,8 @@ export const config_uri = {
     client: "http://localhost:3030",
   },
   prod: {
-    server: " https://asia-northeast3-cra-project-t.cloudfunctions.net/app",
-    client: "",
+    server: "https://asia-northeast3-cra-project-t.cloudfunctions.net/app",
+    client: "https://cra-project-t.web.app",
   },
 };
 
