@@ -30,10 +30,10 @@ import axios from "axios";
 import { CircularProgress } from "@material-ui/core";
 import { userStore } from "../stores/userStore"; //사이트에서 통합적으로 정보 불러올 수 있도록.
 
-const AddNotif = props => {
+const AddNotif = (props) => {
   const classes = useStyles();
   const Button = props.button
-    ? pr => ({ ...props.button, props: { ...props.button.props, ...pr } })
+    ? (pr) => ({ ...props.button, props: { ...props.button.props, ...pr } })
     : () => null;
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState("paper");
@@ -59,15 +59,15 @@ const AddNotif = props => {
       firebase
         .auth()
         .currentUser.getIdToken()
-        .then(token => {
+        .then((token) => {
           axios
             .get(`/group/${notif.group}/members`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             })
-            .then(res => setMemberList(res.data && res.data.data))
-            .catch(e => {
+            .then((res) => setMemberList(res.data && res.data.data))
+            .catch((e) => {
               setMemberListError(e.response.data.error);
               setMemberList([]);
             })
@@ -76,7 +76,7 @@ const AddNotif = props => {
         });
   }, [notif.group]);
 
-  const handleToggle = value => () => {
+  const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -88,9 +88,9 @@ const AddNotif = props => {
 
     setChecked(newChecked);
   };
-  const numberOfChecked = members => intersection(checked, members).length; // members가 뭐야;;;;;
+  const numberOfChecked = (members) => intersection(checked, members).length; // members가 뭐야;;;;;
 
-  const handleToggleAll = members => () => {
+  const handleToggleAll = (members) => () => {
     if (numberOfChecked(members) === members.length) {
       setChecked(not(checked, members));
     } else {
@@ -123,7 +123,7 @@ const AddNotif = props => {
       <Divider />
       <List className={classes.list} dense component="div" role="list">
         {memberListLoading && <CircularProgress />}
-        {members.map(value => {
+        {members.map((value) => {
           const labelId = `transfer-list-all-item-${value.displayName}-label`;
           return (
             <ListItem
@@ -160,7 +160,7 @@ const AddNotif = props => {
       {
         announceName: notif.name,
         description: notif.description,
-        checked: checked.map(item => item.uid),
+        checked: checked.map((item) => item.uid),
       },
       {
         headers: {
@@ -179,7 +179,7 @@ const AddNotif = props => {
     setOpen(false);
   };
 
-  const handleClickOpen = scrollType => () => {
+  const handleClickOpen = (scrollType) => () => {
     setOpen(true);
     setScroll(scrollType);
   };
@@ -187,7 +187,7 @@ const AddNotif = props => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleChange = e => {
+  const handleChange = (e) => {
     const group = e.target.name;
     setNotif({
       ...notif,
@@ -223,11 +223,12 @@ const AddNotif = props => {
                 }}
               >
                 <option aria-label="None" value="" />
-                {userDataStore.groups.map(group => (
-                  <React.Fragment key={group}>
-                    <option value={group}>{group}</option>
-                  </React.Fragment>
-                ))}
+                {userDataStore.group &&
+                  userDataStore.groups.map((group) => (
+                    <React.Fragment key={group}>
+                      <option value={group}>{group}</option>
+                    </React.Fragment>
+                  ))}
               </NativeSelect>
               <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
             </FormControl>
@@ -241,7 +242,7 @@ const AddNotif = props => {
             multiline
             variant="outlined"
             value={notif.name}
-            onChange={e => setNotif({ ...notif, name: e.target.value })}
+            onChange={(e) => setNotif({ ...notif, name: e.target.value })}
             rows={1}
           />
           <br />
@@ -256,7 +257,7 @@ const AddNotif = props => {
               multiline
               variant="outlined"
               value={notif.description}
-              onChange={e =>
+              onChange={(e) =>
                 setNotif({ ...notif, description: e.target.value })
               }
               rows={4}
@@ -305,7 +306,7 @@ const AddNotif = props => {
 
 export default AddNotif;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -347,11 +348,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 function not(a, b) {
-  return a.filter(value => b.indexOf(value) === -1);
+  return a.filter((value) => b.indexOf(value) === -1);
 }
 
 function intersection(a, b) {
-  return a.filter(value => b.indexOf(value) !== -1);
+  return a.filter((value) => b.indexOf(value) !== -1);
 }
 
 function union(a, b) {
