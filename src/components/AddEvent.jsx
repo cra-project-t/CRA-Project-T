@@ -9,6 +9,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import EventIcon from "@material-ui/icons/Event";
 import firebase from "firebase";
+import axios from "axios";
 import {
   Dialog,
   DialogActions,
@@ -48,7 +49,7 @@ const AddEvent = ({ setOpenNewEvent }) => {
     setOpenNewEvent(false);
   };
 
-  const [calendarId, setCalendarId] = useState(`user-${auth.uid}`);
+  const [calendarId, setCalendarId] = useState(`${auth.uid}`);
   const [calInfo, setCalInfo] = useState(() => initCalInfo());
 
   const classes = useStyles();
@@ -78,8 +79,8 @@ const AddEvent = ({ setOpenNewEvent }) => {
                     )
                     .map((calendar) => (
                       <MenuItem
-                        key={`${calendar.type}-${calendar.owner}`}
-                        value={`${calendar.type}-${calendar.owner}`}
+                        key={`${calendar.owner}`}
+                        value={`${calendar.owner}`}
                       >
                         {calendar.ownerName}
                       </MenuItem>
@@ -190,6 +191,26 @@ const AddEvent = ({ setOpenNewEvent }) => {
           color="primary"
           onClick={() => {
             console.log(calInfo.start);
+            firebase
+              .auth()
+              .currentUser.getIdToken()
+              .then((token) => {
+                axios.post(
+                  `/calendar/${calendarId}/events/add`,
+                  {
+                    allDay: calInfo.allday,
+                    startTime: new Date(calInfo.start).getTime(),
+                    endTime: new Date(calInfo.end).getTime(),
+                    eventName: calInfo.planname,
+                    eventDescription: calInfo.content,
+                  },
+                  {
+                    headers: {
+                      authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
+              });
             firebase
               .firestore()
               .collection("calendars")

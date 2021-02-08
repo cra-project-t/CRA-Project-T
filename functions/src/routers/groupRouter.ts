@@ -111,6 +111,12 @@ groupRouter.post("/add", async (req, res) => {
           .doc(uid)
           .update({
             groups: admin.firestore.FieldValue.arrayUnion(groupID),
+            calendars: admin.firestore.FieldValue.arrayUnion({
+              owner: groupID,
+              ownerName: name,
+              permission: "owner",
+              type: "group",
+            }),
           });
         return res.send("Success");
       } catch (e) {

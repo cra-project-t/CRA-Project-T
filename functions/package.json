@@ -2,10 +2,9 @@
   "name": "functions",
   "scripts": {
     "lint": "eslint \"src/**/*\"",
-    "build": "ttsc",
-    "watch": "nodemon --watch 'src/**/*.ts' --exec 'yarn build' --ext ts,json",
+    "build": "tsc",
+    "watch": "nodemon --watch 'src/**/*.ts' --exec 'yarn serve' --ext ts,json",
     "serve": "yarn build && firebase emulators:start --only functions",
-    "serve:windows": "cmd /V /C \"set GOOGLE_APPLICATION_CREDENTIALS='secrets/firebase-admin.json'&& npm run build && firebase emulators:start —only functions\"",
     "shell": "yarn build && firebase functions:shell",
     "start": "yarn shell",
     "deploy": "firebase deploy --only functions",

@@ -27,8 +27,9 @@ app.use("/calendar", checkAuth, calendarRouter);
 app.use("/group", checkAuth, groupRouter);
 app.use("/user", checkAuth, userRouter);
 
-app.use("/", (req, res) => {
-  res.send("Hello World!!");
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
 
 exports.app = functions.region("asia-northeast3").https.onRequest(app);

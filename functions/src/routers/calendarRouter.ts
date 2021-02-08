@@ -94,6 +94,57 @@ calendarRouter.post("/:id/events/add", async (req, res) => {
   return res.sendStatus(200);
 });
 
+calendarRouter.get("/myEvents", async (req, res, next) => {
+  try {
+    // Get UID
+    const { uid } = req.decodedToken;
+
+    // Get user data from db
+    const userData = (
+      await admin.firestore().collection("users").doc(uid).get()
+    ).data();
+
+    // Check if user have calendars information
+    if (!userData?.calendars) return res.json({ response: [] });
+
+    console.log(
+      `[calendarRouter:Get] Will respond with ${userData.calendars.length} items`
+    );
+
+    // Get all calendar information
+    const userCalendarInfoPromise: Promise<
+      FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+    >[] = userData.calendars.map((calendar: Calendar) => {
+      return admin
+        .firestore()
+        .collection(`${calendar.type}s`)
+        .doc(calendar.owner)
+        .collection("events")
+        .get();
+    });
+
+    const userCalendarInfoResponse = (
+      await Promise.all(userCalendarInfoPromise)
+    ).reduce((prev: any, data) => {
+      return [
+        ...prev,
+        ...data.docs.map((doc) => ({
+          _id: doc.id,
+          ...doc.data(),
+          startTime: doc.data().startTime.toDate(),
+          endTime: doc.data().endTime.toDate(),
+        })),
+      ];
+    }, []);
+    console.log(userCalendarInfoResponse);
+    return res.json(userCalendarInfoResponse);
+  } catch (e) {
+    console.error(e);
+    return res.sendStatus(500);
+  }
+});
+
+// @deprecated - Will be removed in the future.
 calendarRouter.get("/:id/events", async (req, res) => {
   const { id } = req.params;
   const { uid } = req.decodedToken;

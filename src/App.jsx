@@ -17,7 +17,7 @@ const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
   useEffect(() => {
     auth && auth.getIdToken().then((token) => console.log(token));
-  }, []);
+  }, [auth]);
   // Auth Use Context
   const { dispatch, state } = useContext(userStore);
   useEffect(() => {
@@ -36,7 +36,7 @@ const AuthOkay = ({ children }) => {
       .collection("users")
       .doc(auth.uid)
       .onSnapshot((docSnapshot) => {
-        //console.log("Snapshot Triggered");
+        console.log("Snapshot Triggered");
         dispatch({
           type: "update",
           payload: { loading: false, ...docSnapshot.data() },
