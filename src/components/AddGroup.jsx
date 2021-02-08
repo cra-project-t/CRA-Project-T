@@ -120,6 +120,8 @@ const AddGroup = props => {
               id="groupname"
               label="한글 GROUP이름"
               variant="outlined"
+              placeholder="EX) 시간조율"
+              fullWidth
               value={groupList.name}
               onChange={e =>
                 setGroupList({ ...groupList, name: e.target.value })
@@ -132,16 +134,22 @@ const AddGroup = props => {
             <TextField
               id="groupid"
               label="영어소문자 GROUP이름"
+              placeholder="EX) timemanagement"
               variant="outlined"
+              fullWidth
               value={groupList.id}
               onChange={e => setGroupList({ ...groupList, id: e.target.value })}
             />
             <br />
             <br />
+            <FormLabel component="legend">GROUP 이미지: </FormLabel>
+            <br />
             <TextField
               id="groupphoto"
               label="Photo URL"
               variant="outlined"
+              placeholder="EX) https://file.mk.co.kr/meet/neds/2019/01/image_readtop_2019_31665_15475788633604297.jpg"
+              fullWidth
               value={groupList.photoURL}
               onChange={e =>
                 setGroupList({ ...groupList, photoURL: e.target.value })
@@ -168,7 +176,7 @@ const AddGroup = props => {
               </NativeSelect>
               <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
             </FormControl>
-            <Typography id="input-slider" gutterBottom>
+            {/* <Typography id="input-slider" gutterBottom>
               GROUP 인원 수
             </Typography>
             <Grid container spacing={2} alignItems="center">
@@ -198,7 +206,9 @@ const AddGroup = props => {
                   }}
                 />
               </Grid>
-            </Grid>
+            </Grid> */}
+            <br />
+            <br />
             <div>
               <FormLabel component="legend">GROUP 설명: </FormLabel>
               <br />
@@ -208,6 +218,7 @@ const AddGroup = props => {
                 placeholder="GROUP 설명을 입력해주세요..."
                 multiline
                 variant="outlined"
+                fullWidth
                 value={groupList.description}
                 onChange={e =>
                   setGroupList({ ...groupList, description: e.target.value })

@@ -237,6 +237,7 @@ const AddNotif = props => {
           <TextField
             id="outlined-textarea"
             placeholder="공지 제목을 입력해주세요"
+            fullWidth
             multiline
             variant="outlined"
             value={notif.name}
@@ -251,6 +252,7 @@ const AddNotif = props => {
             <TextField
               id="outlined-textarea"
               placeholder="공지 설명을 입력해주세요"
+              fullWidth
               multiline
               variant="outlined"
               value={notif.description}
