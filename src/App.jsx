@@ -8,13 +8,16 @@ import HomePage from "./pages/HomePage";
 import HisnetLogin from "./components/HisnetLogin";
 import AddGroup from "./components/AddGroup";
 import SearchGroup from "./components/SearchGroup";
+import AddNotif from "./components/AddNotif";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
 import { userStore } from "./stores/userStore";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
-
+  useEffect(() => {
+    auth && auth.getIdToken().then((token) => console.log(token));
+  }, []);
   // Auth Use Context
   const { dispatch, state } = useContext(userStore);
   useEffect(() => {
@@ -33,7 +36,7 @@ const AuthOkay = ({ children }) => {
       .collection("users")
       .doc(auth.uid)
       .onSnapshot((docSnapshot) => {
-        console.log("Snapshot Triggered");
+        //console.log("Snapshot Triggered");
         dispatch({
           type: "update",
           payload: { loading: false, ...docSnapshot.data() },
@@ -41,12 +44,6 @@ const AuthOkay = ({ children }) => {
       });
     return () => unsub();
   }, [dispatch, auth, loading]);
-
-  // Log Access Token
-  useEffect(
-    () => auth && auth.getIdToken(false).then((token) => console.log(token)),
-    [auth]
-  );
 
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
@@ -100,6 +97,7 @@ const App = () => {
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
+            <Route path="/addnotif" exact component={AddNotif} />
           </Switch>
         </Router>
       </AuthOkay>
