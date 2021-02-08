@@ -67,8 +67,9 @@ const HomeClubNotif = () => {
   console.log(notif);
   return (
     <div className={classes.root}>
-      <FormGroup row>
+      {/* <FormGroup row>
         <FormControlLabel
+          fullWidth
           control={
             <Checkbox
               checked={dense}
@@ -77,20 +78,24 @@ const HomeClubNotif = () => {
           }
           label="Enable dense"
         />
-      </FormGroup>
+      </FormGroup> */}
+      <br />
       {notifListError && (
         <div>
           <Alert severity="error">{notifListError}</Alert>
         </div>
       )}
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+      <Grid container spacing={2} fullWidth>
+        <Grid item fullWidth>
           <div className={classes.demo}>
-            <List dense={dense}>
+            <List dense>
               {notif.map(data => (
-                <ListItem key={data._id}>
-                  <ListItemText primary={data.announceName} />
-                </ListItem>
+                <>
+                  <ListItem key={data._id}>
+                    <ListItemText primary={data.announceName} />
+                  </ListItem>
+                  <Divider />
+                </>
               ))}{" "}
               {/*promise map 사용 잘못된 예시*/}
               {/* //1. 배열풀어주기: data에 map한번 더=>비효율적 */}
@@ -107,7 +112,8 @@ export default HomeClubNotif;
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    maxWidth: 752,
+    //maxWidth: 752,
+    width: "100%",
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
