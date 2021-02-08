@@ -43,7 +43,7 @@ const AddEvent = ({ setOpenNewEvent }) => {
   const [calInfo, setCalInfo] = useState(() => initCalInfo());
 
   const classes = useStyles();
-  const handleChange1 = e => {
+  const handleChange1 = (e) => {
     setCalInfo({ ...calInfo, allday: e.target.checked });
   };
 
@@ -64,7 +64,7 @@ const AddEvent = ({ setOpenNewEvent }) => {
               fullWidth
               variant="outlined"
               value={calInfo.planname}
-              onChange={e =>
+              onChange={(e) =>
                 setCalInfo({
                   ...calInfo,
                   planname: e.target.value,
@@ -76,14 +76,14 @@ const AddEvent = ({ setOpenNewEvent }) => {
                 <DateAndTimePickers
                   label="시작 일정"
                   value={calInfo.start}
-                  onChange={e => {
+                  onChange={(e) => {
                     setCalInfo({ ...calInfo, start: e.target.value });
                   }}
                 />
                 <DateAndTimePickers
                   label="종료 일정"
                   value={calInfo.end}
-                  onChange={e => {
+                  onChange={(e) => {
                     setCalInfo({ ...calInfo, end: e.target.value });
                   }}
                 />
@@ -93,14 +93,14 @@ const AddEvent = ({ setOpenNewEvent }) => {
                 <DatePickers
                   label="시작 일정"
                   value={calInfo.start}
-                  onChange={e => {
+                  onChange={(e) => {
                     setCalInfo({ ...calInfo, start: e.target.value });
                   }}
                 />
                 <DatePickers
                   label="종료 일정"
                   value={calInfo.end}
-                  onChange={e => {
+                  onChange={(e) => {
                     setCalInfo({ ...calInfo, end: e.target.value });
                   }}
                 />
@@ -133,7 +133,7 @@ const AddEvent = ({ setOpenNewEvent }) => {
                 rows={4}
                 variant="outlined"
                 value={calInfo.place}
-                onChange={e =>
+                onChange={(e) =>
                   setCalInfo({ ...calInfo, place: e.target.value })
                 }
               />
@@ -148,7 +148,7 @@ const AddEvent = ({ setOpenNewEvent }) => {
                 rows={4}
                 variant="outlined"
                 value={calInfo.content}
-                onChange={e =>
+                onChange={(e) =>
                   setCalInfo({ ...calInfo, content: e.target.value })
                 }
               />
@@ -186,7 +186,7 @@ const AddEvent = ({ setOpenNewEvent }) => {
 
 export default AddEvent;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: "flex",
     flexWrap: "wrap",
