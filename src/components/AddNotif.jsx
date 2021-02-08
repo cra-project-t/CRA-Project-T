@@ -223,7 +223,7 @@ const AddNotif = (props) => {
                 }}
               >
                 <option aria-label="None" value="" />
-                {userDataStore.group &&
+                {userDataStore.groups &&
                   userDataStore.groups.map((group) => (
                     <React.Fragment key={group}>
                       <option value={group}>{group}</option>

@@ -70,9 +70,9 @@ calendarRouter.post("/:id/events/add", async (req, res) => {
   const calendar: Calendar =
     userData.calendars &&
     userData.calendars.find(
-      (calendar: Calendar) =>
-        calendar.owner === id &&
-        ["owner", "write"].includes(calendar.permission)
+      (_calendar: Calendar) =>
+        _calendar.owner === id &&
+        ["owner", "write"].includes(_calendar.permission)
     );
   if (!calendar) return res.sendStatus(403); // Not enough permission
 

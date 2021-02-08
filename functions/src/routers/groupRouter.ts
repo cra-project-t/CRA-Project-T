@@ -105,7 +105,7 @@ groupRouter.post("/add", async (req, res) => {
   const groupID = englishName.trim().toLowerCase();
   // TODO: memberCount 및 members 정의 후에 해당 요청이 문제가 없을경우
   // 해당 유저의 정보에 groups 항목에 해당 그룹을 추가한다.
-  admin
+  return admin
     .firestore()
     .collection("groups")
     .doc(groupID)
@@ -136,12 +136,10 @@ groupRouter.post("/add", async (req, res) => {
           });
         return res.send("Success");
       } catch (e) {
-        admin.firestore().collection("groups").doc(groupID).delete();
+        await admin.firestore().collection("groups").doc(groupID).delete();
         return res.status(500).json(e);
       }
     });
-
-  return;
 });
 
 groupRouter.get("/:userId/groups", async (req, res) => {
