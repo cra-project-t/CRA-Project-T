@@ -305,7 +305,15 @@ groupRouter.post("/:groupId", async (req, res) => {
       .firestore()
       .collection("users")
       .doc(uid)
-      .update({ groups: admin.firestore.FieldValue.arrayUnion(groupId) });
+      .update({
+        groups: admin.firestore.FieldValue.arrayUnion(groupId),
+        calendars: admin.firestore.FieldValue.arrayUnion({
+          owner: groupId,
+          ownerName: groupId,
+          permission: "read",
+          type: "group",
+        }),
+      });
     //checkGroup.update(groupId); //일케 못하는듯..?->배열이니까+post로 받은 데이타(ex. firestore에서 받아온 데이타가져와서 get이나 add등의 함수 기능 X)는 함수로 만들 수 없다(map이나 split 등의 함수 자체로 받을 수 있으나)
 
     return res.json({
