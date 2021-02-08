@@ -98,14 +98,16 @@ const HomePage = () => {
                 },
               }}
               events={
-                events.map((doc) => {
-                  return {
-                    title: doc.eventName,
-                    start: new Date(doc.startTime),
-                    end: new Date(doc.endTime),
-                    allDay: doc.allDay,
-                  };
-                })
+                events && Array.isArray(events)
+                  ? events.map((doc) => {
+                      return {
+                        title: doc.eventName,
+                        start: new Date(doc.startTime),
+                        end: new Date(doc.endTime),
+                        allDay: doc.allDay,
+                      };
+                    })
+                  : []
                 //   [
                 //   {
                 //     title: "IT 캠프",
