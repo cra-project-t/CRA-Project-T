@@ -2,7 +2,8 @@ import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { Grid, makeStyles, Paper } from "@material-ui/core";
 import firebase from "firebase";
-import React, { useEffect, useState } from "react";
+import { useCollection } from "react-firebase-hooks/firestore";
+import React, { useState } from "react";
 import HomeAddActionIcon from "../components/HomeAddActionIcon";
 import HomeAnnouncements from "../components/HomeAnnouncements";
 import HomeFriends from "../components/HomeFriends";
@@ -10,7 +11,6 @@ import HomeSchoolInfo from "../components/HomeSchoolInfo";
 import QuickView from "../components/QuickView";
 import "../tools/weekNumber";
 import AddEvent from "../components/AddEvent";
-import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,38 +33,21 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [openNewEvent, setOpenNewEvent] = useState(false);
-  const [events, setEvents] = useState([]);
-
-  const refreshData = async () => {
-    const token = await firebase.auth().currentUser.getIdToken();
-    setEvents(
-      (
-        await axios.get("/calendar/myEvents", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      ).data
-    );
-  };
-
-  useEffect(() => {
-    refreshData();
-  }, []);
-  // useCollection(
-  //   firebase
-  //     .firestore()
-  //     .collection("calendars")
-  //     .doc("IQWkcBUvw06jseGNWWoA")
-  //     .collection("events")
-  //   // .where("author", "==", firebaseApp.auth().currentUser.uid),
-  //   // {
-  //   //   snapshotListenOptions: { includeMetadataChanges: true },
-  //   // }
-  // );
+  const [events, loading] = useCollection(
+    firebase
+      .firestore()
+      .collection("calendars")
+      .doc("IQWkcBUvw06jseGNWWoA")
+      .collection("events"),
+    // .where("author", "==", firebaseApp.auth().currentUser.uid),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
   if (!events) {
     return <div>Events Loading</div>;
   }
+  events && console.log(events.docs);
   return (
     <Paper square elevation={1}>
       {openNewEvent && <AddEvent setOpenNewEvent={setOpenNewEvent} />}
@@ -98,16 +81,14 @@ const HomePage = () => {
                 },
               }}
               events={
-                events && Array.isArray(events)
-                  ? events.map((doc) => {
-                      return {
-                        title: doc.eventName,
-                        start: new Date(doc.startTime),
-                        end: new Date(doc.endTime),
-                        allDay: doc.allDay,
-                      };
-                    })
-                  : []
+                events.docs.map((doc) => {
+                  return {
+                    title: doc.data().eventName,
+                    start: doc.data().startTime.toDate(),
+                    end: doc.data().endTime.toDate(),
+                    allDay: doc.data().allDay,
+                  };
+                })
                 //   [
                 //   {
                 //     title: "IT 캠프",
@@ -116,17 +97,6 @@ const HomePage = () => {
                 //   },
                 // ]
               }
-              customButtons={{
-                refreshButton: {
-                  text: "새로고침",
-                  click: refreshData,
-                },
-              }}
-              headerToolbar={{
-                left: "refreshButton",
-                center: "title",
-                // right: "dayGridMonth,timeGridWeek,timeGridDay",
-              }}
               // eventSources={[
               //   {
               //     events: {

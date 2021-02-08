@@ -1,7 +1,7 @@
 export const config_uri = {
   dev: {
     server: "http://localhost:5001/cra-timerec-1229/asia-northeast3/app",
-    client: "http://localhost:3030",
+    client: "http://localhost:3000",
   },
   prod: {
     server: " https://asia-northeast3-cra-project-t.cloudfunctions.net/app",

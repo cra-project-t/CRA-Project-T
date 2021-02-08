@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -9,20 +9,14 @@ import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import EventIcon from "@material-ui/icons/Event";
 import firebase from "firebase";
-import axios from "axios";
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  InputLabel,
-  MenuItem,
-  Select,
 } from "@material-ui/core";
 
 import { padNumber } from "../tools/padNumber";
-import { userStore } from "../stores/userStore";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 const initCalInfo = () => {
   const date = new Date();
@@ -41,23 +35,16 @@ const initCalInfo = () => {
 };
 
 const AddEvent = ({ setOpenNewEvent }) => {
-  const [auth] = useAuthState(firebase.auth());
-  const { state: userDataStore } = useContext(userStore);
-
   const handleClose = () => {
     setCalInfo(initCalInfo());
     setOpenNewEvent(false);
   };
 
-  const [calendarId, setCalendarId] = useState(`${auth.uid}`);
   const [calInfo, setCalInfo] = useState(() => initCalInfo());
 
   const classes = useStyles();
   const handleChange1 = e => {
     setCalInfo({ ...calInfo, allday: e.target.checked });
-  };
-  const changeCalId = (e) => {
-    setCalendarId(e.target.value);
   };
 
   return (
@@ -69,24 +56,6 @@ const AddEvent = ({ setOpenNewEvent }) => {
       <DialogContent>
         <Grid container item justify="center">
           <div className={classes.root} noValidate autoComplete="off">
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>달력</InputLabel>
-              <Select value={calendarId} onChange={changeCalId}>
-                {userDataStore.calendars &&
-                  userDataStore.calendars
-                    .filter((calendar) =>
-                      ["owner", "write"].includes(calendar.permission)
-                    )
-                    .map((calendar) => (
-                      <MenuItem
-                        key={`${calendar.owner}`}
-                        value={`${calendar.owner}`}
-                      >
-                        {calendar.ownerName}
-                      </MenuItem>
-                    ))}
-              </Select>
-            </FormControl>
             <TextField
               id="outlined-textarea"
               label="일정 이름"
@@ -193,26 +162,6 @@ const AddEvent = ({ setOpenNewEvent }) => {
           color="primary"
           onClick={() => {
             console.log(calInfo.start);
-            firebase
-              .auth()
-              .currentUser.getIdToken()
-              .then((token) => {
-                axios.post(
-                  `/calendar/${calendarId}/events/add`,
-                  {
-                    allDay: calInfo.allday,
-                    startTime: new Date(calInfo.start).getTime(),
-                    endTime: new Date(calInfo.end).getTime(),
-                    eventName: calInfo.planname,
-                    eventDescription: calInfo.content,
-                  },
-                  {
-                    headers: {
-                      authorization: `Bearer ${token}`,
-                    },
-                  }
-                );
-              });
             firebase
               .firestore()
               .collection("calendars")

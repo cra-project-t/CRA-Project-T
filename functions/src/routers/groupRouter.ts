@@ -126,14 +126,8 @@ groupRouter.post("/add", async (req, res) => {
           .collection("users")
           .doc(uid)
           .update({
-            groups: admin.firestore.FieldValue.arrayUnion(groupID), // 그룹추가 시, 로그인된 유저의 정보에 추가한 그룹을 데이터에 추가
-            calendars: admin.firestore.FieldValue.arrayUnion({
-              owner: groupID,
-              ownerName: name,
-              permission: "owner",
-              type: "group",
-            }),
-          });
+            groups: admin.firestore.FieldValue.arrayUnion(groupID),
+          }); // 그룹추가 시, 로그인된 유저의 정보에 추가한 그룹을 데이터에 추가
         return res.send("Success");
       } catch (e) {
         admin.firestore().collection("groups").doc(groupID).delete();
