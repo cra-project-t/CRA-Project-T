@@ -99,9 +99,9 @@ function IncludedGroupList() {
       firebase
         .auth()
         .currentUser.getIdToken()
-        .then(token => {
+        .then((token) => {
           const dataPromises = []; // promise 비동기라 loop돌릴 때 오류 가끔씩=> Promise.all사용
-          userDataStore.groups.map(group => {
+          userDataStore.groups.map((group) => {
             dataPromises.push(
               axios.get(`/group/${group}`, {
                 headers: {
@@ -110,7 +110,7 @@ function IncludedGroupList() {
               }) //get으로 받은 Promise를 배열안에 다 넣어버린다.
             );
           });
-          Promise.all(dataPromises).then(datas => {
+          Promise.all(dataPromises).then((datas) => {
             const allData = datas.reduce((prev, curr) => {
               return prev.concat(curr.data.data);
             }, []);
@@ -126,7 +126,7 @@ function IncludedGroupList() {
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            {columns.map(column => (
+            {columns.map((column) => (
               <TableCell
                 key={column.id}
                 align={column.align}
@@ -147,7 +147,7 @@ function IncludedGroupList() {
         <TableBody>
           {groupInfo
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map(groupInfo => {
+            .map((groupInfo) => {
               return (
                 <TableRow
                   hover
@@ -155,7 +155,7 @@ function IncludedGroupList() {
                   tabIndex={-1}
                   key={groupInfo.description}
                 >
-                  {columns.map(column => {
+                  {columns.map((column) => {
                     const value = groupInfo[column.id];
                     return (
                       <TableCell key={column.id} align={column.align}>
@@ -201,7 +201,7 @@ function OtherGroupList() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = event => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -212,14 +212,14 @@ function OtherGroupList() {
     firebase
       .auth()
       .currentUser.getIdToken()
-      .then(token => {
+      .then((token) => {
         axios
           .get(`/group/list`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           })
-          .then(res => setGroupList(res.data));
+          .then((res) => setGroupList(res.data));
       });
     console.log(groupList);
     const fetchData = async () => {
@@ -227,12 +227,12 @@ function OtherGroupList() {
       firebase
         .auth()
         .currentUser.getIdToken()
-        .then(token => {
+        .then((token) => {
           const dataPromises = []; // promise 비동기라 loop돌릴 때 오류 가끔씩=> Promise.all사용
           const othergroups = groupList.filter(
-            group => userDataStore.groups.indesOf(group) === -1
+            (group) => userDataStore.groups.indesOf(group) === -1
           ); // 1. include해서 uid가 없으면 남아있게 !group.member.include 2. filter해서 groupid를 받아서 IDK
-          othergroups.map(group => {
+          othergroups.map((group) => {
             dataPromises.push(
               axios.get(`/group/${group}`, {
                 headers: {
@@ -241,7 +241,7 @@ function OtherGroupList() {
               }) //get으로 받은 Promise를 배열안에 다 넣어버린다.
             );
           });
-          Promise.all(dataPromises).then(datas => {
+          Promise.all(dataPromises).then((datas) => {
             const allData = datas.reduce((prev, curr) => {
               console.log(prev);
               console.log(curr.data.data);
@@ -260,7 +260,7 @@ function OtherGroupList() {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map(column => (
+              {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -281,7 +281,7 @@ function OtherGroupList() {
           <TableBody>
             {groupInfo
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map(groupInfo => {
+              .map((groupInfo) => {
                 return (
                   <TableRow
                     hover
@@ -289,7 +289,7 @@ function OtherGroupList() {
                     tabIndex={-1}
                     key={groupInfo.description}
                   >
-                    {columns.map(column => {
+                    {columns.map((column) => {
                       const value = groupInfo[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
