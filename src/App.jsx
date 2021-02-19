@@ -11,12 +11,13 @@ import SearchGroup from "./pages/SearchGroup";
 import AddNotif from "./components/AddNotif";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
+import TotalGroup from "./pages/TotalGroup";
 import { userStore } from "./stores/userStore";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
   useEffect(() => {
-    auth && auth.getIdToken().then((token) => console.log(token));
+    auth && auth.getIdToken().then(token => console.log(token));
   }, []);
   // Auth Use Context
   const { dispatch, state } = useContext(userStore);
@@ -35,7 +36,7 @@ const AuthOkay = ({ children }) => {
       .firestore()
       .collection("users")
       .doc(auth.uid)
-      .onSnapshot((docSnapshot) => {
+      .onSnapshot(docSnapshot => {
         //console.log("Snapshot Triggered");
         dispatch({
           type: "update",
@@ -56,7 +57,7 @@ const AuthOkay = ({ children }) => {
 // Heading CSS Setting
 
 const drawerWidth = 240;
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   // root: {
   //   display: 'flex',
   // },
@@ -86,7 +87,7 @@ const App = () => {
       <AuthOkay>
         <Router>
           <Route
-            render={(props) => (
+            render={props => (
               <Heading {...props} drawerWidth={drawerWidth} classes={classes} />
             )}
           />
@@ -98,6 +99,7 @@ const App = () => {
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
             <Route path="/addnotif" exact component={AddNotif} />
+            <Route path="/totalgroup" exact component={TotalGroup} />
           </Switch>
         </Router>
       </AuthOkay>
