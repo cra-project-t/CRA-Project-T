@@ -263,25 +263,6 @@ groupRouter.post("/:groupId", async (req, res) => {
   if (!checkGroup) {
     return res.status(221).json({ status: 221, error: "필드 존재X" });
   }
-  // const existingDoc = admin
-  //   .firestore()
-  //   .collection("groups")
-  //   .doc(groupId)
-  //   //.where("id", "array-contains", {groupId})
-  //   .get();
-  // try {
-  //   const data = (await existingDoc).data();
-  //   if (!existingDoc.exists) {
-  //     if (uid in data) {
-  //       return res.status(409).json({
-  //         status: 409,
-  //         error: "이미 가입되어 있음",
-  //       });
-  //     }
-  //   }
-  // } catch (err) {
-  //   res.send({ err: "Something went terribly wrong^^" });
-  // } // 몰라
 
   try {
     // 1 - group 에 유저 정보 추가.
