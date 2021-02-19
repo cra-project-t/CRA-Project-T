@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import HomePage from "./pages/HomePage";
 import HisnetLogin from "./components/HisnetLogin";
 import AddGroup from "./components/AddGroup";
-import SearchGroup from "./components/SearchGroup";
+import SearchGroup from "./pages/SearchGroup";
 import AddNotif from "./components/AddNotif";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";

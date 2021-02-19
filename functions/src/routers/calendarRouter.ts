@@ -45,5 +45,5 @@ calendarRouter.get("/:id/events", async (req, res) => {
       .get()
   ).docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 
-  res.json(eventsInfo);
+  return res.json(eventsInfo);
 });

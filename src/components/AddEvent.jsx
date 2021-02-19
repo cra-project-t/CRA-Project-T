@@ -128,6 +128,7 @@ const AddEvent = ({ setOpenNewEvent }) => {
                 id="일정 장소"
                 label="일정 장소"
                 placeholder="일정 장소를 입력해주세요"
+                fullWidth
                 multiline
                 rows={4}
                 variant="outlined"
@@ -142,6 +143,7 @@ const AddEvent = ({ setOpenNewEvent }) => {
                 id="일정 내용"
                 label="일정 내용"
                 placeholder="일정 내용을 입력해주세요"
+                fullWidth
                 multiline
                 rows={4}
                 variant="outlined"
