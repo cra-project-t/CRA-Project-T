@@ -354,7 +354,8 @@ object 는 map, reduce, find, sort (X)
 
 */
   // reduce: 1. accumulate(callback) 함수, 2. 초기값
-  groupData.docs.reduce((prev, curr) => {}, {});
+  // object를 list로 만들기
+  // groupData.docs.reduce((prev, curr) => {}, {});
 
   if (!groupData)
     return res
