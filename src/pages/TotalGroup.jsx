@@ -24,7 +24,7 @@ const TotalGroup = () => {
         <Grid className={classes.root} container spacing={2}>
           <Grid item sm={6} xs={12}>
             <div className={classes.paper}>
-              <Typography
+              {/* <Typography
                 className={classes.title1}
                 variant="h6"
                 id="tableTitle"
@@ -32,7 +32,7 @@ const TotalGroup = () => {
               >
                 소속 그룹
               </Typography>
-              <IncludedGroupList />
+              <IncludedGroupList /> */}
             </div>
             <br />
             <div>
@@ -44,7 +44,7 @@ const TotalGroup = () => {
               >
                 전체 그룹
               </Typography>
-              <OtherGroupList />
+              <AllGroupList />
             </div>
           </Grid>
           {/*
@@ -72,114 +72,112 @@ const useStyles = makeStyles({
   },
 });
 
-function IncludedGroupList() {
-  const classes = useStyles();
-  const { state: userDataStore } = useContext(userStore);
-  const [groupInfo, setGroupInfo] = useState([]);
-  const [groupInfoError, setGroupInfoError] = useState("");
-  const [groupInfoLoading, setGroupInfoLoading] = useState(false);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const columns = [
-    { id: "name", label: "그룹이름", minWidth: 100 },
-    { id: "description", label: "그룹정보", minWidth: 170 },
-    {
-      id: "memberCount",
-      label: "그룹원 수",
-      minWidth: 50,
-    },
-  ];
+// function IncludedGroupList() {
+//   const classes = useStyles();
+//   const { state: userDataStore } = useContext(userStore);
+//   const [groupInfo, setGroupInfo] = useState([]);
+//   const [groupInfoError, setGroupInfoError] = useState("");
+//   const [groupInfoLoading, setGroupInfoLoading] = useState(false);
+//   const [page, setPage] = React.useState(0);
+//   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+//   const columns = [
+//     { id: "name", label: "그룹이름", minWidth: 100 },
+//     { id: "description", label: "그룹정보", minWidth: 170 },
+//     {
+//       id: "memberCount",
+//       label: "그룹원 수",
+//       minWidth: 50,
+//     },
+//   ];
 
-  useEffect(() => {
-    setGroupInfoError("");
-    setGroupInfoLoading(true);
-    const fetchData = async () => {
-      const token = await firebase.auth().currentUser.getIdToken();
-      console.log(token);
-      firebase
-        .auth()
-        .currentUser.getIdToken()
-        .then(token => {
-          const dataPromises = []; // promise 비동기라 loop돌릴 때 오류 가끔씩=> Promise.all사용
-          userDataStore.groups.map(group => {
-            dataPromises.push(
-              axios.get(`/group/${group}`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }) //get으로 받은 Promise를 배열안에 다 넣어버린다.
-            );
-          });
-          Promise.all(dataPromises).then(datas => {
-            const allData = datas.reduce((prev, curr) => {
-              return prev.concat(curr.data.data);
-            }, []);
-            setGroupInfo(allData);
-          });
-        });
-    };
-    fetchData();
-  }, []);
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const token = await firebase.auth().currentUser.getIdToken();
+//       console.log(token);
+//       firebase
+//         .auth()
+//         .currentUser.getIdToken()
+//         .then(token => {
+//           const dataPromises = []; // promise 비동기라 loop돌릴 때 오류 가끔씩=> Promise.all사용
+//           userDataStore.groups.map(group => {
+//             dataPromises.push(
+//               axios.get(`/group/${group}`, {
+//                 headers: {
+//                   Authorization: `Bearer ${token}`,
+//                 },
+//               }) //get으로 받은 Promise를 배열안에 다 넣어버린다.
+//             );
+//           });
+//           Promise.all(dataPromises).then(datas => {
+//             const allData = datas.reduce((prev, curr) => {
+//               return prev.concat(curr.data.data);
+//             }, []);
+//             setGroupInfo(allData);
+//           });
+//         });
+//     };
+//     fetchData();
+//   }, []);
 
-  return (
-    <TableContainer className={classes.container}>
-      <Table stickyHeader aria-label="sticky table">
-        <TableHead>
-          <TableRow>
-            {columns.map(column => (
-              <TableCell
-                key={column.id}
-                align={column.align}
-                style={{ minWidth: column.minWidth }}
-              >
-                {column.id == "memberCount" ? (
-                  <div>
-                    <GroupIcon />
-                    {column.label}
-                  </div>
-                ) : (
-                  <div>{column.label}</div>
-                )}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {groupInfo
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map(groupInfo => {
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={groupInfo.description}
-                >
-                  {columns.map(column => {
-                    const value = groupInfo[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.id == "name" ? (
-                          <div>
-                            <Avatar alt="Remy Sharp" src={groupInfo.photoURL} />
-                            {value}
-                          </div>
-                        ) : (
-                          value
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
-}
+//   return (
+//     <TableContainer className={classes.container}>
+//       <Table stickyHeader aria-label="sticky table">
+//         <TableHead>
+//           <TableRow>
+//             {columns.map(column => (
+//               <TableCell
+//                 key={column.id}
+//                 align={column.align}
+//                 style={{ minWidth: column.minWidth }}
+//               >
+//                 {column.id == "memberCount" ? (
+//                   <div>
+//                     <GroupIcon />
+//                     {column.label}
+//                   </div>
+//                 ) : (
+//                   <div>{column.label}</div>
+//                 )}
+//               </TableCell>
+//             ))}
+//           </TableRow>
+//         </TableHead>
+//         <TableBody>
+//           {groupInfo
+//             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+//             .map(groupInfo => {
+//               return (
+//                 <TableRow
+//                   hover
+//                   role="checkbox"
+//                   tabIndex={-1}
+//                   key={groupInfo.description}
+//                 >
+//                   {columns.map(column => {
+//                     const value = groupInfo[column.id];
+//                     return (
+//                       <TableCell key={column.id} align={column.align}>
+//                         {column.id == "name" ? (
+//                           <div>
+//                             <Avatar alt="Remy Sharp" src={groupInfo.photoURL} />
+//                             {value}
+//                           </div>
+//                         ) : (
+//                           value
+//                         )}
+//                       </TableCell>
+//                     );
+//                   })}
+//                 </TableRow>
+//               );
+//             })}
+//         </TableBody>
+//       </Table>
+//     </TableContainer>
+//   );
+// }
 
-function OtherGroupList() {
+function AllGroupList() {
   const classes = useStyles();
   const { state: userDataStore } = useContext(userStore);
   const [groupInfo, setGroupInfo] = useState([]);
@@ -187,7 +185,7 @@ function OtherGroupList() {
   const [groupInfoError, setGroupInfoError] = useState("");
   const [groupInfoLoading, setGroupInfoLoading] = useState(false);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const columns = [
     { id: "name", label: "그룹이름", minWidth: 100 },
     { id: "description", label: "그룹정보", minWidth: 170 },
@@ -209,46 +207,22 @@ function OtherGroupList() {
   useEffect(() => {
     setGroupInfoError("");
     setGroupInfoLoading(true);
-    firebase
-      .auth()
-      .currentUser.getIdToken()
-      .then(token => {
-        axios
-          .get(`/group/list`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then(res => setGroupList(res.data));
-      });
-    console.log(groupList);
     const fetchData = async () => {
       const token = await firebase.auth().currentUser.getIdToken();
+      console.log(token);
       firebase
         .auth()
         .currentUser.getIdToken()
         .then(token => {
-          const dataPromises = []; // promise 비동기라 loop돌릴 때 오류 가끔씩=> Promise.all사용
-          const othergroups = groupList.filter(
-            group => userDataStore.groups.indesOf(group) === -1
-          ); // 1. include해서 uid가 없으면 남아있게 !group.member.include 2. filter해서 groupid를 받아서 IDK
-          othergroups.map(group => {
-            dataPromises.push(
-              axios.get(`/group/${group}`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }) //get으로 받은 Promise를 배열안에 다 넣어버린다.
-            );
-          });
-          Promise.all(dataPromises).then(datas => {
-            const allData = datas.reduce((prev, curr) => {
-              console.log(prev);
-              console.log(curr.data.data);
-              return prev.concat(curr.data.data);
-            }, []);
-            setGroupInfo(allData);
-          });
+          // 1. include해서 uid가 없으면 남아있게 !group.member.include 2. filter해서 groupid를 받아서 IDK
+          axios
+            .get("/group/all", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then(res => setGroupInfo(res.data)); //get으로 받은 Promise를 배열안에 다 넣어버린다.
+          console.log(groupInfo);
         });
     };
     fetchData();
@@ -266,7 +240,7 @@ function OtherGroupList() {
                   align={column.align}
                   style={{ minWidth: column.minWidth }}
                 >
-                  {column.id == "memberCount" ? (
+                  {column.id === "memberCount" ? (
                     <div>
                       <GroupIcon />
                       {column.label}
@@ -293,7 +267,7 @@ function OtherGroupList() {
                       const value = groupInfo[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {column.id == "name" ? (
+                          {column.id === "name" ? (
                             <div>
                               <Avatar
                                 alt="Remy Sharp"

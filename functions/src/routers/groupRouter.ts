@@ -290,12 +290,19 @@ groupRouter.post("/:groupId", async (req, res) => {
     console.error(e);
     return res.sendStatus(500);
   }
-});
-
-groupRouter.get("/all", async (req, res) => {
   // 데이터베이스에서 해당 그룹 정보 가져오기
-  const groupData = await admin.firestore().collection("groups").get(); // await: 받아올 데이터가 있으니까 그때까지 기다려라
-
+  // const groupList: any = [];
+  // await admin
+  //   .firestore()
+  //   .collection("groups")
+  //   .get()
+  //   .then(function (querySnapshot) {
+  //     querySnapshot.forEach(function (doc) {
+  //       // doc.data() is never undefined for query doc snapshots
+  //       console.log(doc.id, " => ", doc.data());
+  //       groupList.push(doc.data());
+  //     });
+  //   });
   /*
 
 데이터를 어떻게 줄까? 
@@ -354,16 +361,20 @@ object 는 map, reduce, find, sort (X)
 
 */
   // reduce: 1. accumulate(callback) 함수, 2. 초기값
-  // object를 list로 만들기
-  // groupData.docs.reduce((prev, curr) => {}, {});
+  // array into object
+  // groupData.docs.reduce((prv, cur) => {}, {});
+});
 
-  if (!groupData)
+groupRouter.get("/all", async (req, res) => {
+  const groupList = await admin.firestore().collection("groups").get();
+
+  if (!groupList)
     return res
       .status(404)
       .json({ status: 404, error: "데이터를 찾을 수 없습니다." });
 
   return res.json({
     status: "200",
-    data: groupData,
+    data: groupList.docs.map(doc => doc.data()),
   });
 });
