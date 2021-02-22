@@ -26,15 +26,15 @@ const GroupPage = () => {
     firebase
       .auth()
       .currentUser.getIdToken()
-      .then(token => {
+      .then((token) => {
         axios
           .get(`/group/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           })
-          .then(res => setGroupList(res.data && res.data.data))
-          .catch(e => {
+          .then((res) => setGroupList(res.data && res.data.data))
+          .catch((e) => {
             setGroupListError(e.response.data.error);
             setGroupList([]);
           })
@@ -112,7 +112,7 @@ function GroupNotifList() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = event => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -128,9 +128,9 @@ function GroupNotifList() {
       firebase
         .auth()
         .currentUser.getIdToken()
-        .then(token => {
+        .then((token) => {
           const dataPromises = [];
-          userDataStore.groups.map(group => {
+          userDataStore.groups.map((group) => {
             dataPromises.push(
               axios.get(`/notif/${group}/show/announce`, {
                 headers: {
@@ -139,7 +139,7 @@ function GroupNotifList() {
               }) //get으로 받은 Promise를 배열안에 다 넣어버린다.
             );
           });
-          Promise.all(dataPromises).then(datas => {
+          Promise.all(dataPromises).then((datas) => {
             const allData = datas.reduce((prev, curr) => {
               console.log(prev);
               console.log(curr.data.data);
@@ -159,7 +159,7 @@ function GroupNotifList() {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map(column => (
+              {columns.map((column) => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -173,7 +173,7 @@ function GroupNotifList() {
           <TableBody>
             {notifList
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map(notifList => {
+              .map((notifList) => {
                 return (
                   <TableRow
                     hover
@@ -181,7 +181,7 @@ function GroupNotifList() {
                     tabIndex={-1}
                     key={notifList._id}
                   >
-                    {columns.map(column => {
+                    {columns.map((column) => {
                       const value = notifList[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
