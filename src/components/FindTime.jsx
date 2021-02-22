@@ -43,32 +43,32 @@ const FindTime = () => {
   const [Time] = useState({
     MON: {
       start: [],
-      end: []
+      end: [],
     },
     TUE: {
       start: [],
-      end: []
+      end: [],
     },
     WED: {
       start: [],
-      end: []
+      end: [],
     },
     THU: {
       start: [],
-      end: []
+      end: [],
     },
     FRI: {
       start: [],
-      end: []
+      end: [],
     },
     SAT: {
       start: [],
-      end: []
+      end: [],
     },
     SUN: {
       start: [],
-      end: []
-    }
+      end: [],
+    },
   });
   // console.log(state);
   return <div>{findTime().MON.start[0]}</div>;
