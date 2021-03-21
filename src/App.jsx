@@ -14,15 +14,10 @@ import { userStore } from "./stores/userStore";
 import Status from "./components/Status";
 import HisnetLogin from "./components/HisnetLogin";
 import UserInfo from "./components/UserInfo";
+import FindTime from "./components/FindTime";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
-<<<<<<< HEAD
-=======
-  useEffect(() => {
-    auth && auth.getIdToken().then((token) => console.log(token));
-  }, []);
->>>>>>> e64670bace7147503d1ec4be3d45cc49f16d4d44
   // Auth Use Context
   const { dispatch, state } = useContext(userStore);
   useEffect(() => {
@@ -50,7 +45,6 @@ const AuthOkay = ({ children }) => {
     return () => unsub();
   }, [dispatch, auth, loading]);
 
-<<<<<<< HEAD
   console.log(state);
 
   if (loading) return <div className="loading">Auth is Loading</div>;
@@ -58,13 +52,6 @@ const AuthOkay = ({ children }) => {
   if (!auth) return <Login />;
   if (state.loading) return <div>Database is Loading</div>;
   if (Object.keys(state).length === 1) return <Status />;
-=======
-  if (loading) return <div className="loading">Auth is Loading</div>;
-  if (error) return <div className="error">Auth is Error</div>;
-  if (!auth) return <Login />;
-  if (state.loading)
-    return <div className="loading">User Data is Loading from Database</div>;
->>>>>>> e64670bace7147503d1ec4be3d45cc49f16d4d44
   return children;
 };
 
@@ -113,6 +100,7 @@ const App = () => {
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
             <Route path="/addnotif" exact component={AddNotif} />
+            <Route path="/find" exact component={FindTime} />
           </Switch>
         </Router>
       </AuthOkay>

@@ -1,14 +1,12 @@
 import {
   Avatar,
   Backdrop,
-  Button,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Divider,
   Grid,
   List,
   ListItem,
@@ -181,32 +179,31 @@ const SearchFriends = (props) => {
               <p>검색해보세요</p>
             ) : searchResult === undefined ? (
               <p>검색중</p>
-            ) : Object.keys(searchResult).length == 0 ? (
+            ) : Object.keys(searchResult).length === 0 ? (
               <p>검색결과 없음</p>
             ) : (
-              <List className={classes.list}>
-                {searchResult.map(({ _id, picture, nickname, major }) => (
-                  <ListItem
-                    key={_id}
-                    button
-                    disabled={firebase.auth().currentUser.uid === _id}
-                    onClick={() => sendFriendRequest(_id)}
-                    alignItems="flex-start"
-                  >
-                    <ListItemAvatar>
-                      <Avatar alt={nickname} src={picture} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={`${nickname}${
-                        firebase.auth().currentUser.uid === _id ? " (나)" : ""
-                      }`}
-                      secondary={<React.Fragment>{major}</React.Fragment>}
-                    />
-                  </ListItem>
-                ))}
-                {/* <Divider variant="inset" component="li" /> */}
-              </List>
-            )}
+                    <List className={classes.list}>
+                      {searchResult.map(({ _id, picture, nickname, major }) => (
+                        <ListItem
+                          key={_id}
+                          button
+                          disabled={firebase.auth().currentUser.uid === _id}
+                          onClick={() => sendFriendRequest(_id)}
+                          alignItems="flex-start"
+                        >
+                          <ListItemAvatar>
+                            <Avatar alt={nickname} src={picture} />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={`${nickname}${firebase.auth().currentUser.uid === _id ? " (나)" : ""
+                              }`}
+                            secondary={<React.Fragment>{major}</React.Fragment>}
+                          />
+                        </ListItem>
+                      ))}
+                      {/* <Divider variant="inset" component="li" /> */}
+                    </List>
+                  )}
           </div>
           {sendResult && sendResult.status && (
             <Alert severity="error">

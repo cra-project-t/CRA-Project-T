@@ -12,6 +12,7 @@ import QuickView from "../components/QuickView";
 import "../tools/weekNumber";
 import AddEvent from "../components/AddEvent";
 import EventView from "../components/EventView";
+// import FindFime from "../components/FindFime";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [openNewEvent, setOpenNewEvent] = useState(false);
+  // const [openTime, setOpenTime] = useState(false);
   const [openEvent, setopenEvent] = useState(false);
   const [events, loading] = useCollection(
     firebase
@@ -52,6 +54,7 @@ const HomePage = () => {
   events && console.log(events.docs);
   return (
     <Paper square elevation={1}>
+      {/* {openTime && <FindFime setopenTime={setOpenTime} />} */}
       {openNewEvent && <AddEvent setOpenNewEvent={setOpenNewEvent} />}
       {openEvent && <EventView props={openEvent} setopenEvent={setopenEvent} />}
       <HomeAddActionIcon setOpenNewEvent={setOpenNewEvent} />
@@ -105,17 +108,17 @@ const HomePage = () => {
                 setopenEvent(e.event);
                 // console.log(e.event)
               }}
-              // onClick={() => {<EventView props="g" />}}
-              // onclick={<EventView props="g" />}
-              // eventSources={[
-              //   {
-              //     events: {
-              //       title: "event1",
-              //       start: "2021-01-28",
-              //     },
-              //   },
-              // ]}
-              // initialView="dayGridMonth"
+            // onClick={() => {<EventView props="g" />}}
+            // onclick={<EventView props="g" />}
+            // eventSources={[
+            //   {
+            //     events: {
+            //       title: "event1",
+            //       start: "2021-01-28",
+            //     },
+            //   },
+            // ]}
+            // initialView="dayGridMonth"
             />
           </div>
         </Grid>
