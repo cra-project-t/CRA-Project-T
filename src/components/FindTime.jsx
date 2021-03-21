@@ -53,20 +53,36 @@ const FindTime = (props) => {
   const [times, settime] = useState({
     TOD: { // today
       start: [],
-      end: []
+      end: [],
     },
     TOM: { // tomorrow
       start: [],
-      end: []
+      end: [],
     },
     TWOD: { // two days
       start: [],
-      end: []
+      end: [],
     },
+<<<<<<< HEAD
     THD: { // three days
+=======
+    THU: {
       start: [],
-      end: []
-    }
+      end: [],
+    },
+    FRI: {
+      start: [],
+      end: [],
+    },
+    SAT: {
+      start: [],
+      end: [],
+    },
+    SUN: {
+>>>>>>> ebfe9ae37f0228aa90181fda5181b49510047591
+      start: [],
+      end: [],
+    },
   });
 
   const handleClickOpen = (scrollType) => () => {
