@@ -51,19 +51,23 @@ const FindTime = (props) => {
   const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const days = ["TOD", "TOM", "TWOD", "THD"];
   const [times, settime] = useState({
-    TOD: { // today
+    TOD: {
+      // today
       start: [],
       end: [],
     },
-    TOM: { // tomorrow
+    TOM: {
+      // tomorrow
       start: [],
       end: [],
     },
-    TWOD: { // two days
+    TWOD: {
+      // two days
       start: [],
       end: [],
     },
-    THD: { // three days
+    THD: {
+      // three days
       start: [],
       end: [],
     },
@@ -85,11 +89,12 @@ const FindTime = (props) => {
         {findTime()}
       </Dialog>
     </>
-  )
+  );
 
   function findTime() {
     data.forEach((element) => {
-      let day = days[weeks.findIndex((e) => e === element.week) - today.getDay()];
+      let day =
+        days[weeks.findIndex((e) => e === element.week) - today.getDay()];
       times[day].start.unshift(element.startTime);
       times[day].end.unshift(element.endTime);
       mergeTime(times[day], 0);
@@ -105,21 +110,53 @@ const FindTime = (props) => {
     times.THD.end.unshift(0);
     const list = [];
     let j = 0;
-    list.push(<DialogTitle>오늘</DialogTitle>)
+    list.push(<DialogTitle>오늘</DialogTitle>);
     for (let i = 0; i < times.TOD.start.length; i++) {
-      list.push(<DialogContent><FindTimeForm key={j++} props1={times.TOD.end[i]} props2={times.TOD.start[i]} /></DialogContent>)
+      list.push(
+        <DialogContent>
+          <FindTimeForm
+            key={j++}
+            props1={times.TOD.end[i]}
+            props2={times.TOD.start[i]}
+          />
+        </DialogContent>
+      );
     }
-    list.push(<DialogTitle>내일</DialogTitle>)
+    list.push(<DialogTitle>내일</DialogTitle>);
     for (let i = 0; i < times.TOM.start.length; i++) {
-      list.push(<DialogContent><FindTimeForm key={j++} props1={times.TOM.end[i]} props2={times.TOM.start[i]} /></DialogContent>)
+      list.push(
+        <DialogContent>
+          <FindTimeForm
+            key={j++}
+            props1={times.TOM.end[i]}
+            props2={times.TOM.start[i]}
+          />
+        </DialogContent>
+      );
     }
-    list.push(<DialogTitle>2일 뒤</DialogTitle>)
+    list.push(<DialogTitle>2일 뒤</DialogTitle>);
     for (let i = 0; i < times.TWOD.start.length; i++) {
-      list.push(<DialogContent><FindTimeForm key={j++} props1={times.TWOD.end[i]} props2={times.TWOD.start[i]} /></DialogContent>)
+      list.push(
+        <DialogContent>
+          <FindTimeForm
+            key={j++}
+            props1={times.TWOD.end[i]}
+            props2={times.TWOD.start[i]}
+          />
+        </DialogContent>
+      );
     }
-    list.push(<DialogTitle>3일 뒤</DialogTitle>)
+    list.push(<DialogTitle>3일 뒤</DialogTitle>);
     for (let i = 0; i < times.THD.start.length; i++) {
-      list.push(<DialogContent><FindTimeForm key={j++} props1={times.THD.end[i]} props2={times.THD.start[i]} /></DialogContent>)
+      list.push(
+        <DialogContent>
+          <FindTimeForm
+            key={j++}
+            props1={times.THD.end[i]}
+            props2={times.THD.start[i]}
+          />
+        </DialogContent>
+      );
     }
     return list;
   }
