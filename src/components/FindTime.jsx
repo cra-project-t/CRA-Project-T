@@ -63,23 +63,7 @@ const FindTime = (props) => {
       start: [],
       end: [],
     },
-<<<<<<< HEAD
     THD: { // three days
-=======
-    THU: {
-      start: [],
-      end: [],
-    },
-    FRI: {
-      start: [],
-      end: [],
-    },
-    SAT: {
-      start: [],
-      end: [],
-    },
-    SUN: {
->>>>>>> ebfe9ae37f0228aa90181fda5181b49510047591
       start: [],
       end: [],
     },
