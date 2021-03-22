@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FindTimeForm from "./FindTimeForm.jsx";
-import { Dialog, DialogContent, DialogTitle } from "@material-ui/core";
+import { Dialog, DialogTitle } from "@material-ui/core";
 // import firebase from "firebase";
 
 const FindTime = (props) => {
@@ -47,9 +47,9 @@ const FindTime = (props) => {
   // useEffect(() => {
   //   firebase.firestore().collection('users').doc('B95XfCKRgDVbb38aeqlc6dLDv9W2').get().then(doc => setState(doc.data()));
   // }, [])
-  let today = new Date();
-  const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const days = ["TOD", "TOM", "TWOD", "THD"];
+  // let today = new Date();
+  // const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  // const days = ["TOD", "TOM", "TWOD", "THD"];
   const [times, settime] = useState({
     TOD: { // today
       start: [],
@@ -78,51 +78,151 @@ const FindTime = (props) => {
     setOpen(false);
   };
 
+  const lists = useEffect(() => {
+    let today = new Date();
+    const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    const days = ["TOD", "TOM", "TWOD", "THD"];
+
+    function findTime() {
+      data.forEach((element) => {
+        let day = days[weeks.findIndex((e) => e === element.week) - today.getDay()];
+        times[day].start.unshift(element.startTime);
+        times[day].end.unshift(element.endTime);
+        mergeTime(times[day], 0);
+        // console.log(days[weeks.findIndex((e) => e === element.week) - today.getDay()]);
+      });
+      times.TOD.start.push(1440);
+      times.TOD.end.unshift(0);
+      times.TOM.start.push(1440);
+      times.TOM.end.unshift(0);
+      times.TWOD.start.push(1440);
+      times.TWOD.end.unshift(0);
+      times.THD.start.push(1440);
+      times.THD.end.unshift(0);
+      let j = 0;
+      let todayIndex = today.getDay();
+      const list = [];
+      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+      for (let i = 0; i < times.TOD.start.length; i++) {
+        list.push(<FindTimeForm key={j++} props1={times.TOD.end[i]} props2={times.TOD.start[i]} />)
+      }
+      if (todayIndex === 7) todayIndex = 0;
+      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+      for (let i = 0; i < times.TOM.start.length; i++) {
+        list.push(<FindTimeForm key={j++} props1={times.TOM.end[i]} props2={times.TOM.start[i]} />)
+      }
+      if (todayIndex === 7) todayIndex = 0;
+      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+      for (let i = 0; i < times.TWOD.start.length; i++) {
+        list.push(<FindTimeForm key={j++} props1={times.TWOD.end[i]} props2={times.TWOD.start[i]} />)
+      }
+      if (todayIndex === 7) todayIndex = 0;
+      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+      for (let i = 0; i < times.THD.start.length; i++) {
+        list.push(<FindTimeForm key={j++} props1={times.THD.end[i]} props2={times.THD.start[i]} />)
+      }
+      return list;
+    }
+
+    function mergeTime(time, i) {
+      if (i === time.start.length - 1);
+      else if (time.end[i] < time.start[i + 1]);
+      else if (time.start[i] <= time.start[i + 1]) {
+        if (time.end[i] < time.end[i + 1]) {
+          // 2번
+          swap(time.end, i, i + 1);
+          time.start.splice(i + 1, 1);
+          time.end.splice(i + 1, 1);
+        } else {
+          // 3-1번
+          time.start.splice(i + 1, 1);
+          time.end.splice(i + 1, 1);
+          mergeTime(time, i);
+        }
+      } else if (
+        time.start[i] >= time.start[i + 1] &&
+        time.end[i] <= time.end[i + 1]
+      ) {
+        //3-2번
+        time.start.splice(i, 1);
+        time.end.splice(i, 1);
+      } else if (time.start[i] > time.end[i + 1]) {
+        // 5번
+        swap(time.start, i, i + 1);
+        swap(time.end, i, i + 1);
+        mergeTime(time, i + 1);
+      } else if (time.end[i] >= time.end[i + 1]) {
+        if (time.start[i] > time.start[i + 1]) {
+          //4번
+          swap(time.start, i, i + 1);
+          time.start.splice(i + 1, 1);
+          time.end.splice(i + 1, 1);
+          mergeTime(time, i);
+        } else {
+          //3-1번
+          time.start.splice(i + 1, 1);
+          time.end.splice(i + 1, 1);
+          mergeTime(time, i);
+        }
+      }
+    }
+
+    function swap(time, a, b) {
+      let temp = time[a];
+      time[a] = time[b];
+      time[b] = temp;
+    }
+
+    return findTime();
+  }, [data])
+
   return (
     <>
       <Button onClick={handleClickOpen("paper")} />
       <Dialog open={open} onClose={handleClose} scroll={scroll}>
-        {findTime()}
+        {lists}
       </Dialog>
     </>
   )
 
-  function findTime() {
-    data.forEach((element) => {
-      let day = days[weeks.findIndex((e) => e === element.week) - today.getDay()];
-      times[day].start.unshift(element.startTime);
-      times[day].end.unshift(element.endTime);
-      mergeTime(times[day], 0);
-      // console.log(days[weeks.findIndex((e) => e === element.week) - today.getDay()]);
-    });
-    times.TOD.start.push(1440);
-    times.TOD.end.unshift(0);
-    times.TOM.start.push(1440);
-    times.TOM.end.unshift(0);
-    times.TWOD.start.push(1440);
-    times.TWOD.end.unshift(0);
-    times.THD.start.push(1440);
-    times.THD.end.unshift(0);
-    const list = [];
-    let j = 0;
-    list.push(<DialogTitle>오늘</DialogTitle>)
-    for (let i = 0; i < times.TOD.start.length; i++) {
-      list.push(<DialogContent><FindTimeForm key={j++} props1={times.TOD.end[i]} props2={times.TOD.start[i]} /></DialogContent>)
-    }
-    list.push(<DialogTitle>내일</DialogTitle>)
-    for (let i = 0; i < times.TOM.start.length; i++) {
-      list.push(<DialogContent><FindTimeForm key={j++} props1={times.TOM.end[i]} props2={times.TOM.start[i]} /></DialogContent>)
-    }
-    list.push(<DialogTitle>2일 뒤</DialogTitle>)
-    for (let i = 0; i < times.TWOD.start.length; i++) {
-      list.push(<DialogContent><FindTimeForm key={j++} props1={times.TWOD.end[i]} props2={times.TWOD.start[i]} /></DialogContent>)
-    }
-    list.push(<DialogTitle>3일 뒤</DialogTitle>)
-    for (let i = 0; i < times.THD.start.length; i++) {
-      list.push(<DialogContent><FindTimeForm key={j++} props1={times.THD.end[i]} props2={times.THD.start[i]} /></DialogContent>)
-    }
-    return list;
-  }
+  // function findTime(times, data) {
+  //   data.forEach((element) => {
+  //     let day = days[weeks.findIndex((e) => e === element.week) - today.getDay()];
+  //     times[day].start.unshift(element.startTime);
+  //     times[day].end.unshift(element.endTime);
+  //     mergeTime(times[day], 0);
+  //     // console.log(days[weeks.findIndex((e) => e === element.week) - today.getDay()]);
+  //   });
+  //   times.TOD.start.push(1440);
+  //   times.TOD.end.unshift(0);
+  //   times.TOM.start.push(1440);
+  //   times.TOM.end.unshift(0);
+  //   times.TWOD.start.push(1440);
+  //   times.TWOD.end.unshift(0);
+  //   times.THD.start.push(1440);
+  //   times.THD.end.unshift(0);
+  //   let j = 0;
+  //   let todayIndex = today.getDay();
+  //   list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+  //   for (let i = 0; i < times.TOD.start.length; i++) {
+  //     list.push(<FindTimeForm key={j++} props1={times.TOD.end[i]} props2={times.TOD.start[i]} />)
+  //   }
+  //   if (todayIndex === 7) todayIndex = 0;
+  //   list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+  //   for (let i = 0; i < times.TOM.start.length; i++) {
+  //     list.push(<FindTimeForm key={j++} props1={times.TOM.end[i]} props2={times.TOM.start[i]} />)
+  //   }
+  //   if (todayIndex === 7) todayIndex = 0;
+  //   list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+  //   for (let i = 0; i < times.TWOD.start.length; i++) {
+  //     list.push(<FindTimeForm key={j++} props1={times.TWOD.end[i]} props2={times.TWOD.start[i]} />)
+  //   }
+  //   if (todayIndex === 7) todayIndex = 0;
+  //   list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+  //   for (let i = 0; i < times.THD.start.length; i++) {
+  //     list.push(<FindTimeForm key={j++} props1={times.THD.end[i]} props2={times.THD.start[i]} />)
+  //   }
+  // }
 
   // function MergeTime(Time) {
   //   quick_sort(Time, 0, Time.start.length - 1);
@@ -152,54 +252,54 @@ const FindTime = (props) => {
   //   }
   // }
 
-  function mergeTime(time, i) {
-    if (i === time.start.length - 1);
-    else if (time.end[i] < time.start[i + 1]);
-    else if (time.start[i] <= time.start[i + 1]) {
-      if (time.end[i] < time.end[i + 1]) {
-        // 2번
-        swap(time.end, i, i + 1);
-        time.start.splice(i + 1, 1);
-        time.end.splice(i + 1, 1);
-      } else {
-        // 3-1번
-        time.start.splice(i + 1, 1);
-        time.end.splice(i + 1, 1);
-        mergeTime(time, i);
-      }
-    } else if (
-      time.start[i] >= time.start[i + 1] &&
-      time.end[i] <= time.end[i + 1]
-    ) {
-      //3-2번
-      time.start.splice(i, 1);
-      time.end.splice(i, 1);
-    } else if (time.start[i] > time.end[i + 1]) {
-      // 5번
-      swap(time.start, i, i + 1);
-      swap(time.end, i, i + 1);
-      mergeTime(time, i + 1);
-    } else if (time.end[i] >= time.end[i + 1]) {
-      if (time.start[i] > time.start[i + 1]) {
-        //4번
-        swap(time.start, i, i + 1);
-        time.start.splice(i + 1, 1);
-        time.end.splice(i + 1, 1);
-        mergeTime(time, i);
-      } else {
-        //3-1번
-        time.start.splice(i + 1, 1);
-        time.end.splice(i + 1, 1);
-        mergeTime(time, i);
-      }
-    }
-  }
+  // function mergeTime(time, i) {
+  //   if (i === time.start.length - 1);
+  //   else if (time.end[i] < time.start[i + 1]);
+  //   else if (time.start[i] <= time.start[i + 1]) {
+  //     if (time.end[i] < time.end[i + 1]) {
+  //       // 2번
+  //       swap(time.end, i, i + 1);
+  //       time.start.splice(i + 1, 1);
+  //       time.end.splice(i + 1, 1);
+  //     } else {
+  //       // 3-1번
+  //       time.start.splice(i + 1, 1);
+  //       time.end.splice(i + 1, 1);
+  //       mergeTime(time, i);
+  //     }
+  //   } else if (
+  //     time.start[i] >= time.start[i + 1] &&
+  //     time.end[i] <= time.end[i + 1]
+  //   ) {
+  //     //3-2번
+  //     time.start.splice(i, 1);
+  //     time.end.splice(i, 1);
+  //   } else if (time.start[i] > time.end[i + 1]) {
+  //     // 5번
+  //     swap(time.start, i, i + 1);
+  //     swap(time.end, i, i + 1);
+  //     mergeTime(time, i + 1);
+  //   } else if (time.end[i] >= time.end[i + 1]) {
+  //     if (time.start[i] > time.start[i + 1]) {
+  //       //4번
+  //       swap(time.start, i, i + 1);
+  //       time.start.splice(i + 1, 1);
+  //       time.end.splice(i + 1, 1);
+  //       mergeTime(time, i);
+  //     } else {
+  //       //3-1번
+  //       time.start.splice(i + 1, 1);
+  //       time.end.splice(i + 1, 1);
+  //       mergeTime(time, i);
+  //     }
+  //   }
+  // }
 
-  function swap(time, a, b) {
-    let temp = time[a];
-    time[a] = time[b];
-    time[b] = temp;
-  }
+  // function swap(time, a, b) {
+  //   let temp = time[a];
+  //   time[a] = time[b];
+  //   time[b] = temp;
+  // }
 };
 
 export default FindTime;

@@ -1,9 +1,10 @@
 import React from "react";
+import { DialogContent } from "@material-ui/core";
 
 const FindTimeForm = ({ key, props1, props2 }) => {
-    return (<div id={key}>
+    return (<DialogContent id={key}>
         {props1} {props2}
-    </div>)
+    </DialogContent>)
 
 }
 
