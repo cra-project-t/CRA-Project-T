@@ -5,19 +5,19 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { CssBaseline, makeStyles } from "@material-ui/core";
 import Login from "./pages/Login";
 import HomePage from "./pages/HomePage";
-import HisnetLogin from "./components/HisnetLogin";
 import AddGroup from "./components/AddGroup";
 import SearchGroup from "./pages/SearchGroup";
 import AddNotif from "./components/AddNotif";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
 import { userStore } from "./stores/userStore";
+import Status from "./components/Status";
+import HisnetLogin from "./components/HisnetLogin";
+import UserInfo from "./components/UserInfo";
+import FindTime from "./components/FindTime";
 
 const AuthOkay = ({ children }) => {
   const [auth, loading, error] = useAuthState(firebase.auth());
-  useEffect(() => {
-    auth && auth.getIdToken().then((token) => console.log(token));
-  }, []);
   // Auth Use Context
   const { dispatch, state } = useContext(userStore);
   useEffect(() => {
@@ -45,11 +45,13 @@ const AuthOkay = ({ children }) => {
     return () => unsub();
   }, [dispatch, auth, loading]);
 
+  console.log(state);
+
   if (loading) return <div className="loading">Auth is Loading</div>;
   if (error) return <div className="error">Auth is Error</div>;
   if (!auth) return <Login />;
-  if (state.loading)
-    return <div className="loading">User Data is Loading from Database</div>;
+  if (state.loading) return <div>Database is Loading</div>;
+  if (Object.keys(state).length === 1) return <Status />;
   return children;
 };
 
@@ -91,13 +93,14 @@ const App = () => {
             )}
           />
           <Switch>
+            <Route path="/mypage" exact component={UserInfo} />
             <Route path="/" exact component={HomePage} />
-            {/* Test Routes */}
             <Route path="/sf" exact component={SearchFriends} />
             <Route path="/hisnetlogin" exact component={HisnetLogin} />
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
             <Route path="/addnotif" exact component={AddNotif} />
+            <Route path="/find" exact component={FindTime} />
           </Switch>
         </Router>
       </AuthOkay>
