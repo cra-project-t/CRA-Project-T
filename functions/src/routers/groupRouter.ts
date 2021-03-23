@@ -302,4 +302,91 @@ groupRouter.post("/:groupId", async (req, res) => {
     console.error(e);
     return res.sendStatus(500);
   }
+  // 데이터베이스에서 해당 그룹 정보 가져오기
+  // const groupList: any = [];
+  // await admin
+  //   .firestore()
+  //   .collection("groups")
+  //   .get()
+  //   .then(function (querySnapshot) {
+  //     querySnapshot.forEach(function (doc) {
+  //       // doc.data() is never undefined for query doc snapshots
+  //       console.log(doc.id, " => ", doc.data());
+  //       groupList.push(doc.data());
+  //     });
+  //   });
+  /*
+
+데이터를 어떻게 줄까? 
+
+{}vs[]
+
+cra 데이타
+documentID: cra
+{
+  name: "크라",
+  members: ["유정섭", "강하림"]
+}
+방법1: list에 추가(나열) ===> documentID가 없기에 안에 _id형식으로 넣어준다.
+const groupList = [
+  {
+    _id: "cra1"
+    name: "크라",
+    members: ["유정섭", "강하림"]
+  },
+  {
+    name: "크라",
+    members: ["유정섭", "강하림"]
+  },
+  {
+    name: "크라",
+    members: ["유정섭", "강하림"]
+  }
+]
+
+find, map, sort, filter, ... 루프. 반복문. ===> 시간 多
+groupList.find(group => group._id === "cra1")
+=>
+{
+  _id: "cra1"
+  name: "크라",
+  members: ["유정섭", "강하림"]
+}
+
+
+파이썬 딕셔너리 / 자바스크립트 오브젝트 ===> 그럼에도 불구하고 단점: object는 map, reduce,...반복문 X
+const groupList = {
+  cra1: {
+    name: "크라",
+    members: ["유정섭", "강하림"]
+  },
+  cra2: {
+    name: "크라",
+    members: ["유정섭", "강하림"]
+  }
+}
+
+
+groupList.cra1
+
+object 는 map, reduce, find, sort (X)
+
+*/
+  // reduce: 1. accumulate(callback) 함수, 2. 초기값
+  // array into object
+  // groupData.docs.reduce((prv, cur) => {}, {});
+});
+
+groupRouter.get("/all", async (req, res) => {
+  const groupList = await admin.firestore().collection("groups").get();
+
+  if (!groupList)
+    return res
+      .status(404)
+      .json({ status: 404, error: "데이터를 찾을 수 없습니다." });
+
+  return res.json({
+    status: "200",
+    data: groupList.docs.map(doc => doc.data()),
+  });
 });

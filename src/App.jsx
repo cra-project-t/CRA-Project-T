@@ -11,6 +11,7 @@ import SearchGroup from "./pages/SearchGroup";
 import AddNotif from "./components/AddNotif";
 import Heading from "./components/Headings";
 import SearchFriends from "./components/SearchFriends";
+import TotalGroup from "./pages/TotalGroup";
 import { userStore } from "./stores/userStore";
 
 const AuthOkay = ({ children }) => {
@@ -98,6 +99,7 @@ const App = () => {
             <Route path="/addgroup" exact component={AddGroup} />
             <Route path="/group/:id" component={SearchGroup} />
             <Route path="/addnotif" exact component={AddNotif} />
+            <Route path="/totalgroup" exact component={TotalGroup} />
           </Switch>
         </Router>
       </AuthOkay>

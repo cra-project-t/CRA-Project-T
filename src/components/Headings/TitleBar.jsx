@@ -18,7 +18,7 @@ import SearchFriends from "../SearchFriends";
 import { userStore } from "../../stores/userStore";
 import Notifications from "./Notifications";
 import AddNotif from "../AddNotif";
-//import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AddGroup from "../AddGroup";
 
 const useStyles = makeStyles((theme) => ({
@@ -213,10 +213,10 @@ export default function PrimarySearchAppBar() {
               className={classes.menuButtonList} /*className={classes.search}*/
             >
               <Button>전체일정</Button>
+              <Button>
+                <Link to="/totalgroup">전체그룹</Link>
+              </Button>
               <Button>시간 맞추기</Button>
-              {/* <Button>
-                <Link to="/addnotif">공지추가페이지</Link>
-              </Button> */}
               <AddGroup button={<Button>그룹추가</Button>} />
               <AddNotif button={<Button>공지추가</Button>} />
               <SearchFriends button={<Button>친구추가</Button>} />

@@ -20,7 +20,7 @@ notifRouter.get("/:groupId/show/announce", async (req, res) => {
         .collection("groups")
         .doc(groupId)
         .collection("announcements")
-        .orderBy("created")
+        .orderBy("created", "desc")
         .limit(5)
         .get()
     ).docs.map((data) => ({
