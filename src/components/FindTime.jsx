@@ -51,7 +51,8 @@ const FindTime = (props) => {
   // const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   // const days = ["TOD", "TOM", "TWOD", "THD"];
   const times = {
-    TOD: { // today
+    TOD: {
+      // today
       start: [],
       end: [],
     },
@@ -81,7 +82,7 @@ const FindTime = (props) => {
     setOpen(false);
   };
 
-  const [lists, setLists] = useState([])
+  const [lists, setLists] = useState([]);
 
   useEffect(() => {
     let today = new Date();
@@ -110,24 +111,48 @@ const FindTime = (props) => {
       let j = 0;
       let todayIndex = today.getDay();
       const list = [];
-      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>);
       for (let i = 0; i < times.TOD.start.length; i++) {
-        list.push(<FindTimeForm key={j++} props1={times.TOD.end[i]} props2={times.TOD.start[i]} />)
+        list.push(
+          <FindTimeForm
+            key={j++}
+            props1={times.TOD.end[i]}
+            props2={times.TOD.start[i]}
+          />
+        );
       }
       if (todayIndex === 7) todayIndex = 0;
-      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>);
       for (let i = 0; i < times.TOM.start.length; i++) {
-        list.push(<FindTimeForm key={j++} props1={times.TOM.end[i]} props2={times.TOM.start[i]} />)
+        list.push(
+          <FindTimeForm
+            key={j++}
+            props1={times.TOM.end[i]}
+            props2={times.TOM.start[i]}
+          />
+        );
       }
       if (todayIndex === 7) todayIndex = 0;
-      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>);
       for (let i = 0; i < times.TWOD.start.length; i++) {
-        list.push(<FindTimeForm key={j++} props1={times.TWOD.end[i]} props2={times.TWOD.start[i]} />)
+        list.push(
+          <FindTimeForm
+            key={j++}
+            props1={times.TWOD.end[i]}
+            props2={times.TWOD.start[i]}
+          />
+        );
       }
       if (todayIndex === 7) todayIndex = 0;
-      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>)
+      list.push(<DialogTitle>{weeks[todayIndex++]}</DialogTitle>);
       for (let i = 0; i < times.THD.start.length; i++) {
-        list.push(<FindTimeForm key={j++} props1={times.THD.end[i]} props2={times.THD.start[i]} />)
+        list.push(
+          <FindTimeForm
+            key={j++}
+            props1={times.THD.end[i]}
+            props2={times.THD.start[i]}
+          />
+        );
       }
       setLists(list);
     }
@@ -182,7 +207,7 @@ const FindTime = (props) => {
     }
 
     findTime();
-  }, [])
+  }, []);
 
   return (
     <>
