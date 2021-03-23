@@ -47,23 +47,35 @@ const FindTime = (props) => {
   // useEffect(() => {
   //   firebase.firestore().collection('users').doc('B95XfCKRgDVbb38aeqlc6dLDv9W2').get().then(doc => setState(doc.data()));
   // }, [])
+<<<<<<< HEAD
   // let today = new Date();
   // const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   // const days = ["TOD", "TOM", "TWOD", "THD"];
   const times = {
     TOD: { // today
+=======
+  let today = new Date();
+  const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const days = ["TOD", "TOM", "TWOD", "THD"];
+  const [times, settime] = useState({
+    TOD: {
+      // today
+>>>>>>> f13441db97f2944f983415b97ed2d744c06040f8
       start: [],
       end: [],
     },
-    TOM: { // tomorrow
+    TOM: {
+      // tomorrow
       start: [],
       end: [],
     },
-    TWOD: { // two days
+    TWOD: {
+      // two days
       start: [],
       end: [],
     },
-    THD: { // three days
+    THD: {
+      // three days
       start: [],
       end: [],
     },
@@ -188,8 +200,9 @@ const FindTime = (props) => {
         {lists}
       </Dialog>
     </>
-  )
+  );
 
+<<<<<<< HEAD
   // function findTime(times, data) {
   //   data.forEach((element) => {
   //     let day = days[weeks.findIndex((e) => e === element.week) - today.getDay()];
@@ -228,6 +241,77 @@ const FindTime = (props) => {
   //     list.push(<FindTimeForm key={j++} props1={times.THD.end[i]} props2={times.THD.start[i]} />)
   //   }
   // }
+=======
+  function findTime() {
+    data.forEach((element) => {
+      let day =
+        days[weeks.findIndex((e) => e === element.week) - today.getDay()];
+      times[day].start.unshift(element.startTime);
+      times[day].end.unshift(element.endTime);
+      mergeTime(times[day], 0);
+      // console.log(days[weeks.findIndex((e) => e === element.week) - today.getDay()]);
+    });
+    times.TOD.start.push(1440);
+    times.TOD.end.unshift(0);
+    times.TOM.start.push(1440);
+    times.TOM.end.unshift(0);
+    times.TWOD.start.push(1440);
+    times.TWOD.end.unshift(0);
+    times.THD.start.push(1440);
+    times.THD.end.unshift(0);
+    const list = [];
+    let j = 0;
+    list.push(<DialogTitle>오늘</DialogTitle>);
+    for (let i = 0; i < times.TOD.start.length; i++) {
+      list.push(
+        <DialogContent>
+          <FindTimeForm
+            key={j++}
+            props1={times.TOD.end[i]}
+            props2={times.TOD.start[i]}
+          />
+        </DialogContent>
+      );
+    }
+    list.push(<DialogTitle>내일</DialogTitle>);
+    for (let i = 0; i < times.TOM.start.length; i++) {
+      list.push(
+        <DialogContent>
+          <FindTimeForm
+            key={j++}
+            props1={times.TOM.end[i]}
+            props2={times.TOM.start[i]}
+          />
+        </DialogContent>
+      );
+    }
+    list.push(<DialogTitle>2일 뒤</DialogTitle>);
+    for (let i = 0; i < times.TWOD.start.length; i++) {
+      list.push(
+        <DialogContent>
+          <FindTimeForm
+            key={j++}
+            props1={times.TWOD.end[i]}
+            props2={times.TWOD.start[i]}
+          />
+        </DialogContent>
+      );
+    }
+    list.push(<DialogTitle>3일 뒤</DialogTitle>);
+    for (let i = 0; i < times.THD.start.length; i++) {
+      list.push(
+        <DialogContent>
+          <FindTimeForm
+            key={j++}
+            props1={times.THD.end[i]}
+            props2={times.THD.start[i]}
+          />
+        </DialogContent>
+      );
+    }
+    return list;
+  }
+>>>>>>> f13441db97f2944f983415b97ed2d744c06040f8
 
   // function MergeTime(Time) {
   //   quick_sort(Time, 0, Time.start.length - 1);
