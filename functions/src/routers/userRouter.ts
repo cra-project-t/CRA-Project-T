@@ -278,6 +278,6 @@ userRouter.post("/request/approve", async (req, res) => {
     // 실패했을때 삭제
     console.error("Error While Accept Friend Request");
     console.error(e);
-    res.status(500).json({ err: e });
+    return res.status(500).json({ err: e });
   }
 });
