@@ -232,6 +232,34 @@ groupRouter.post("/:groupId/add/announce", async (req, res) => {
   return;
 });
 
+groupRouter.get("/all", async (req, res) => {
+  const groupList = await admin.firestore().collection("groups").get();
+
+  if (!groupList)
+    return res
+      .status(404)
+      .json({ status: 404, error: "데이터를 찾을 수 없습니다." });
+
+  return res.json({
+    status: "200",
+    data: groupList.docs.map(doc => doc.data()),
+  });
+});
+
+// const groupList = await admin.firestore().collection("groups").get().then((querySnapshot)=>{
+//  const glDoc: any=[]
+//    querySnapshot.reduce((prev,curr)=>{
+//      glDoc.push({id:document.id, ...document.data()})
+//    }
+//  });
+
+//  if (!groupList.size)
+//    return res
+//      .status(404)
+//      .json({ status: 404, error: "데이터를 찾을 수 없습니다." });
+
+// /all했을 때 위치 가장 아래시 /:groupId의 groupRouter에 걸려서 Error 404 반환 groupData로 ㅇㅇ
+
 groupRouter.get("/:groupId", async (req, res) => {
   //const uid = req.decodedToken.uid;
   const groupId = req.params.groupId.toLowerCase();
@@ -354,6 +382,13 @@ const groupList = {
   }
 }
 
+object.b === object["b"];
+const id="b";
+object[id]={};
+ const result = data.reduce((prev, curr) => {
+   prev[curr.id]=curr;
+   //prev["a"]={id: "a", english....}
+ }, {});
 
 groupList.cra1
 
@@ -363,18 +398,4 @@ object 는 map, reduce, find, sort (X)
   // reduce: 1. accumulate(callback) 함수, 2. 초기값
   // array into object
   // groupData.docs.reduce((prv, cur) => {}, {});
-});
-
-groupRouter.get("/all", async (req, res) => {
-  const groupList = await admin.firestore().collection("groups").get();
-
-  if (!groupList)
-    return res
-      .status(404)
-      .json({ status: 404, error: "데이터를 찾을 수 없습니다." });
-
-  return res.json({
-    status: "200",
-    data: groupList.docs.map(doc => doc.data()),
-  });
 });
