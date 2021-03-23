@@ -10,6 +10,8 @@ import HomeSchoolInfo from "../components/HomeSchoolInfo";
 import QuickView from "../components/QuickView";
 import "../tools/weekNumber";
 import AddEvent from "../components/AddEvent";
+import EventView from "../components/EventView";
+// import FindFime from "../components/FindFime";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [openNewEvent, setOpenNewEvent] = useState(false);
+  const [openEvent, setopenEvent] = useState(false);
   const [events, setEvents] = useState([]);
 
   const refreshData = async () => {
@@ -67,7 +70,9 @@ const HomePage = () => {
   }
   return (
     <Paper square elevation={1}>
+      {/* {openTime && <FindFime setopenTime={setOpenTime} />} */}
       {openNewEvent && <AddEvent setOpenNewEvent={setOpenNewEvent} />}
+      {openEvent && <EventView props={openEvent} setopenEvent={setopenEvent} />}
       <HomeAddActionIcon setOpenNewEvent={setOpenNewEvent} />
       <Grid className={classes.root} container spacing={2}>
         <Grid item sm={6} xs={12}>
@@ -116,6 +121,10 @@ const HomePage = () => {
                 //   },
                 // ]
               }
+              eventClick={(e) => {
+                setopenEvent(e.event);
+                // console.log(e.event)
+              }}
               customButtons={{
                 refreshButton: {
                   text: "새로고침",
@@ -127,6 +136,8 @@ const HomePage = () => {
                 center: "title",
                 // right: "dayGridMonth,timeGridWeek,timeGridDay",
               }}
+              // onClick={() => {<EventView props="g" />}}
+              // onclick={<EventView props="g" />}
               // eventSources={[
               //   {
               //     events: {

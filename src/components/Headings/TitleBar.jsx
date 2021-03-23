@@ -20,6 +20,7 @@ import Notifications from "./Notifications";
 import AddNotif from "../AddNotif";
 //import { Link } from "react-router-dom";
 import AddGroup from "../AddGroup";
+import FindTime from "../FindTime";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -213,7 +214,8 @@ export default function PrimarySearchAppBar() {
               className={classes.menuButtonList} /*className={classes.search}*/
             >
               <Button>전체일정</Button>
-              <Button>시간 맞추기</Button>
+              {/* <Button>시간 맞추기</Button> */}
+              <FindTime button={<Button>시간 맞추기</Button>} />
               {/* <Button>
                 <Link to="/addnotif">공지추가페이지</Link>
               </Button> */}
