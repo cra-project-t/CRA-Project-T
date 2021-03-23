@@ -62,23 +62,24 @@ export default function HomeFriends() {
   const [groupDetails, setGroupDetails] = useState({});
 
   useEffect(() => {
-    userDataStore.groups
-      .filter((groupId) => !Object.keys(groupDetails).includes(groupId))
-      .map(async (groupId) => {
-        const groupData = (
-          await axios.get(`/group/${groupId}`, {
-            headers: {
-              Authorization: `Bearer ${await firebase
-                .auth()
-                .currentUser.getIdToken()}`,
-            },
-          })
-        ).data.data;
-        setGroupDetails((prevState) => ({
-          ...prevState,
-          [groupId]: groupData,
-        }));
-      });
+    userDataStore.groups &&
+      userDataStore.groups
+        .filter((groupId) => !Object.keys(groupDetails).includes(groupId))
+        .map(async (groupId) => {
+          const groupData = (
+            await axios.get(`/group/${groupId}`, {
+              headers: {
+                Authorization: `Bearer ${await firebase
+                  .auth()
+                  .currentUser.getIdToken()}`,
+              },
+            })
+          ).data.data;
+          setGroupDetails((prevState) => ({
+            ...prevState,
+            [groupId]: groupData,
+          }));
+        });
   }, [userDataStore.groups]);
 
   return (
@@ -109,36 +110,38 @@ export default function HomeFriends() {
           />
         </ListItemSecondaryAction>
       </ListItem>
-      {userDataStore.groups.map((groupId, index) => (
-        <React.Fragment key={groupId}>
-          <ListItem alignItems="flex-start">
-            <ListItemAvatar>
-              <Avatar alt={groupId} src="/static/images/avatar/1.jpg" />
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                (groupDetails[groupId] && groupDetails[groupId].name) || groupId
-              }
-              secondary={
-                <React.Fragment>
-                  <Typography
-                    component="span"
-                    variant="body2"
-                    className={classes.inline}
-                    color="textPrimary"
-                  >
-                    동아리
-                  </Typography>
-                  {" — 2교시 10:00-11:15"}
-                </React.Fragment>
-              }
-            />
-          </ListItem>
-          {/* {userDataStore.friends.active.list < index && (
+      {userDataStore.groups &&
+        userDataStore.groups.map((groupId, index) => (
+          <React.Fragment key={groupId}>
+            <ListItem alignItems="flex-start">
+              <ListItemAvatar>
+                <Avatar alt={groupId} src="/static/images/avatar/1.jpg" />
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  (groupDetails[groupId] && groupDetails[groupId].name) ||
+                  groupId
+                }
+                secondary={
+                  <React.Fragment>
+                    <Typography
+                      component="span"
+                      variant="body2"
+                      className={classes.inline}
+                      color="textPrimary"
+                    >
+                      동아리
+                    </Typography>
+                    {" — 2교시 10:00-11:15"}
+                  </React.Fragment>
+                }
+              />
+            </ListItem>
+            {/* {userDataStore.friends.active.list < index && (
             <Divider variant="inset" component="li" />
           )} */}
-        </React.Fragment>
-      ))}
+          </React.Fragment>
+        ))}
       {userDataStore.friends && userDataStore.friends.active ? (
         userDataStore.friends.active.map((friend, index) => (
           <React.Fragment key={friend._id}>
