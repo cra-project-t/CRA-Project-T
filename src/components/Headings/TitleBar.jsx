@@ -21,6 +21,7 @@ import AddNotif from "../AddNotif";
 //import { Link } from "react-router-dom";
 import AddGroup from "../AddGroup";
 import FindTime from "../FindTime";
+import UserInfo from "../UserInfo";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -144,7 +145,7 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <UserInfo button={<MenuItem onClick={handleMenuClose}>Profile</MenuItem>} />
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={() => firebase.auth().signOut()}>Signout</MenuItem>
     </Menu>
@@ -185,6 +186,7 @@ export default function PrimarySearchAppBar() {
           color="inherit"
         >
           <AccountCircle />
+
         </IconButton>
         <p>Profile</p>
       </MenuItem>
