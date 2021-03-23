@@ -47,12 +47,27 @@ groupRouter.get("/:groupId/members", async (req, res) => {
 });
 
 // POST /group/add
+//새로운 그룹을 추가
 groupRouter.post("/add", async (req, res) => {
-  const { englishName, name, type, description, memberCount } = req.body;
+  const {
+    englishName,
+    name,
+    type,
+    description,
+    memberCount,
+    photoURL,
+  } = req.body;
   const { uid } = req.decodedToken;
 
   // 유효성 #1 - 해당 필드들이 존재하여야함.
-  if (!englishName || !name || !type || !description || !memberCount) {
+  if (
+    !englishName ||
+    !name ||
+    !type ||
+    !description ||
+    !memberCount ||
+    !photoURL
+  ) {
     return res.status(221).json({
       status: 221,
       error: "필수 필드중 하나가 존재하지 않음.",
@@ -98,12 +113,13 @@ groupRouter.post("/add", async (req, res) => {
       name: name,
       type: type,
       description: description,
-      owners: [uid],
+      owners: [uid], //소유자(만든 사람)이나 멤버나 로그인된 user므로 추가
       members: [uid],
       memberCount: 1, // memberCount 그룹 추가 시 1명이므로
-    })
+      photoURL: photoURL,
+    }) // 주석처리의 중요성 ★
     .then(async () => {
-      //문제가 없음
+      //문제가 없으면
       try {
         await admin
           .firestore()
@@ -111,7 +127,7 @@ groupRouter.post("/add", async (req, res) => {
           .doc(uid)
           .update({
             groups: admin.firestore.FieldValue.arrayUnion(groupID),
-          });
+          }); // 그룹추가 시, 로그인된 유저의 정보에 추가한 그룹을 데이터에 추가
         return res.send("Success");
       } catch (e) {
         admin.firestore().collection("groups").doc(groupID).delete();
@@ -214,4 +230,64 @@ groupRouter.post("/:groupId/add/announce", async (req, res) => {
   // admin.firestore().collection("users").doc(uid).set({...createdDocument, group: name});
   // }
   return;
+});
+
+groupRouter.get("/:groupId", async (req, res) => {
+  //const uid = req.decodedToken.uid;
+  const groupId = req.params.groupId.toLowerCase();
+
+  // 데이터베이스에서 해당 그룹 정보 가져오기
+  const groupData = (
+    await admin.firestore().collection("groups").doc(groupId).get()
+  ).data();
+
+  // DB 에서 해당 데이터를 찾을 수 없는경우.
+  if (!groupData)
+    return res
+      .status(404)
+      .json({ status: 404, error: "데이터를 찾을 수 없습니다." });
+
+  // 유저 정보 데이터 반환
+  return res.json({
+    status: "200",
+    data: groupData,
+  });
+});
+
+groupRouter.post("/:groupId", async (req, res) => {
+  const uid = req.decodedToken.uid;
+  // const { uid } = req.decodedToken; // decodedToken은 오브젝트, {uid}는 decodedToken 안의 uid를 쓰겠다고 선언하는 것
+  const groupId = req.params.groupId.toLowerCase();
+  // const { checkGroup } = req.body;
+  const checkGroup = req.body.checkGroup; //인생의 교훈: 아는 것만 복붙
+  if (!checkGroup) {
+    return res.status(221).json({ status: 221, error: "필드 존재X" });
+  }
+
+  try {
+    // 1 - group 에 유저 정보 추가.
+    await admin
+      .firestore()
+      .collection("groups")
+      .doc(groupId)
+      .update({
+        members: admin.firestore.FieldValue.arrayUnion(uid),
+        memberCount: admin.firestore.FieldValue.increment(1), //firebase대신 admin권한
+      });
+
+    // 2 - 유저 정보에 그룹 데이터 추가.
+    await admin
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .update({ groups: admin.firestore.FieldValue.arrayUnion(groupId) });
+    //checkGroup.update(groupId); //일케 못하는듯..?->배열이니까+post로 받은 데이타(ex. firestore에서 받아온 데이타가져와서 get이나 add등의 함수 기능 X)는 함수로 만들 수 없다(map이나 split 등의 함수 자체로 받을 수 있으나)
+
+    return res.json({
+      status: "200",
+    });
+  } catch (e) {
+    console.error(e);
+    return res.sendStatus(500);
+  }
 });
