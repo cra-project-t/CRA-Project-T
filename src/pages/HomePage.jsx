@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
   const [openNewEvent, setOpenNewEvent] = useState(false);
+  const [openEvent, setopenEvent] = useState(false);
   const [events, setEvents] = useState([]);
 
   const refreshData = async () => {
