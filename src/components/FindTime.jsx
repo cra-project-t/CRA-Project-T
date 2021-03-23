@@ -12,32 +12,32 @@ const FindTime = (props) => {
 
   const data = [
     {
-      week: "MON",
+      week: "WED",
       startTime: 60,
       endTime: 80,
     },
     {
-      week: "MON",
+      week: "WED",
       startTime: 150,
       endTime: 300,
     },
     {
-      week: "MON",
+      week: "WED",
       startTime: 50,
       endTime: 220,
     },
     {
-      week: "MON",
+      week: "WED",
       startTime: 300,
       endTime: 350,
     },
     {
       week: "TUE",
       startTime: 300,
-      endTime: 350,
+      endTime: 1100,
     },
     {
-      week: "MON",
+      week: "WED",
       startTime: 400,
       endTime: 500,
     },
@@ -92,13 +92,13 @@ const FindTime = (props) => {
           mergeTime(times[day], 0);
         }
       });
-      times.TOD.start.push(1440);
+      times.TOD.start.push(1439);
       times.TOD.end.unshift(0);
-      times.TOM.start.push(1440);
+      times.TOM.start.push(1439);
       times.TOM.end.unshift(0);
-      times.TWOD.start.push(1440);
+      times.TWOD.start.push(1439);
       times.TWOD.end.unshift(0);
-      times.THD.start.push(1440);
+      times.THD.start.push(1439);
       times.THD.end.unshift(0);
       let j = 0;
       let todayIndex = today.getDay();
