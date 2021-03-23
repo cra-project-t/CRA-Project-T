@@ -145,7 +145,9 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <UserInfo button={<MenuItem onClick={handleMenuClose}>Profile</MenuItem>} />
+      <UserInfo
+        button={<MenuItem onClick={handleMenuClose}>Profile</MenuItem>}
+      />
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={() => firebase.auth().signOut()}>Signout</MenuItem>
     </Menu>
