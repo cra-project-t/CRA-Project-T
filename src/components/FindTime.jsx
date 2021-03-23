@@ -50,7 +50,7 @@ const FindTime = (props) => {
   // let today = new Date();
   // const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   // const days = ["TOD", "TOM", "TWOD", "THD"];
-  const [times, settime] = useState({
+  const times = {
     TOD: { // today
       start: [],
       end: [],
@@ -67,7 +67,7 @@ const FindTime = (props) => {
       start: [],
       end: [],
     },
-  });
+  };
 
   const handleClickOpen = (scrollType) => () => {
     setOpen(true);
@@ -78,17 +78,22 @@ const FindTime = (props) => {
     setOpen(false);
   };
 
-  const lists = useEffect(() => {
+  const [lists, setLists] = useState([])
+
+  useEffect(() => {
     let today = new Date();
     const weeks = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
     const days = ["TOD", "TOM", "TWOD", "THD"];
 
     function findTime() {
       data.forEach((element) => {
-        let day = days[weeks.findIndex((e) => e === element.week) - today.getDay()];
-        times[day].start.unshift(element.startTime);
-        times[day].end.unshift(element.endTime);
-        mergeTime(times[day], 0);
+        let idx = weeks.findIndex((e) => e === element.week) - today.getDay();
+        if (idx >= 0 && idx < 3) {
+          let day = days[idx];
+          times[day].start.unshift(element.startTime);
+          times[day].end.unshift(element.endTime);
+          mergeTime(times[day], 0);
+        }
         // console.log(days[weeks.findIndex((e) => e === element.week) - today.getDay()]);
       });
       times.TOD.start.push(1440);
@@ -121,7 +126,7 @@ const FindTime = (props) => {
       for (let i = 0; i < times.THD.start.length; i++) {
         list.push(<FindTimeForm key={j++} props1={times.THD.end[i]} props2={times.THD.start[i]} />)
       }
-      return list;
+      setLists(list);
     }
 
     function mergeTime(time, i) {
@@ -173,8 +178,8 @@ const FindTime = (props) => {
       time[b] = temp;
     }
 
-    return findTime();
-  }, [data])
+    findTime();
+  }, [])
 
   return (
     <>
