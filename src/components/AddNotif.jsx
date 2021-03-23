@@ -223,11 +223,12 @@ const AddNotif = (props) => {
                 }}
               >
                 <option aria-label="None" value="" />
-                {userDataStore.groups.map((group) => (
-                  <React.Fragment key={group}>
-                    <option value={group}>{group}</option>
-                  </React.Fragment>
-                ))}
+                {userDataStore.groups &&
+                  userDataStore.groups.map((group) => (
+                    <React.Fragment key={group}>
+                      <option value={group}>{group}</option>
+                    </React.Fragment>
+                  ))}
               </NativeSelect>
               <FormHelperText>GROUP TYPE를 선택해주세요</FormHelperText>
             </FormControl>

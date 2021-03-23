@@ -105,7 +105,7 @@ groupRouter.post("/add", async (req, res) => {
   const groupID = englishName.trim().toLowerCase();
   // TODO: memberCount 및 members 정의 후에 해당 요청이 문제가 없을경우
   // 해당 유저의 정보에 groups 항목에 해당 그룹을 추가한다.
-  admin
+  return admin
     .firestore()
     .collection("groups")
     .doc(groupID)
@@ -126,16 +126,20 @@ groupRouter.post("/add", async (req, res) => {
           .collection("users")
           .doc(uid)
           .update({
-            groups: admin.firestore.FieldValue.arrayUnion(groupID),
-          }); // 그룹추가 시, 로그인된 유저의 정보에 추가한 그룹을 데이터에 추가
+            groups: admin.firestore.FieldValue.arrayUnion(groupID), // 그룹추가 시, 로그인된 유저의 정보에 추가한 그룹을 데이터에 추가
+            calendars: admin.firestore.FieldValue.arrayUnion({
+              owner: groupID,
+              ownerName: name,
+              permission: "owner",
+              type: "group",
+            }),
+          });
         return res.send("Success");
       } catch (e) {
-        admin.firestore().collection("groups").doc(groupID).delete();
+        await admin.firestore().collection("groups").doc(groupID).delete();
         return res.status(500).json(e);
       }
     });
-
-  return;
 });
 
 groupRouter.get("/:userId/groups", async (req, res) => {
@@ -280,7 +284,15 @@ groupRouter.post("/:groupId", async (req, res) => {
       .firestore()
       .collection("users")
       .doc(uid)
-      .update({ groups: admin.firestore.FieldValue.arrayUnion(groupId) });
+      .update({
+        groups: admin.firestore.FieldValue.arrayUnion(groupId),
+        calendars: admin.firestore.FieldValue.arrayUnion({
+          owner: groupId,
+          ownerName: groupId,
+          permission: "read",
+          type: "group",
+        }),
+      });
     //checkGroup.update(groupId); //일케 못하는듯..?->배열이니까+post로 받은 데이타(ex. firestore에서 받아온 데이타가져와서 get이나 add등의 함수 기능 X)는 함수로 만들 수 없다(map이나 split 등의 함수 자체로 받을 수 있으나)
 
     return res.json({
